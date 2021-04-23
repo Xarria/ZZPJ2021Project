@@ -5,7 +5,6 @@ import lombok.Data;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Entity
@@ -19,7 +18,7 @@ public class Recipe {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false, updatable = true)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @NotNull
@@ -27,21 +26,39 @@ public class Recipe {
     @JoinColumn(name = "author", nullable = false, updatable = false)
     private Account author;
 
-    private String ingredients;
-
+    @NotNull
+    @Column(name = "description", nullable = false)
     private String description;
 
+    @NotNull
+    @Column(name = "ingredients", nullable = false)
+    @ManyToMany
+    private List<Ingredient> ingredients;
+
+    @NotNull
+    @Column(name = "rating", nullable = false)
     private Float rating;
 
-    private String tags;
+    @NotNull
+    @Column(name = "tags", nullable = false)
+    @ManyToMany
+    private List<Tag> tags;
 
+    @NotNull
+    @Column(name = "image", nullable = false)
     private Byte[] image;
 
+    @NotNull
+    @Column(name = "servings", nullable = false)
     private Integer servings;
 
+    @Column(name = "calories")
     private Integer calories;
 
-    private Long expectedTime;
+    @NotNull
+    @Column(name = "prepare_time_in_minutes", nullable = false)
+    private Long prepareTimeInMinutes;
 
+    @Column(name = "difficulty")
     private String difficulty;
 }
