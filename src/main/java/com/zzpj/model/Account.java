@@ -14,15 +14,28 @@ public class Account {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    private String login;
+    @NotNull
+    @Column(name = "login", nullable = false)
+    private String login; // max 24 chars
 
+    @NotNull
+    @Column(name = "password", length = 64, nullable = false)
     private String password;
 
+    @NotNull
+    @Column(name = "email", nullable = false)
     private String email;
 
-    private String favouriteRecipes;
+    @Column(name = "favorite_recipes")
+    @OneToMany
+    private List<Recipe> favoriteRecipes;
 
-    private String accessLevel;
+    @NotNull
+    @Column(name = "access_level", nullable = false)
+    @ManyToOne
+    private AccessLevel accessLevel;
 
+    @NotNull
+    @Column(name = "active", nullable = false)
     private Boolean active;
 }
