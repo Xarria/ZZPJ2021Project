@@ -1,10 +1,14 @@
 package com.zzpj.model;
 
+import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
+@Data
 @Table(name = "Account")
 public class Account {
 
@@ -19,6 +23,7 @@ public class Account {
     private String login; // max 24 chars
 
     @NotNull
+    @ToString.Exclude
     @Column(name = "password", length = 64, nullable = false)
     private String password;
 

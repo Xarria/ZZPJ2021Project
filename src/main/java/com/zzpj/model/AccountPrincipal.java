@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @Data
 public class AccountPrincipal implements UserDetails {
@@ -13,36 +14,36 @@ public class AccountPrincipal implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(account.getAccessLevel());
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return account.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return account.getLogin();
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return account.getActive();
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return account.getActive();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return account.getActive();
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return account.getActive();
     }
 }
