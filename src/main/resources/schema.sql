@@ -1,11 +1,11 @@
-DROP TABLE IF EXISTS AccessLevel CASCADE;
+DROP TABLE IF EXISTS Access_Level CASCADE;
 DROP TABLE IF EXISTS Account CASCADE;
 DROP TABLE IF EXISTS Ingredient CASCADE;
 DROP TABLE IF EXISTS Recipe CASCADE;
 DROP TABLE IF EXISTS Recipe_Account CASCADE;
 DROP TABLE IF EXISTS Recipe_Ingredient CASCADE;
 
-CREATE TABLE AccessLevel
+CREATE TABLE Access_Level
 (
     id   bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
     name varchar(32),
@@ -23,7 +23,7 @@ CREATE TABLE Account
     active           boolean      NOT NULL,
 
     CONSTRAINT account_primary_key_constraint PRIMARY KEY (id),
-    CONSTRAINT access_level_foreign_key_constraint FOREIGN KEY (access_level) REFERENCES AccessLevel (id)
+    CONSTRAINT access_level_foreign_key_constraint FOREIGN KEY (access_level) REFERENCES Access_Level (id)
 );
 
 CREATE TABLE Ingredient

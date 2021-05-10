@@ -16,6 +16,8 @@ public class AccountPrincipal implements UserDetails {
         this.account = account;
     }
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singletonList(account.getAccessLevel());

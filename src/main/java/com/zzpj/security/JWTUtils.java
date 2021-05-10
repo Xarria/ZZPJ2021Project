@@ -1,13 +1,18 @@
 package com.zzpj.security;
 
+import com.zzpj.model.AccessLevel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JWTUtils {
@@ -30,9 +35,11 @@ public class JWTUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
+        String claim = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining());
+
         return Jwts.builder()
-                .claim("auth", userDetails.getAuthorities().stream().findFirst())
                 .setSubject(userDetails.getUsername())
+                .claim("auth", claim)
                 .setIssuer(SecurityConstants.ISSUER)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + SecurityConstants.JWT_TIMEOUT))

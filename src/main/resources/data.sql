@@ -1,4 +1,4 @@
-INSERT INTO AccessLevel (name)
+INSERT INTO Access_Level (name)
 VALUES ('admin'),
        ('moderator'),
        ('user');
