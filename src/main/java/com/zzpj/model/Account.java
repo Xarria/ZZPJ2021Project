@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,9 +32,9 @@ public class Account {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "favorite_recipes")
-    @OneToMany
-    private List<Recipe> favoriteRecipes;
+    @ManyToMany
+    @JoinTable(name = "Recipe_Account")
+    private List<Recipe> favouriteRecipes = new ArrayList<>();
 
     @NotNull
     @Column(name = "access_level", nullable = false)

@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
-@Table(name = "Tag")
-public class Tag {
+@Table(name = "FavouriteRecipeAccountCon")
+public class RecipeAccountCon {
 
     @Id
     @NotNull
@@ -17,6 +17,10 @@ public class Tag {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "recipe_id", nullable = false, updatable = false)
+    private Long idRecipe;
+
+    @NotNull
+    @Column(name = "account_id", nullable = false, updatable = false)
+    private Long idAccount;
 }

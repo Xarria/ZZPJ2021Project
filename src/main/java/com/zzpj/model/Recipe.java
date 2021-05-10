@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -33,16 +34,18 @@ public class Recipe {
     @NotNull
     @Column(name = "ingredients", nullable = false)
     @ManyToMany
-    private List<Ingredient> ingredients;
+    @JoinTable(name = "Recipe_Ingredient")
+    private List<Ingredient> recipeIngredients;
 
     @NotNull
     @Column(name = "rating", nullable = false)
     private Float rating;
 
-    @NotNull
-    @Column(name = "tags", nullable = false)
-    @ManyToMany
-    private List<Tag> tags;
+    @ElementCollection
+    private List<String> recipeTags = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "favouriteRecipes")
+    private List<Account> accounts = new ArrayList<>();
 
     @NotNull
     @Column(name = "image", nullable = false)
