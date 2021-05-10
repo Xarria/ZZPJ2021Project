@@ -1,6 +1,5 @@
-package com.zzpj.utils;
+package com.zzpj.security;
 
-import com.zzpj.security.SecurityConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,8 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Function;
 
 @Service
@@ -33,8 +30,8 @@ public class JWTUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return Jwts.builder().setClaims(claims)
+        return Jwts.builder()
+                .claim("auth", userDetails.getAuthorities().stream().findFirst())
                 .setSubject(userDetails.getUsername())
                 .setIssuer(SecurityConstants.ISSUER)
                 .setIssuedAt(new Date())

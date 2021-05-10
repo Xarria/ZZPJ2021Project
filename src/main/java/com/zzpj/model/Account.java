@@ -5,13 +5,13 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
 @Table(name = "Account")
-@SecondaryTable(name = "AccessLevel")
 public class Account {
 
     @Id
@@ -22,6 +22,7 @@ public class Account {
 
     @NotNull
     @Column(name = "login", nullable = false)
+    @Size(max = 24)
     private String login; // max 24 chars
 
     @NotNull
@@ -38,8 +39,8 @@ public class Account {
     private List<Recipe> favouriteRecipes = new ArrayList<>();
 
     @NotNull
-    @JoinColumn(name = "access_level", nullable = false, referencedColumnName = "id", table = "AccessLevel")
     @ManyToOne
+    @JoinColumn(name = "access_level", nullable = false, referencedColumnName = "id")
     private AccessLevel accessLevel;
 
     @NotNull
