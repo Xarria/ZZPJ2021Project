@@ -11,6 +11,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "Account")
+@SecondaryTable(name = "AccessLevel")
 public class Account {
 
     @Id
@@ -37,7 +38,7 @@ public class Account {
     private List<Recipe> favouriteRecipes = new ArrayList<>();
 
     @NotNull
-    @Column(name = "access_level", nullable = false)
+    @JoinColumn(name = "access_level", nullable = false, referencedColumnName = "id", table = "AccessLevel")
     @ManyToOne
     private AccessLevel accessLevel;
 
