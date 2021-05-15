@@ -1,6 +1,6 @@
 package com.zzpj.services;
 
-import com.zzpj.DTOs.AccountAccessLevelDTO;
+import com.zzpj.DTOs.AccountDTO;
 import com.zzpj.model.Account;
 import com.zzpj.model.AccountPrincipal;
 import com.zzpj.repository.AccountRepository;
@@ -37,12 +37,12 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
     }
 
     @Override
-    public AccountAccessLevelDTO getAccountByLogin(String login) {
+    public AccountDTO getAccountByLogin(String login) {
         return null;
     }
 
     @Override
-    public AccountAccessLevelDTO getAllAccounts() {
+    public AccountDTO getAllAccounts() {
         return null;
     }
 

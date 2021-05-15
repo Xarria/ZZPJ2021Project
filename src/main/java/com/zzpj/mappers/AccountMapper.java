@@ -1,14 +1,14 @@
 package com.zzpj.mappers;
 
-import com.zzpj.DTOs.AccountAccessLevelDTO;
+import com.zzpj.DTOs.AccountDTO;
 import com.zzpj.model.Account;
 
 import java.util.stream.Collectors;
 
 public class AccountMapper {
 
-    public static AccountAccessLevelDTO entityToDTO(Account account){
-        AccountAccessLevelDTO accountDTO = new AccountAccessLevelDTO();
+    public static AccountDTO entityToDTO(Account account){
+        AccountDTO accountDTO = new AccountDTO();
         accountDTO.setLogin(account.getLogin());
         accountDTO.setPassword(account.getPassword());
         accountDTO.setEmail(account.getEmail());

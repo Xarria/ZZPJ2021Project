@@ -15,7 +15,7 @@ public class RecipeDTO {
     // TODO nałożyć ograniczenia na pola
     private String name;
 
-    private AccountAccessLevelDTO author;
+    private AccountDTO author;
 
     private String description;
 

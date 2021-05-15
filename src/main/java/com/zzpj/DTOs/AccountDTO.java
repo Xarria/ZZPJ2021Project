@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountAccessLevelDTO {
+public class AccountDTO {
 
     @NotBlank
     @Size(max = 24, message = "Login can not have more than 24 characters")

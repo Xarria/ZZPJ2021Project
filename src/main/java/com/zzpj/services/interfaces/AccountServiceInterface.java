@@ -1,15 +1,15 @@
 package com.zzpj.services.interfaces;
 
-import com.zzpj.DTOs.AccountAccessLevelDTO;
+import com.zzpj.DTOs.AccountDTO;
 import com.zzpj.model.Account;
 
 public interface AccountServiceInterface {
 
     void createAccount(Account account);
 
-    AccountAccessLevelDTO getAccountByLogin(String login);
+    AccountDTO getAccountByLogin(String login);
 
-    AccountAccessLevelDTO getAllAccounts();
+    AccountDTO getAllAccounts();
 
     void updateAccount(String login, Account updatedAccount);
 
