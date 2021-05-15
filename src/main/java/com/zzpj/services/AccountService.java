@@ -1,8 +1,10 @@
 package com.zzpj.services;
 
+import com.zzpj.DTOs.AccountAccessLevelDTO;
 import com.zzpj.model.Account;
 import com.zzpj.model.AccountPrincipal;
 import com.zzpj.repository.AccountRepository;
+import com.zzpj.services.interfaces.AccountServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountService implements UserDetailsService {
+public class AccountService implements UserDetailsService, AccountServiceInterface {
 
     private final AccountRepository accountRepository;
 
@@ -26,5 +28,36 @@ public class AccountService implements UserDetailsService {
                 .findFirst()
                 .orElseThrow( () -> new UsernameNotFoundException("Account with login " + username + " was not found."));
         return new AccountPrincipal(account);
+    }
+
+
+    @Override
+    public void createAccount(Account account) {
+
+    }
+
+    @Override
+    public AccountAccessLevelDTO getAccountByLogin(String login) {
+        return null;
+    }
+
+    @Override
+    public AccountAccessLevelDTO getAllAccounts() {
+        return null;
+    }
+
+    @Override
+    public void updateAccount(String login, Account updatedAccount) {
+
+    }
+
+    @Override
+    public void activateAccount(String login) {
+
+    }
+
+    @Override
+    public void deactivateAccount(String login) {
+
     }
 }
