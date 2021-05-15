@@ -32,8 +32,8 @@ public class Ingredient {
     @Column(name = "protein")
     private int protein;
 
-    @Column(name = "carbonhydrates")
-    private int carbonhydrates;
+    @Column(name = "carbohydrates")
+    private int carbohydrates;
 
     @Column(name = "fats")
     private int fats;
