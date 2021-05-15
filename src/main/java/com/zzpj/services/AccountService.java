@@ -1,6 +1,5 @@
 package com.zzpj.services;
 
-import com.zzpj.DTOs.AccountDTO;
 import com.zzpj.exceptions.EmailAlreadyExistsException;
 import com.zzpj.exceptions.LoginAlreadyExistsException;
 import com.zzpj.model.AccessLevel;
@@ -51,20 +50,15 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
 
     @Override
     public Account getAccountByLogin(String login) {
-//        return accountRepository.findAll().stream()
-//                .filter(acc -> acc.getLogin().equals(login))
-//                .findFirst()
-//                .orElseThrow(() -> new UsernameNotFoundException("Account with login " + login + " was not found."));
-        return accountRepository.findByLogin(login);
-    public AccountDTO getAccountByLogin(String login) {
-        return null;
+        return accountRepository.findAll().stream()
+                .filter(acc -> acc.getLogin().equals(login))
+                .findFirst()
+                .orElseThrow(() -> new UsernameNotFoundException("Account with login " + login + " was not found."));
     }
 
     @Override
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
-    public AccountDTO getAllAccounts() {
-        return null;
     }
 
     @Override
