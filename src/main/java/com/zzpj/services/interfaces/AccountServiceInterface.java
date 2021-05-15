@@ -1,19 +1,27 @@
 package com.zzpj.services.interfaces;
 
-import com.zzpj.DTOs.AccountAccessLevelDTO;
+import com.zzpj.exceptions.EmailAlreadyExistsException;
+import com.zzpj.exceptions.LoginAlreadyExistsException;
+import com.zzpj.model.AccessLevel;
 import com.zzpj.model.Account;
+
+import java.util.List;
 
 public interface AccountServiceInterface {
 
-    void createAccount(Account account);
+    void createAccount(Account account) throws LoginAlreadyExistsException, EmailAlreadyExistsException;
 
-    AccountAccessLevelDTO getAccountByLogin(String login);
+    Account getAccountByLogin(String login);
 
-    AccountAccessLevelDTO getAllAccounts();
+    List<Account> getAllAccounts();
 
     void updateAccount(String login, Account updatedAccount);
 
     void activateAccount(String login);
 
     void deactivateAccount(String login);
+
+    void addAccessLevel(AccessLevel accessLevel);
+
+    void removeAccessLevel(AccessLevel accessLevel);
 }

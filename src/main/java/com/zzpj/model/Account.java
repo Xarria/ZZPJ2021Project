@@ -12,6 +12,9 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "Account")
+@NamedQueries({
+        @NamedQuery(name = "Account.findByLogin", query = "SELECT a FROM Account a WHERE a.login = :login")
+})
 public class Account {
 
     @Id
