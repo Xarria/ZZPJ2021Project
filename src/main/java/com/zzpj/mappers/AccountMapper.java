@@ -4,8 +4,8 @@ import com.zzpj.DTOs.AccountAccessLevelDTO;
 
 public class AccountMapper {
 
-//    public static AccountAccessLevelDTO createAccountDTOFromAccountAccessLevel(){
-//        AccountAccessLevelDTO accountDTO = new AccountAccessLevelDTO();
-//
-//    }
+    public static AccountAccessLevelDTO createAccountDTOFromAccountAccessLevel(){
+        AccountAccessLevelDTO accountDTO = new AccountAccessLevelDTO();
+
+    }
 }
