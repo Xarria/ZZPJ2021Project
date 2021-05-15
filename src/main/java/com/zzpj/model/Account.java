@@ -26,15 +26,15 @@ public class Account {
     @NotNull
     @Column(name = "login", nullable = false)
     @Size(max = 24)
-    private String login; // max 24 chars
+    private String login;
 
     @NotNull
     @ToString.Exclude
-    @Column(name = "password", length = 64, nullable = false)
+    @Column(name = "password", length = 128, nullable = false)
     private String password;
 
     @NotNull
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, length = 100)
     private String email;
 
     @ManyToMany
@@ -46,7 +46,6 @@ public class Account {
     @JoinColumn(name = "access_level", nullable = false, referencedColumnName = "id")
     private AccessLevel accessLevel;
 
-    @NotNull
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 }
