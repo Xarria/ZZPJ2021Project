@@ -39,9 +39,9 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
     public void createAccount(Account account) throws LoginAlreadyExistsException, EmailAlreadyExistsException {
         List<Account> accounts = accountRepository.findAll();
         if (accounts.stream().anyMatch(a -> account.getLogin().equals(a.getLogin()))) {
-            throw new LoginAlreadyExistsException("Account with such login already exists");
+            throw new LoginAlreadyExistsException("Account with login " + account.getLogin() + "already exists");
         } else if (accounts.stream().anyMatch(a -> account.getEmail().equals(a.getEmail()))) {
-            throw new EmailAlreadyExistsException("Account with such e-mail already exists");
+            throw new EmailAlreadyExistsException("Account with e-mail " + account.getEmail() + "already exists");
         }
         account.setPassword(Sha512DigestUtils.shaHex(account.getPassword()));
         accountRepository.save(account);
