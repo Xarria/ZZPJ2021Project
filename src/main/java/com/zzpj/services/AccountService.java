@@ -50,10 +50,8 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
 
     @Override
     public Account getAccountByLogin(String login) {
-        return accountRepository.findAll().stream()
-                .filter(acc -> acc.getLogin().equals(login))
-                .findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("Account with login " + login + " was not found."));
+        // TODO co jak nie ma usera z takim loginem?
+        return accountRepository.findByLogin(login);
     }
 
     @Override

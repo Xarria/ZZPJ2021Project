@@ -1,6 +1,7 @@
 package com.zzpj.controllers;
 
 import com.zzpj.model.DTOs.AccountNoRecipesDTO;
+import com.zzpj.model.DTOs.AccountRecipesDTO;
 import com.zzpj.model.mappers.AccountMapper;
 import com.zzpj.model.entities.Account;
 import com.zzpj.services.AccountService;
@@ -35,8 +36,14 @@ public class AccountController {
     // read
     @GetMapping(path = "/accounts/{login}", produces = "application/json")
     public ResponseEntity<AccountNoRecipesDTO> getAccount(@PathVariable String login) {
-        AccountNoRecipesDTO account = AccountMapper.entityToAdminDTO(accountService.getAccountByLogin(login));
-        return ResponseEntity.ok(account);
+        AccountNoRecipesDTO accountNoRecipesDTO = AccountMapper.entityToAdminDTO(accountService.getAccountByLogin(login));
+        return ResponseEntity.ok(accountNoRecipesDTO);
+    }
+
+    @GetMapping(path = "/accounts/r/{login}", produces = "application/json")
+    public ResponseEntity<AccountRecipesDTO> getAccountRecipes(@PathVariable String login) {
+        AccountRecipesDTO accountRecipesDTO = AccountMapper.entityToRecipesDTO(accountService.getAccountByLogin(login));
+        return ResponseEntity.ok(accountRecipesDTO);
     }
 
     @GetMapping(path = "/accounts", produces = "application/json")
@@ -46,6 +53,15 @@ public class AccountController {
                 .stream().map(AccountMapper::entityToAdminDTO).collect(Collectors.toList());
 
         return ResponseEntity.ok(accounts);
+    }
+
+    @GetMapping(path = "/accounts/r", produces = "application/json")
+    public ResponseEntity<?> getAllAccountsRecipes() {
+        List<AccountRecipesDTO> accountRecipesDTOs = accountService.getAllAccounts().stream()
+                .map(AccountMapper::entityToRecipesDTO)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(accountRecipesDTOs);
     }
 
     // update
