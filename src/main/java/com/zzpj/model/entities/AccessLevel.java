@@ -1,4 +1,4 @@
-package com.zzpj.model;
+package com.zzpj.model.entities;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,6 +10,11 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name = "AccessLevel")
 public class AccessLevel implements GrantedAuthority {
+
+    public static final String ADMIN = "admin";
+    public static final String MODERATOR = "moderator";
+    public static final String USER = "user";
+
 
     @Id
     @NotNull

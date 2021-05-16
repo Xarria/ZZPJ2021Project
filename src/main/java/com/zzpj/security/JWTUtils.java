@@ -1,6 +1,5 @@
 package com.zzpj.security;
 
-import com.zzpj.model.AccessLevel;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -8,9 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
