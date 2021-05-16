@@ -82,14 +82,4 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
         account.setActive(false);
         accountRepository.save(account);
     }
-
-    @Override
-    public void addAccessLevel(AccessLevel accessLevel) {
-
-    }
-
-    @Override
-    public void removeAccessLevel(AccessLevel accessLevel) {
-
-    }
 }

@@ -2,7 +2,6 @@ package com.zzpj.services.interfaces;
 
 import com.zzpj.exceptions.EmailAlreadyExistsException;
 import com.zzpj.exceptions.LoginAlreadyExistsException;
-import com.zzpj.model.entities.AccessLevel;
 import com.zzpj.model.entities.Account;
 
 import java.util.List;
@@ -20,8 +19,4 @@ public interface AccountServiceInterface {
     void activateAccount(String login);
 
     void deactivateAccount(String login);
-
-    void addAccessLevel(AccessLevel accessLevel);
-
-    void removeAccessLevel(AccessLevel accessLevel);
 }

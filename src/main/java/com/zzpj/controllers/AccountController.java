@@ -31,7 +31,11 @@ public class AccountController {
         this.accessLevelService = accessLevelService;
     }
 
-    // create
+    // TODO Wszystko opakować wyjątkami
+
+
+    //region CREATE
+
     @PostMapping(path = "/accounts", consumes = "application/json")
     public ResponseEntity<AccountNoRecipesDTO> createAccount(@RequestBody AccountNoRecipesDTO accountDTO) {
         try {
@@ -62,8 +66,11 @@ public class AccountController {
 
         return ResponseEntity.ok().build();
     }
+    //endregion
 
-    // read
+
+    //region READ
+
     @GetMapping(path = "/accounts/{login}", produces = "application/json")
     public ResponseEntity<AccountNoRecipesDTO> getAccount(@PathVariable String login) {
         AccountNoRecipesDTO accountNoRecipesDTO = AccountMapper.entityToAdminDTO(accountService.getAccountByLogin(login));
@@ -93,6 +100,10 @@ public class AccountController {
 
         return ResponseEntity.ok(accountRecipesDTOs);
     }
+    //endregion
+
+
+    //region UPDATE
 
     // update
     @PutMapping(path = "/accounts/{login}", consumes = "application/json")
@@ -103,5 +114,20 @@ public class AccountController {
 
     // activity
 
+    @PutMapping(path = "accounts/activate/{login}")
+    public ResponseEntity<?> activateAccount(@PathVariable String login) {
+        accountService.activateAccount(login);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(path = "accounts/deactivate/{login}")
+    public ResponseEntity<?> deactivateAccount(@PathVariable String login) {
+        accountService.deactivateAccount(login);
+        return ResponseEntity.ok().build();
+    }
+    //endregion
+
     // access levels
+    // - Pewne obawy istnieją czy my na pewno chcemy zmieniać poziom dostępu? Bo jakoś tak dziwnie
+    //   mieć admina czy moda z dodanymi przepisami [szczególnie admina mod to kwestia dyskusyjna]
 }
