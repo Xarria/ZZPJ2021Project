@@ -15,14 +15,15 @@ CREATE TABLE Access_Level
 
 CREATE TABLE Account
 (
-    id               bigint       NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
-    login            varchar(24)  NOT NULL,
-    password         varchar(128)  NOT NULL,
-    email            varchar(100) NOT NULL,
-    access_level     bigint       NOT NULL,
-    active           boolean      NOT NULL,
+    id           bigint       NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
+    login        varchar(24)  NOT NULL,
+    password     varchar(128) NOT NULL,
+    email        varchar(100) NOT NULL,
+    access_level bigint       NOT NULL,
+    active       boolean      NOT NULL,
 
     CONSTRAINT account_primary_key_constraint PRIMARY KEY (id),
+    CONSTRAINT login_unique_constraint UNIQUE (login),
     CONSTRAINT access_level_foreign_key_constraint FOREIGN KEY (access_level) REFERENCES Access_Level (id)
 );
 
@@ -58,9 +59,9 @@ CREATE TABLE Recipe
 
 CREATE TABLE Recipe_Account
 (
-    id          bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
-    recipe_id   bigint NOT NULL,
-    account_id  bigint NOT NULL,
+    id         bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
+    recipe_id  bigint NOT NULL,
+    account_id bigint NOT NULL,
 
     CONSTRAINT recipe_account_con_primary_key_constraint PRIMARY KEY (id),
     CONSTRAINT recipe_id_foreign_key_constraint FOREIGN KEY (recipe_id) REFERENCES Recipe (id),
@@ -69,9 +70,9 @@ CREATE TABLE Recipe_Account
 
 CREATE TABLE Recipe_Ingredient
 (
-    id          bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
-    recipe_id   bigint NOT NULL,
-    ingredient_id  bigint NOT NULL,
+    id            bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
+    recipe_id     bigint NOT NULL,
+    ingredient_id bigint NOT NULL,
 
     CONSTRAINT recipe_ingredient_con_primary_key_constraint PRIMARY KEY (id),
     CONSTRAINT recipe_id_foreign_key_constraint FOREIGN KEY (recipe_id) REFERENCES Recipe (id),
