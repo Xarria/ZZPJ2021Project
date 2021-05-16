@@ -1,5 +1,6 @@
 package com.zzpj.controllers;
 
+import com.zzpj.exceptions.AccountDoesNotExistException;
 import com.zzpj.exceptions.EmailAlreadyExistsException;
 import com.zzpj.exceptions.LoginAlreadyExistsException;
 import com.zzpj.model.DTOs.AccountNoRecipesDTO;
@@ -73,13 +74,23 @@ public class AccountController {
 
     @GetMapping(path = "/accounts/{login}", produces = "application/json")
     public ResponseEntity<AccountNoRecipesDTO> getAccount(@PathVariable String login) {
-        AccountNoRecipesDTO accountNoRecipesDTO = AccountMapper.entityToAdminDTO(accountService.getAccountByLogin(login));
+        AccountNoRecipesDTO accountNoRecipesDTO;
+        try {
+            accountNoRecipesDTO = AccountMapper.entityToAdminDTO(accountService.getAccountByLogin(login));
+        } catch (AccountDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok(accountNoRecipesDTO);
     }
 
     @GetMapping(path = "/accounts/r/{login}", produces = "application/json")
     public ResponseEntity<AccountRecipesDTO> getAccountRecipes(@PathVariable String login) {
-        AccountRecipesDTO accountRecipesDTO = AccountMapper.entityToRecipesDTO(accountService.getAccountByLogin(login));
+        AccountRecipesDTO accountRecipesDTO;
+        try {
+            accountRecipesDTO = AccountMapper.entityToRecipesDTO(accountService.getAccountByLogin(login));
+        } catch (AccountDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok(accountRecipesDTO);
     }
 
@@ -102,32 +113,39 @@ public class AccountController {
     }
     //endregion
 
-
     //region UPDATE
 
     // update
     @PutMapping(path = "/accounts/{login}", consumes = "application/json")
-    public ResponseEntity<?> updateAccount(@PathVariable String login, @RequestBody AccountNoRecipesDTO account) {
-        //TODO update account (dto to entity mapper required)
+    public ResponseEntity<?> updateAccount(@PathVariable String login, @RequestBody AccountNoRecipesDTO accountDTO) {
+        try {
+            AccessLevel accessLevel = accessLevelService.getAccessLevelByName(accountDTO.getAccessLevel());
+            accountService.updateAccount(login, AccountMapper.noRecipesDTOWithAccessLevelToEntity(accountDTO, accessLevel));
+        } catch (AccountDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     // activity
-
     @PutMapping(path = "accounts/activate/{login}")
     public ResponseEntity<?> activateAccount(@PathVariable String login) {
-        accountService.activateAccount(login);
+        try {
+            accountService.activateAccount(login);
+        } catch (AccountDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok().build();
     }
 
     @PutMapping(path = "accounts/deactivate/{login}")
     public ResponseEntity<?> deactivateAccount(@PathVariable String login) {
-        accountService.deactivateAccount(login);
+        try {
+            accountService.deactivateAccount(login);
+        } catch (AccountDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok().build();
     }
     //endregion
-
-    // access levels
-    // - Pewne obawy istnieją czy my na pewno chcemy zmieniać poziom dostępu? Bo jakoś tak dziwnie
-    //   mieć admina czy moda z dodanymi przepisami [szczególnie admina mod to kwestia dyskusyjna]
 }
