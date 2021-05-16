@@ -2,6 +2,7 @@ package com.zzpj.model.mappers;
 
 import com.zzpj.model.DTOs.AccountNoRecipesDTO;
 import com.zzpj.model.DTOs.AccountRecipesDTO;
+import com.zzpj.model.entities.AccessLevel;
 import com.zzpj.model.entities.Account;
 
 import java.util.stream.Collectors;
@@ -20,12 +21,12 @@ public class AccountMapper {
         return accountNoRecipesDTO;
     }
 
-    public static Account adminDtoToEntity(AccountNoRecipesDTO accountNoRecipesDTO) {
+    public static Account noRecipesDTOWithAccessLevelToEntity(AccountNoRecipesDTO accountNoRecipesDTO, AccessLevel accessLevel) {
         Account account = new Account();
         account.setLogin(accountNoRecipesDTO.getLogin());
         account.setPassword(accountNoRecipesDTO.getPassword());
         account.setEmail(accountNoRecipesDTO.getEmail());
-//        account.setAccessLevel(accountNoRecipesDTO.getAccessLevel());
+        account.setAccessLevel(accessLevel);
         return account;
     }
 

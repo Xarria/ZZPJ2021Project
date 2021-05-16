@@ -1,5 +1,6 @@
 package com.zzpj.security;
 
+import com.zzpj.model.entities.AccessLevel;
 import com.zzpj.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,12 +37,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                .anyRequest().authenticated()
+                    .authorizeRequests()
+                        .antMatchers(HttpMethod.POST, "/auth", "/register")
+                            .permitAll()
+                    .antMatchers(HttpMethod.POST, "/accounts/**")
+                        .hasAuthority(AccessLevel.ADMIN)
+                    .antMatchers(HttpMethod.GET, "/accounts/**")
+                        .permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                    .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

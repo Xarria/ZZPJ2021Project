@@ -11,6 +11,11 @@ import javax.validation.constraints.NotNull;
 @Table(name = "AccessLevel")
 public class AccessLevel implements GrantedAuthority {
 
+    public static final String ADMIN = "admin";
+    public static final String MODERATOR = "moderator";
+    public static final String USER = "user";
+
+
     @Id
     @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)

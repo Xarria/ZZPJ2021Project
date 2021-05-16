@@ -7,6 +7,7 @@ import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.AccountPrincipal;
 import com.zzpj.repository.AccessLevelRepository;
 import com.zzpj.repository.AccountRepository;
+import com.zzpj.services.interfaces.AccessLevelServiceInterface;
 import com.zzpj.services.interfaces.AccountServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.token.Sha512DigestUtils;
@@ -22,12 +23,12 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
 
     private final AccountRepository accountRepository;
 
-    private final AccessLevelRepository accessLevelRepository;
+    private final AccessLevelServiceInterface accessLevelService;
 
     @Autowired
-    public AccountService(AccountRepository accountRepository, AccessLevelRepository accessLevelRepository) {
+    public AccountService(AccountRepository accountRepository, AccessLevelServiceInterface accessLevelService) {
         this.accountRepository = accountRepository;
-        this.accessLevelRepository = accessLevelRepository;
+        this.accessLevelService = accessLevelService;
     }
 
     @Override
@@ -49,9 +50,7 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
             throw new EmailAlreadyExistsException("Account with such e-mail already exists");
         }
         account.setPassword(Sha512DigestUtils.shaHex(account.getPassword()));
-//        AccessLevel accessLevel = accessLevelRepository.findAccessLevelByName(account.getAccessLevel());
-//        account.setAccessLevel(accessLevel);
-//        accountRepository.save(account);
+        accountRepository.save(account);
     }
 
     @Override
