@@ -24,7 +24,7 @@ public class Account {
     private Long id;
 
     @NotNull
-    @Column(name = "login", nullable = false)
+    @Column(name = "login", nullable = false, unique = true)
     @Size(max = 24)
     private String login;
 
