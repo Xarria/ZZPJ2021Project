@@ -1,5 +1,7 @@
 package com.zzpj.controllers;
 
+import com.zzpj.exceptions.EmailAlreadyExistsException;
+import com.zzpj.exceptions.LoginAlreadyExistsException;
 import com.zzpj.model.DTOs.AccountNoRecipesDTO;
 import com.zzpj.model.DTOs.AccountRecipesDTO;
 import com.zzpj.model.mappers.AccountMapper;
@@ -26,11 +28,15 @@ public class AccountController {
     }
 
     // create
-    @PostMapping(path = "/accounts", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createAccount(@RequestBody AccountNoRecipesDTO account) {
-        //TODO crete account (dto to entity mapper required)
-        Account createdAccount = new Account();
-        return ResponseEntity.created(URI.create("/accounts/" + createdAccount.getLogin())).build();
+    @PostMapping(path = "/accounts", consumes = "application/json")
+    public ResponseEntity<AccountNoRecipesDTO> createAccount(@RequestBody AccountNoRecipesDTO account) {
+        try {
+            accountService.createAccount(AccountMapper.adminDtoToEntity(account));
+        } catch (LoginAlreadyExistsException | EmailAlreadyExistsException ex) {
+            ex.printStackTrace();
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     // read

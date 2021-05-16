@@ -15,12 +15,12 @@ CREATE TABLE Access_Level
 
 CREATE TABLE Account
 (
-    id           bigint       NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
-    login        varchar(24)  NOT NULL,
-    password     varchar(128) NOT NULL,
-    email        varchar(100) NOT NULL,
-    access_level bigint       NOT NULL,
-    active       boolean      NOT NULL,
+    id           bigint                 NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
+    login        varchar(24)            NOT NULL,
+    password     varchar(128)           NOT NULL,
+    email        varchar(100)           NOT NULL,
+    access_level bigint                 NOT NULL,
+    active       boolean DEFAULT true   NOT NULL,
 
     CONSTRAINT account_primary_key_constraint PRIMARY KEY (id),
     CONSTRAINT login_unique_constraint UNIQUE (login),

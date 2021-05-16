@@ -27,7 +27,7 @@ public class AccountNoRecipesDTO {
     private String email;
 
     @NotNull
-    private AccessLevelDTO accessLevel;
+    private String accessLevel;
 
     private Boolean active;
 }

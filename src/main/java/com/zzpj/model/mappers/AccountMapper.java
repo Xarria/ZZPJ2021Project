@@ -12,12 +12,21 @@ public class AccountMapper {
         AccountNoRecipesDTO accountNoRecipesDTO = new AccountNoRecipesDTO();
 
         accountNoRecipesDTO.setLogin(account.getLogin());
-        // We dont want to send password
+        accountNoRecipesDTO.setPassword("");
         accountNoRecipesDTO.setEmail(account.getEmail());
-        accountNoRecipesDTO.setAccessLevel(AccessLevelMapper.entityToDTO(account.getAccessLevel()));
+        accountNoRecipesDTO.setAccessLevel(account.getAccessLevel().getName());
         accountNoRecipesDTO.setActive(account.getActive());
 
         return accountNoRecipesDTO;
+    }
+
+    public static Account adminDtoToEntity(AccountNoRecipesDTO accountNoRecipesDTO) {
+        Account account = new Account();
+        account.setLogin(accountNoRecipesDTO.getLogin());
+        account.setPassword(accountNoRecipesDTO.getPassword());
+        account.setEmail(accountNoRecipesDTO.getEmail());
+//        account.setAccessLevel(accountNoRecipesDTO.getAccessLevel());
+        return account;
     }
 
     public static AccountRecipesDTO entityToRecipesDTO(Account account) {
