@@ -1,7 +1,7 @@
-package com.zzpj.mappers;
+package com.zzpj.model.mappers;
 
-import com.zzpj.DTOs.IngredientDTO;
-import com.zzpj.model.Ingredient;
+import com.zzpj.model.DTOs.IngredientDTO;
+import com.zzpj.model.entities.Ingredient;
 
 public class IngredientsMapper {
 

@@ -2,9 +2,9 @@ package com.zzpj.services;
 
 import com.zzpj.exceptions.EmailAlreadyExistsException;
 import com.zzpj.exceptions.LoginAlreadyExistsException;
-import com.zzpj.model.AccessLevel;
-import com.zzpj.model.Account;
-import com.zzpj.model.AccountPrincipal;
+import com.zzpj.model.entities.AccessLevel;
+import com.zzpj.model.entities.Account;
+import com.zzpj.model.entities.AccountPrincipal;
 import com.zzpj.repository.AccountRepository;
 import com.zzpj.services.interfaces.AccountServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;

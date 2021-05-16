@@ -1,8 +1,8 @@
 package com.zzpj.controllers;
 
-import com.zzpj.DTOs.AccountDTO;
-import com.zzpj.mappers.AccountMapper;
-import com.zzpj.model.Account;
+import com.zzpj.model.DTOs.AccountNoRecipesDTO;
+import com.zzpj.model.mappers.AccountMapper;
+import com.zzpj.model.entities.Account;
 import com.zzpj.services.AccountService;
 import com.zzpj.services.interfaces.AccountServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AccountController {
 
     // create
     @PostMapping(path = "/accounts", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createAccount(@RequestBody AccountDTO account) {
+    public ResponseEntity<?> createAccount(@RequestBody AccountNoRecipesDTO account) {
         //TODO crete account (dto to entity mapper required)
         Account createdAccount = new Account();
         return ResponseEntity.created(URI.create("/accounts/" + createdAccount.getLogin())).build();
@@ -34,23 +34,23 @@ public class AccountController {
 
     // read
     @GetMapping(path = "/accounts/{login}", produces = "application/json")
-    public ResponseEntity<AccountDTO> getAccount(@PathVariable String login) {
-        AccountDTO account = AccountMapper.entityToDTO(accountService.getAccountByLogin(login));
+    public ResponseEntity<AccountNoRecipesDTO> getAccount(@PathVariable String login) {
+        AccountNoRecipesDTO account = AccountMapper.entityToAdminDTO(accountService.getAccountByLogin(login));
         return ResponseEntity.ok(account);
     }
 
     @GetMapping(path = "/accounts", produces = "application/json")
     public ResponseEntity<?> getAllAccounts() {
         //TODO
-        List<AccountDTO> accounts = accountService.getAllAccounts()
-                .stream().map(AccountMapper::entityToDTO).collect(Collectors.toList());
+        List<AccountNoRecipesDTO> accounts = accountService.getAllAccounts()
+                .stream().map(AccountMapper::entityToAdminDTO).collect(Collectors.toList());
 
         return ResponseEntity.ok(accounts);
     }
 
     // update
     @PutMapping(path = "/accounts/{login}", consumes = "application/json")
-    public ResponseEntity<?> updateAccount(@PathVariable String login, @RequestBody AccountDTO account) {
+    public ResponseEntity<?> updateAccount(@PathVariable String login, @RequestBody AccountNoRecipesDTO account) {
         //TODO update account (dto to entity mapper required)
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

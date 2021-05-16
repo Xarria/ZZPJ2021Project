@@ -1,4 +1,4 @@
-package com.zzpj.model;
+package com.zzpj.model.entities;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

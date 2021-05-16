@@ -1,6 +1,6 @@
 package com.zzpj.security;
 
-import com.zzpj.DTOs.UserCredentials;
+import com.zzpj.model.DTOs.UserCredentials;
 import com.zzpj.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -2,8 +2,8 @@ package com.zzpj.services.interfaces;
 
 import com.zzpj.exceptions.EmailAlreadyExistsException;
 import com.zzpj.exceptions.LoginAlreadyExistsException;
-import com.zzpj.model.AccessLevel;
-import com.zzpj.model.Account;
+import com.zzpj.model.entities.AccessLevel;
+import com.zzpj.model.entities.Account;
 
 import java.util.List;
 

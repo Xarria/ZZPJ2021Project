@@ -1,4 +1,4 @@
-package com.zzpj.model;
+package com.zzpj.model.entities;
 
 import lombok.Data;
 import lombok.ToString;
@@ -24,8 +24,7 @@ public class Account {
     private Long id;
 
     @NotNull
-    @Column(name = "login", nullable = false, unique = true)
-    @Size(max = 24)
+    @Column(name = "login", nullable = false, unique = true, length = 24)
     private String login;
 
     @NotNull
@@ -34,7 +33,7 @@ public class Account {
     private String password;
 
     @NotNull
-    @Column(name = "email", nullable = false, length = 100)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
     @OneToMany

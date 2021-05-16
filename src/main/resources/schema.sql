@@ -24,6 +24,7 @@ CREATE TABLE Account
 
     CONSTRAINT account_primary_key_constraint PRIMARY KEY (id),
     CONSTRAINT login_unique_constraint UNIQUE (login),
+    CONSTRAINT email_unique_constraint UNIQUE (email),
     CONSTRAINT access_level_foreign_key_constraint FOREIGN KEY (access_level) REFERENCES Access_Level (id)
 );
 

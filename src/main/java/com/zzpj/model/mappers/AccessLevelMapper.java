@@ -1,7 +1,7 @@
-package com.zzpj.mappers;
+package com.zzpj.model.mappers;
 
-import com.zzpj.DTOs.AccessLevelDTO;
-import com.zzpj.model.AccessLevel;
+import com.zzpj.model.DTOs.AccessLevelDTO;
+import com.zzpj.model.entities.AccessLevel;
 
 public class AccessLevelMapper {
 

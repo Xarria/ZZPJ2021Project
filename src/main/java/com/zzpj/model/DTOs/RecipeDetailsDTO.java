@@ -1,4 +1,4 @@
-package com.zzpj.DTOs;
+package com.zzpj.model.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,12 +10,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecipeDTO {
+public class RecipeDetailsDTO {
 
     // TODO nałożyć ograniczenia na pola
     private String name;
 
-    private AccountDTO author;
+    private String authorLogin;
 
     private String description;
 
@@ -23,7 +23,7 @@ public class RecipeDTO {
 
     private Float rating;
 
-    private List<String> recipeTags = new ArrayList<>();
+    private List<String> tags = new ArrayList<>();
 
     private Byte[] image;
 
@@ -31,7 +31,7 @@ public class RecipeDTO {
 
     private Integer calories;
 
-    private Long prepareTimeInMinutes;
+    private Long preparationTimeInMinutes;
 
     private String difficulty;
 }

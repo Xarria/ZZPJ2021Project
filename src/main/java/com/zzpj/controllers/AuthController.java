@@ -1,6 +1,6 @@
 package com.zzpj.controllers;
 
-import com.zzpj.DTOs.UserCredentials;
+import com.zzpj.model.DTOs.UserCredentials;
 import com.zzpj.security.JWTUtils;
 import com.zzpj.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

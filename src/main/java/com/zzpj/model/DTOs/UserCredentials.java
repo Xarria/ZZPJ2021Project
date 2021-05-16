@@ -1,4 +1,4 @@
-package com.zzpj.DTOs;
+package com.zzpj.model.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
