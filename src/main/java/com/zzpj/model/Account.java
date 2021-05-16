@@ -37,8 +37,11 @@ public class Account {
     @Column(name = "email", nullable = false, length = 100)
     private String email;
 
-    @ManyToMany
-    @JoinTable(name = "Recipe_Account")
+    @OneToMany
+    @JoinTable(
+            name = "Recipe_Account",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private List<Recipe> favouriteRecipes = new ArrayList<>();
 
     @NotNull
