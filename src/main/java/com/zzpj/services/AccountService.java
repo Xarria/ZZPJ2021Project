@@ -1,15 +1,20 @@
 package com.zzpj.services;
 
-import com.zzpj.DTOs.AccountDTO;
+import com.zzpj.exceptions.EmailAlreadyExistsException;
+import com.zzpj.exceptions.LoginAlreadyExistsException;
+import com.zzpj.model.AccessLevel;
 import com.zzpj.model.Account;
 import com.zzpj.model.AccountPrincipal;
 import com.zzpj.repository.AccountRepository;
 import com.zzpj.services.interfaces.AccountServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.token.Sha512DigestUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AccountService implements UserDetailsService, AccountServiceInterface {
@@ -26,24 +31,34 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
         Account account = accountRepository.findAll().stream()
                 .filter(acc -> acc.getLogin().equals(username))
                 .findFirst()
-                .orElseThrow( () -> new UsernameNotFoundException("Account with login " + username + " was not found."));
+                .orElseThrow(() -> new UsernameNotFoundException("Account with login " + username + " was not found."));
         return new AccountPrincipal(account);
     }
 
 
     @Override
-    public void createAccount(Account account) {
-
+    public void createAccount(Account account) throws LoginAlreadyExistsException, EmailAlreadyExistsException {
+        List<Account> accounts = accountRepository.findAll();
+        if (accounts.stream().anyMatch(a -> account.getLogin().equals(a.getLogin()))) {
+            throw new LoginAlreadyExistsException("Account with such login already exists");
+        } else if (accounts.stream().anyMatch(acc -> account.getEmail().equals(acc.getEmail()))) {
+            throw new EmailAlreadyExistsException("Account with such e-mail already exists");
+        }
+        account.setPassword(Sha512DigestUtils.shaHex(account.getPassword()));
+        accountRepository.save(account);
     }
 
     @Override
-    public AccountDTO getAccountByLogin(String login) {
-        return null;
+    public Account getAccountByLogin(String login) {
+        return accountRepository.findAll().stream()
+                .filter(acc -> acc.getLogin().equals(login))
+                .findFirst()
+                .orElseThrow(() -> new UsernameNotFoundException("Account with login " + login + " was not found."));
     }
 
     @Override
-    public AccountDTO getAllAccounts() {
-        return null;
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
     }
 
     @Override
@@ -58,6 +73,16 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
 
     @Override
     public void deactivateAccount(String login) {
+
+    }
+
+    @Override
+    public void addAccessLevel(AccessLevel accessLevel) {
+
+    }
+
+    @Override
+    public void removeAccessLevel(AccessLevel accessLevel) {
 
     }
 }
