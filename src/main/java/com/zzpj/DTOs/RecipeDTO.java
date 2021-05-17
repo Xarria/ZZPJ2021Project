@@ -1,5 +1,6 @@
 package com.zzpj.DTOs;
 
+import com.zzpj.model.DTOs.AccountNoRecipesDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +25,7 @@ public class RecipeDTO {
     private String name;
 
     @NotNull
-    private AccountAccessLevelDTO author;
+    private AccountNoRecipesDTO author;
 
     @NotBlank
     private String description;
@@ -38,7 +39,7 @@ public class RecipeDTO {
 
     private List<String> recipeTags = new ArrayList<>();
 
-    private List<AccountAccessLevelDTO> accounts = new ArrayList<>();
+    private List<AccountNoRecipesDTO> accounts = new ArrayList<>();
 
     @NotNull
     private Byte[] image;
