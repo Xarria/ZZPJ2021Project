@@ -3,6 +3,7 @@ package com.zzpj.services.interfaces;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
+import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 
 import java.io.IOException;
@@ -19,6 +20,8 @@ public interface RecipeServiceInterface {
     void deleteRecipe(Long id) throws RecipeDoesNotExistException;
 
     void updateRecipe(Long id, Recipe updatedRecipe) throws RecipeDoesNotExistException;
+
+    void addIngredient(Long recipeId, Ingredient ingredient) throws RecipeDoesNotExistException;
 
     void saveRecipeToFilesystem(Long id, String filename) throws IOException, RecipeDoesNotExistException;
 

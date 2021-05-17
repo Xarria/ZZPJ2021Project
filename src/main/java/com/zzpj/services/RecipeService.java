@@ -3,6 +3,7 @@ package com.zzpj.services;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
+import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 import com.zzpj.model.mappers.RecipeMapper;
 import com.zzpj.repository.RecipeRepository;
@@ -63,6 +64,19 @@ public class RecipeService implements RecipeServiceInterface {
         recipe.setName(updatedRecipe.getName());
         recipe.setDescription(updatedRecipe.getDescription());
         recipe.setCalories(updatedRecipe.getCalories());
+        recipeRepository.save(recipe);
+    }
+
+    @Override
+    public void addIngredient(Long recipeId, Ingredient ingredient) throws RecipeDoesNotExistException {
+        Recipe recipe = recipeRepository.findAll().stream()
+            .filter(r -> r.getId().equals(recipeId))
+            .findFirst()
+            .orElseThrow(() -> new RecipeDoesNotExistException("Recipe with id " + recipeId + " was not found."));
+
+        List<Ingredient> ingredients = recipe.getRecipeIngredients();
+        ingredients.add(ingredient);
+        recipe.setRecipeIngredients(ingredients);
         recipeRepository.save(recipe);
     }
 
