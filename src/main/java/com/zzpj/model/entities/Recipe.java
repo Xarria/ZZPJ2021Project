@@ -1,4 +1,4 @@
-package com.zzpj.model;
+package com.zzpj.model.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,9 +47,6 @@ public class Recipe {
 
     @ElementCollection
     private List<String> recipeTags = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "favouriteRecipes")
-    private List<Account> accounts = new ArrayList<>();
 
     @NotNull
     @Column(name = "image", nullable = false)

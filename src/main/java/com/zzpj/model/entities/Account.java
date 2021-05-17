@@ -1,4 +1,4 @@
-package com.zzpj.model;
+package com.zzpj.model.entities;
 
 import lombok.Data;
 import lombok.ToString;
@@ -12,30 +12,34 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "Account")
+@NamedQueries({
+        @NamedQuery(name = "Account.findByLogin", query = "SELECT a FROM Account a WHERE a.login = :login")
+})
 public class Account {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @NotNull
-    @Column(name = "login", nullable = false)
-    @Size(max = 24)
-    private String login; // max 24 chars
+    @Column(name = "login", nullable = false, unique = true, length = 24)
+    private String login;
 
     @NotNull
     @ToString.Exclude
-    @Column(name = "password", length = 64, nullable = false)
+    @Column(name = "password", length = 128, nullable = false)
     private String password;
 
     @NotNull
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
 
-    @ManyToMany
-    @JoinTable(name = "Recipe_Account")
+    @OneToMany
+    @JoinTable(
+            name = "Recipe_Account",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "recipe_id"))
     private List<Recipe> favouriteRecipes = new ArrayList<>();
 
     @NotNull
@@ -43,7 +47,6 @@ public class Account {
     @JoinColumn(name = "access_level", nullable = false, referencedColumnName = "id")
     private AccessLevel accessLevel;
 
-    @NotNull
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    private Boolean active = true;
 }
