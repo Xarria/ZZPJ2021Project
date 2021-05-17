@@ -42,4 +42,16 @@ public class RecipeMapper {
 
         return recipeDetailsDTO;
     }
+
+    public static Recipe generalDTOToEntity(RecipeGeneralDTO recipeGeneralDTO) {
+        Recipe recipe = new Recipe();
+
+        recipe.setName(recipeGeneralDTO.getName());
+        recipe.setRating(recipeGeneralDTO.getRating());
+        recipe.setCalories(recipeGeneralDTO.getCalories());
+        recipe.setPrepareTimeInMinutes(recipeGeneralDTO.getPreparationTimeInMinutes());
+        recipe.setImage(recipeGeneralDTO.getImage());
+
+        return recipe;
+    }
 }

@@ -1,4 +1,4 @@
-package com.zzpj.mappers;
+package com.zzpj.model.mappers;
 
 
 import com.zzpj.model.DTOs.RecipeDetailsDTO;

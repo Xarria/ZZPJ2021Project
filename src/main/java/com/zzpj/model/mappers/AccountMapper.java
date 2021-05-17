@@ -15,19 +15,10 @@ public class AccountMapper {
         accountNoRecipesDTO.setLogin(account.getLogin());
         accountNoRecipesDTO.setPassword("");
         accountNoRecipesDTO.setEmail(account.getEmail());
-        accountNoRecipesDTO.setAccessLevel(account.getAccessLevel().getName());
+        accountNoRecipesDTO.setAccessLevel(AccessLevelMapper.entityToDTO(account.getAccessLevel()));
         accountNoRecipesDTO.setActive(account.getActive());
 
         return accountNoRecipesDTO;
-    }
-
-    public static Account noRecipesDTOWithAccessLevelToEntity(AccountNoRecipesDTO accountNoRecipesDTO, AccessLevel accessLevel) {
-        Account account = new Account();
-        account.setLogin(accountNoRecipesDTO.getLogin());
-        account.setPassword(accountNoRecipesDTO.getPassword());
-        account.setEmail(accountNoRecipesDTO.getEmail());
-        account.setAccessLevel(accessLevel);
-        return account;
     }
 
     public static AccountRecipesDTO entityToRecipesDTO(Account account) {
@@ -38,8 +29,30 @@ public class AccountMapper {
         accountRecipesDTO.setFavouriteRecipes(account.getFavouriteRecipes().stream()
                 .map(RecipeMapper::entityToGeneralDTO)
                 .collect(Collectors.toList()));
+
         return accountRecipesDTO;
     }
 
-    //TODO dto to entity mapper
+    public static Account noRecipesDTOWithAccessLevelToEntity(AccountNoRecipesDTO accountNoRecipesDTO, AccessLevel accessLevel) {
+        Account account = new Account();
+
+        account.setLogin(accountNoRecipesDTO.getLogin());
+        account.setPassword(accountNoRecipesDTO.getPassword());
+        account.setEmail(accountNoRecipesDTO.getEmail());
+        account.setAccessLevel(accessLevel);
+        account.setActive(accountNoRecipesDTO.getActive());
+
+        return account;
+    }
+
+    public static Account recipesDTOWithAccessLevelToEntity(AccountRecipesDTO accountRecipesDTO, AccessLevel accessLevel) {
+        Account account = new Account();
+
+        account.setLogin(accountRecipesDTO.getLogin());
+        account.setEmail(accountRecipesDTO.getEmail());
+        account.setFavouriteRecipes(accountRecipesDTO.getFavouriteRecipes().stream()
+                .map(RecipeMapper::generalDTOToEntity)
+                .collect(Collectors.toList()));
+        return account;
+    }
 }
