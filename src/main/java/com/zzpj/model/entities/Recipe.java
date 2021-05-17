@@ -1,16 +1,21 @@
 package com.zzpj.model.entities;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "Recipe")
-public class Recipe {
+public class Recipe implements Serializable {
 
     @Id
     @NotNull
