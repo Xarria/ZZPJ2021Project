@@ -1,5 +1,6 @@
 package com.zzpj.services;
 
+import com.zzpj.exceptions.AccountDoesNotExistException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
@@ -32,17 +33,16 @@ public class RecipeService implements RecipeServiceInterface {
     }
 
     @Override
-    public RecipeDetailsDTO getRecipeById(Long id) throws RecipeDoesNotExistException {
-        Recipe recipe = recipeRepository.findAll().stream()
-                .filter(r -> r.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RecipeDoesNotExistException("Recipe with id " + id + " was not found."));
-        return RecipeMapper.entityToDetailsDTO(recipe);
+    public Recipe getRecipeById(Long id) throws RecipeDoesNotExistException {
+        if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(id))) {
+            throw new RecipeDoesNotExistException("Recipe with id " + id + " was not found.");
+        }
+        return recipeRepository.findRecipeById(id);
     }
 
     @Override
-    public List<RecipeGeneralDTO> getAllRecipes() {
-        return recipeRepository.findAll().stream().map(RecipeMapper::entityToGeneralDTO).collect(Collectors.toList());
+    public List<Recipe> getAllRecipes() {
+        return recipeRepository.findAll();
     }
 
     @Override
@@ -56,10 +56,10 @@ public class RecipeService implements RecipeServiceInterface {
 
     @Override
     public void updateRecipe(Long id, Recipe updatedRecipe) throws RecipeDoesNotExistException {
-        Recipe recipe = recipeRepository.findAll().stream()
-                .filter(r -> r.getId().equals(id))
-                .findFirst()
-                .orElseThrow(() -> new RecipeDoesNotExistException("Recipe with id " + id + " was not found."));
+        if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(id))) {
+            throw new RecipeDoesNotExistException("Recipe with id " + id + " was not found.");
+        }
+        Recipe recipe = recipeRepository.findRecipeById(id);
         //TODO ustalić zmieniane pola
         recipe.setName(updatedRecipe.getName());
         recipe.setDescription(updatedRecipe.getDescription());
@@ -69,10 +69,10 @@ public class RecipeService implements RecipeServiceInterface {
 
     @Override
     public void addIngredient(Long recipeId, Ingredient ingredient) throws RecipeDoesNotExistException {
-        Recipe recipe = recipeRepository.findAll().stream()
-            .filter(r -> r.getId().equals(recipeId))
-            .findFirst()
-            .orElseThrow(() -> new RecipeDoesNotExistException("Recipe with id " + recipeId + " was not found."));
+        if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(recipeId))) {
+            throw new RecipeDoesNotExistException("Recipe with id " + recipeId + " was not found.");
+        }
+        Recipe recipe = recipeRepository.findRecipeById(recipeId);
 
         List<Ingredient> ingredients = recipe.getRecipeIngredients();
         ingredients.add(ingredient);

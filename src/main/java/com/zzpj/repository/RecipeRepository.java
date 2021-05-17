@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, Long> {
 
-    Recipe findById(String id);
+    Recipe findRecipeById(Long id);
 }
