@@ -1,6 +1,7 @@
 package com.zzpj.services;
 
 import com.zzpj.exceptions.IngredientNotFoundException;
+import com.zzpj.exceptions.URLNotFoundException;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.parsers.IngredientJsonParser;
 import com.zzpj.security.SecurityConstants;
@@ -15,7 +16,7 @@ import java.net.URL;
 public class IngredientService implements IngredientServiceInterface {
 
     @Override
-    public Ingredient getIngredientsByKeyword(String keyword) throws IngredientNotFoundException, IOException {
+    public Ingredient getIngredientsByKeyword(String keyword) throws URLNotFoundException, IngredientNotFoundException, IOException {
         String requestUrl = getRequest(keyword);
         URL url = new URL(requestUrl);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -24,6 +25,9 @@ public class IngredientService implements IngredientServiceInterface {
         connection.setReadTimeout(5000);
 
         int status = connection.getResponseCode();
+        if (status == 404) {
+            throw new URLNotFoundException("404 Error thrown");
+        }
 
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         String inputLine;
@@ -32,8 +36,6 @@ public class IngredientService implements IngredientServiceInterface {
             content.append(inputLine);
         }
         in.close();
-
-        System.out.println(content);
 
         return IngredientJsonParser.parse(content.toString());
     }

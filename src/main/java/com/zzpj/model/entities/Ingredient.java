@@ -12,11 +12,9 @@ import java.util.List;
 @Table(name = "Ingredient")
 public class Ingredient {
 
-    @Id
     @NotNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
-    private Long id;
+    private String id;
 
     @NotNull
     @Column(name = "name", nullable = false)
@@ -24,7 +22,7 @@ public class Ingredient {
 
     @NotNull
     @Column(name = "quantity", nullable = false)
-    private Long quantity;
+    private Double quantity;
 
     @Column(name = "calories")
     private int calories;

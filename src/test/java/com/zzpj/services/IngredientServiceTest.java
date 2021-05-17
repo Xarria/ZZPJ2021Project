@@ -1,6 +1,7 @@
 package com.zzpj.services;
 
 import com.zzpj.exceptions.IngredientNotFoundException;
+import com.zzpj.exceptions.URLNotFoundException;
 import com.zzpj.security.SecurityConstants;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,9 +11,11 @@ import java.io.IOException;
 class IngredientServiceTest {
 
     @Test
-    void getIngredientsByKeyword() throws IOException, IngredientNotFoundException {
+    void getIngredientsByKeyword() throws IOException, IngredientNotFoundException, URLNotFoundException {
         IngredientService ing = new IngredientService();
         ing.getIngredientsByKeyword("mint leaves");
+
+        Assertions.assertNotNull(ing);
     }
 
     @Test
