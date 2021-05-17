@@ -1,4 +1,4 @@
-package com.zzpj.model;
+package com.zzpj.model.entities;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,8 +15,6 @@ public class AccountPrincipal implements UserDetails {
     public AccountPrincipal(Account account) {
         this.account = account;
     }
-
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
