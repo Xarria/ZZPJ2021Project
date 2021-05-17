@@ -67,6 +67,7 @@ class AccountServiceTest {
 
         Assertions.assertEquals(1, accounts.size());
         Assertions.assertDoesNotThrow(() -> accountService.createAccount(newAccount));
+        Mockito.verify(accountRepository).save(newAccount);
         Assertions.assertEquals(2, accounts.size());
         Assertions.assertEquals(newAccount, accounts.get(1));
         Assertions.assertEquals(newLogin, accounts.get(1).getLogin());
