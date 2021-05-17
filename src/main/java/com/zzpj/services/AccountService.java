@@ -69,7 +69,6 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
         Account account = accountRepository.findByLogin(login);
         account.setPassword(Sha512DigestUtils.shaHex(account.getPassword()));
         account.setEmail(updatedAccount.getEmail());
-        account.setAccessLevel(updatedAccount.getAccessLevel());
         accountRepository.save(account);
     }
 

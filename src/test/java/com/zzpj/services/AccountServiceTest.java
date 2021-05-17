@@ -9,13 +9,13 @@ import com.zzpj.repository.AccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
+import org.springframework.security.core.token.Sha512DigestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
 
 class AccountServiceTest {
 
@@ -27,9 +27,12 @@ class AccountServiceTest {
     private final Account account = new Account();
     @Mock
     private final Account newAccount = new Account();
+    @Spy
+    private final Account updatedAccount = new Account();
 
     private final String login = "login";
     private final String email = "email@email.com";
+    private final String password = "password";
     private final String newLogin = "newLogin";
     private final String newPassword = "newPassword";
     private final String newEmail = "newEmail@email.com";
@@ -41,6 +44,7 @@ class AccountServiceTest {
         Mockito.when(accountRepository.findAll()).thenReturn(accounts);
         Mockito.when(account.getLogin()).thenReturn(login);
         Mockito.when(account.getEmail()).thenReturn(email);
+        Mockito.when(account.getPassword()).thenReturn(password);
         accounts.add(account);
     }
 
@@ -110,13 +114,59 @@ class AccountServiceTest {
 
     @Test
     void updateAccount() {
+        updatedAccount.setPassword(Sha512DigestUtils.shaHex(password));
+        updatedAccount.setEmail(email);
+
+        Mockito.doAnswer(invocation -> {
+            Account account = invocation.getArgument(0);
+            account.setPassword(Sha512DigestUtils.shaHex(newPassword));
+            account.setEmail(newEmail);
+            return null;
+        }).when(accountRepository).save(any());
+
+        Mockito.when(accountRepository.findByLogin(login)).thenReturn(updatedAccount);
+
+        Assertions.assertEquals(Sha512DigestUtils.shaHex(password), updatedAccount.getPassword());
+        Assertions.assertEquals(email, updatedAccount.getEmail());
+        Assertions.assertDoesNotThrow(() -> accountService.updateAccount(login, updatedAccount));
+        Mockito.verify(accountRepository).save(updatedAccount);
+        Assertions.assertEquals(Sha512DigestUtils.shaHex(newPassword), updatedAccount.getPassword());
+        Assertions.assertEquals(newEmail, updatedAccount.getEmail());
     }
 
     @Test
     void activateAccount() {
+        updatedAccount.setActive(false);
+
+        Mockito.doAnswer(invocation -> {
+            Account account = invocation.getArgument(0);
+            account.setActive(true);
+            return null;
+        }).when(accountRepository).save(any());
+
+        Mockito.when(accountRepository.findByLogin(login)).thenReturn(updatedAccount);
+
+        Assertions.assertFalse(updatedAccount.getActive());
+        Assertions.assertDoesNotThrow(() -> accountService.activateAccount(login));
+        Mockito.verify(accountRepository).save(updatedAccount);
+        Assertions.assertTrue(updatedAccount.getActive());
     }
 
     @Test
     void deactivateAccount() {
+        updatedAccount.setActive(true);
+
+        Mockito.doAnswer(invocation -> {
+            Account account = invocation.getArgument(0);
+            account.setActive(false);
+            return null;
+        }).when(accountRepository).save(any());
+
+        Mockito.when(accountRepository.findByLogin(login)).thenReturn(updatedAccount);
+
+        Assertions.assertTrue(updatedAccount.getActive());
+        Assertions.assertDoesNotThrow(() -> accountService.activateAccount(login));
+        Mockito.verify(accountRepository).save(updatedAccount);
+        Assertions.assertFalse(updatedAccount.getActive());
     }
 }
