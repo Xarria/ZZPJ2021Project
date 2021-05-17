@@ -1,12 +1,10 @@
 package com.zzpj.services.interfaces;
 
-import com.zzpj.DTOs.RecipeDTO;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
 import com.zzpj.model.entities.Recipe;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 

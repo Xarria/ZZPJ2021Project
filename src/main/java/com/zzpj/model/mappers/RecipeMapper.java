@@ -40,7 +40,6 @@ public class RecipeMapper {
         recipeDetailsDTO.setPreparationTimeInMinutes(recipe.getPrepareTimeInMinutes());
         recipeDetailsDTO.setDifficulty(recipe.getDifficulty());
 
-        return new RecipeDetailsDTO();
+        return recipeDetailsDTO;
     }
-
 }
