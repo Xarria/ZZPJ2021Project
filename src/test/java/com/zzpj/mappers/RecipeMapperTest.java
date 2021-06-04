@@ -34,7 +34,7 @@ class RecipeMapperTest {
     @Test
     void entityToDetailsDTOTest() {
         Recipe recipe = new Recipe(1L, "Bułeczki", new Account(), "Fajne bułeczki",
-                new ArrayList<>(), 5F, new ArrayList<>(), null, 4,
+                new ArrayList<>(), 5F, 5, new ArrayList<>(), null, 4,
                 400, 45L, "EASY");
 
         assertDoesNotThrow(() -> RecipeMapper.entityToDetailsDTO(recipe));

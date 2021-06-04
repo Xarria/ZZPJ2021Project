@@ -48,6 +48,7 @@ CREATE TABLE Recipe
     author                  bigint           NOT NULL,
     description             text             NOT NULL,
     rating                  float4 DEFAULT 0 NOT NULL,
+    ratings_count           integer DEFAULT 0 NOT NULL,
     image                   bytea[],
     servings                integer          NOT NULL,
     calories                integer,

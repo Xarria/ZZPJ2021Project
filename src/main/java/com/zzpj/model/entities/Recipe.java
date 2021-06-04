@@ -37,7 +37,6 @@ public class Recipe implements Serializable {
     private String description;
 
     @NotNull
-    @Column(name = "ingredients", nullable = false)
     @ManyToMany
     @JoinTable(name = "Recipe_Ingredient")
     private List<Ingredient> recipeIngredients;
@@ -45,6 +44,10 @@ public class Recipe implements Serializable {
     @NotNull
     @Column(name = "rating", nullable = false)
     private Float rating;
+
+    @NotNull
+    @Column(name = "ratings_count", nullable = false)
+    private Integer ratingsCount;
 
     @ElementCollection
     private List<String> recipeTags = new ArrayList<>();

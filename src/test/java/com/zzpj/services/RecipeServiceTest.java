@@ -21,15 +21,15 @@ class RecipeServiceTest {
     private RecipeRepository recipeRepository;
     @InjectMocks
     private RecipeService recipeService;
-    @Mock
+    @Spy
     private final Recipe recipe = new Recipe();
-    @Mock
+    @Spy
     private final Recipe newRecipe = new Recipe();
-    @Mock
+    @Spy
     private final Ingredient ingredient = new Ingredient();
-    @Mock
+    @Spy
     private final Ingredient newIngredient = new Ingredient();
-    @Mock
+    @Spy
     private final List<Ingredient> ingredients = new ArrayList<>();
     @Spy
     private final Recipe updatedRecipe = new Recipe();
@@ -41,6 +41,8 @@ class RecipeServiceTest {
     private Long id = 1L;
     private String ingredientName = "Mąka";
     private String newIngredientName = "Mleko";
+    private Float rating = 5F;
+    private int ratingsCount = 5;
 
     @BeforeEach
     void initMocks() {
@@ -51,10 +53,11 @@ class RecipeServiceTest {
         Mockito.when(recipe.getCalories()).thenReturn(calories);
         Mockito.when(recipe.getRecipeIngredients()).thenReturn(ingredients);
         Mockito.when(recipe.getId()).thenReturn(id);
+        Mockito.when(recipe.getRating()).thenReturn(rating);
+        Mockito.when(recipe.getRatingsCount()).thenReturn(ratingsCount);
         recipes.add(recipe);
         Mockito.when(ingredient.getName()).thenReturn(ingredientName);
         ingredients.add(ingredient);
-
     }
 
 
@@ -154,23 +157,25 @@ class RecipeServiceTest {
     }
 
     @Test
-    void addIngredient() {
+    void addIngredient() throws RecipeDoesNotExistException {
         newIngredient.setName(newIngredientName);
+        ingredients.add(newIngredient);
+        updatedRecipe.setRecipeIngredients(ingredients);
+
+        Mockito.when(recipeRepository.findAll()).thenReturn(recipes);
 
         Mockito.doAnswer(invocation -> {
             Recipe recipe = invocation.getArgument(0);
-            ingredients.add(newIngredient);
             recipe.setRecipeIngredients(ingredients);
             return null;
         }).when(recipeRepository).save(any());
 
-        Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(recipe);
+        Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(updatedRecipe);
 
-        assertEquals(1, recipe.getRecipeIngredients().size());
+        Recipe recipeById = recipeService.getRecipeById(id);
+        assertEquals(2, recipeById.getRecipeIngredients().size());
         assertDoesNotThrow(() -> recipeService.addIngredient(id, newIngredient));
-        Mockito.verify(recipeRepository).save(recipe);
-
-        assertEquals(2, recipe.getRecipeIngredients().size());
+        Mockito.verify(recipeRepository).save(any());
         assertEquals(newIngredientName, recipe.getRecipeIngredients().get(1).getName());
     }
 
@@ -184,6 +189,25 @@ class RecipeServiceTest {
     }
 
     @Test
-    void addRatingToRecipe() {
+    void addRatingToRecipe() throws RecipeDoesNotExistException {
+        updatedRecipe.setRating(6F);
+        updatedRecipe.setRatingsCount(6);
+
+        Mockito.when(recipeRepository.findAll()).thenReturn(recipes);
+
+        Mockito.doAnswer(invocation -> {
+            Recipe recipe = invocation.getArgument(0);
+            recipe.setRatingsCount(6);
+            recipe.setRating((5F * 5 + 11) / (5 + 1));
+            return null;
+        }).when(recipeRepository).save(any());
+
+        Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(updatedRecipe);
+        assertDoesNotThrow(() -> recipeService.addRatingToRecipe(id, 11));
+        Mockito.verify(recipeRepository).save(any());
+
+        Recipe recipeById = recipeService.getRecipeById(id);
+        assertEquals(6, recipeById.getRatingsCount());
+        assertEquals(6F, recipeById.getRating());
     }
 }
