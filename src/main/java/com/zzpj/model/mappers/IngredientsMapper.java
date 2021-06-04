@@ -9,4 +9,9 @@ public class IngredientsMapper {
         // TODO implementacja
         return new IngredientDTO();
     }
+
+    public static Ingredient dtoToEntity(IngredientDTO ingredientDTO) {
+        // TODO implementacja
+        return new Ingredient();
+    }
 }
