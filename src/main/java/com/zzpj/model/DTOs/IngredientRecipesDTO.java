@@ -5,18 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
 @NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class IngredientDTO {
+public class IngredientRecipesDTO {
 
     @NotNull
     private String name;
@@ -35,4 +33,6 @@ public class IngredientDTO {
 
     @PositiveOrZero
     private int fats;
+
+    List<Recipe> recipes = new ArrayList<>();
 }
