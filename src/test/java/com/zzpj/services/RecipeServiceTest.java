@@ -185,10 +185,6 @@ class RecipeServiceTest {
     }
 
     @Test
-    void saveRecipeToFilesystem() {
-    }
-
-    @Test
     void addRatingToRecipe() throws RecipeDoesNotExistException {
         updatedRecipe.setRating(6F);
         updatedRecipe.setRatingsCount(6);
@@ -209,5 +205,10 @@ class RecipeServiceTest {
         Recipe recipeById = recipeService.getRecipeById(id);
         assertEquals(6, recipeById.getRatingsCount());
         assertEquals(6F, recipeById.getRating());
+    }
+
+    @Test
+    void addRatingException() {
+        assertThrows(RecipeDoesNotExistException.class, () -> recipeService.addRatingToRecipe(123L, 3F));
     }
 }
