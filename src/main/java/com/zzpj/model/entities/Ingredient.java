@@ -29,7 +29,7 @@ public class Ingredient {
     @Column(name = "calories")
     private int calories;
 
-    @Column(name = "protein")
+    @Column(name = "proteins")
     private int protein;
 
     @Column(name = "carbohydrates")

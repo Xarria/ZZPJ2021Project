@@ -4,8 +4,6 @@ import com.zzpj.model.DTOs.RecipeDetailsDTO;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
 import com.zzpj.model.entities.AccessLevel;
 import com.zzpj.model.entities.Recipe;
-import com.zzpj.repository.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.stream.Collectors;
 
@@ -17,6 +15,7 @@ public class RecipeMapper {
         recipeGeneralDTO.setName(recipe.getName());
         recipeGeneralDTO.setAuthor(AccountMapper.entityToAdminDTO(recipe.getAuthor()));
         recipeGeneralDTO.setRating(recipe.getRating());
+        recipeGeneralDTO.setRatingsCount(recipe.getRatingsCount());
         recipeGeneralDTO.setCalories(recipe.getCalories());
         recipeGeneralDTO.setPreparationTimeInMinutes(recipe.getPrepareTimeInMinutes());
         recipeGeneralDTO.setImage(recipe.getImage());

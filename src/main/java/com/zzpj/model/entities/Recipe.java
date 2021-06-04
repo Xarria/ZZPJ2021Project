@@ -38,7 +38,9 @@ public class Recipe implements Serializable {
 
     @NotNull
     @ManyToMany
-    @JoinTable(name = "Recipe_Ingredient")
+    @JoinTable(name = "recipe_ingredient",
+            joinColumns = @JoinColumn(name = "recipe_id"),
+            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     private List<Ingredient> recipeIngredients;
 
     @NotNull

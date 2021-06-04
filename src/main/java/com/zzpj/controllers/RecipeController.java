@@ -33,7 +33,7 @@ public class RecipeController {
         this.accountService = accountService;
     }
 
-    @PostMapping(path = "/recipe", consumes = "application/json")
+    @PostMapping(path = "/recipes", consumes = "application/json")
     public ResponseEntity<RecipeDetailsDTO> createRecipe(@RequestBody RecipeDetailsDTO recipe) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
@@ -46,7 +46,7 @@ public class RecipeController {
         }
     }
 
-    @GetMapping(path = "/recipe/{id}", produces = "application/json")
+    @GetMapping(path = "/recipes/{id}", produces = "application/json")
     public ResponseEntity<RecipeDetailsDTO> getRecipeById(@PathVariable Long id) {
         try{
             return ResponseEntity.ok(RecipeMapper.entityToDetailsDTO(recipeService.getRecipeById(id)));
@@ -63,7 +63,7 @@ public class RecipeController {
                 collect(Collectors.toList()));
     }
 
-    @GetMapping(path = "/recipes/remove/{id}", produces = "application/json")
+    @DeleteMapping(path = "/recipes/{id}", produces = "application/json")
     public ResponseEntity<?> deleteRecipe(Long id) {
         try{
             recipeService.deleteRecipe(id);
@@ -74,7 +74,7 @@ public class RecipeController {
         }
     }
 
-    @PutMapping(path = "/recipe/{id}", consumes = "application/json")
+    @PutMapping(path = "/recipes/{id}", consumes = "application/json")
     public ResponseEntity<?> updateRecipe(@PathVariable Long id, @RequestBody RecipeDetailsDTO updatedRecipe) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -91,7 +91,7 @@ public class RecipeController {
         }
     }
 
-    @PutMapping(path = "/recipe/ingredients/{id}", consumes = "application/json")
+    @PutMapping(path = "/recipes/ingredients/{id}", consumes = "application/json")
     public ResponseEntity<?> addIngredient(@PathVariable Long id, @RequestBody IngredientDTO ingredientDTO) {
         try {
             recipeService.addIngredient(id, IngredientsMapper.dtoToEntity(ingredientDTO));
@@ -102,7 +102,7 @@ public class RecipeController {
         }
     }
 
-    @PostMapping(path = "/recipe/save/{id}", produces = "application/json", consumes = "application/text")
+    @PostMapping(path = "/recipes/save/{id}", produces = "application/json", consumes = "application/text")
     public ResponseEntity<?> saveRecipeToFilesystem(Long id, @RequestBody String filename)  {
         try {
             recipeService.saveRecipeToFilesystem(id, filename);
@@ -114,7 +114,7 @@ public class RecipeController {
         }
     }
 
-    @PutMapping(path = "/recipe/ratings/{id}", consumes = "application/json")
+    @PutMapping(path = "/recipes/ratings/{id}", consumes = "application/json")
     public ResponseEntity<?> addRatingToRecipe(Long id, float rating) {
         try {
             recipeService.addRatingToRecipe(id, rating);

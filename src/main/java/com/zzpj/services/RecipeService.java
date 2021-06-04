@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
@@ -57,10 +58,15 @@ public class RecipeService implements RecipeServiceInterface {
             throw new RecipeDoesNotExistException("Recipe with id " + id + " was not found.");
         }
         Recipe recipe = recipeRepository.findRecipeById(id);
-        //TODO ustalić zmieniane pola
         recipe.setName(updatedRecipe.getName());
         recipe.setDescription(updatedRecipe.getDescription());
         recipe.setCalories(updatedRecipe.getCalories());
+        recipe.setRecipeTags(updatedRecipe.getRecipeTags());
+        recipe.setRecipeIngredients(updatedRecipe.getRecipeIngredients());
+        recipe.setPrepareTimeInMinutes(updatedRecipe.getPrepareTimeInMinutes());
+        recipe.setDifficulty(updatedRecipe.getDifficulty());
+        recipe.setServings(updatedRecipe.getServings());
+        recipe.setImage(updatedRecipe.getImage());
         recipeRepository.save(recipe);
     }
 
@@ -79,16 +85,18 @@ public class RecipeService implements RecipeServiceInterface {
 
     @Override
     public void saveRecipeToFilesystem(Long id, String filename) throws IOException, RecipeDoesNotExistException {
-        //TODO ustalić formę zapisywania
         Recipe recipe = recipeRepository.findAll().stream()
                 .filter(r -> r.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new RecipeDoesNotExistException("Recipe with id " + id + " was not found."));
 
-        FileOutputStream fileOut = new FileOutputStream(filename + ".txt");
-        ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-        objectOut.writeObject(recipe);
-        objectOut.close();
+        FileWriter writer = new FileWriter(filename + ".txt");
+        for (int i = 0; i < recipe.getRecipeIngredients().size(); i++) {
+            writer.write(recipe.getRecipeIngredients().get(i).getName() + "\t" + recipe.getRecipeIngredients().get(i).getQuantity() + "\n");
+        }
+        writer.write("\n");
+        writer.write(recipe.getDescription());
+        writer.close();
     }
 
     @Override

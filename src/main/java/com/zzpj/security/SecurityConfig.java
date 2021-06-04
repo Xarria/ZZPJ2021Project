@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                             .permitAll()
                     .antMatchers(HttpMethod.POST, "/accounts/**")
                         .hasAuthority(AccessLevel.ADMIN)
-                    .antMatchers(HttpMethod.GET, "/accounts/**")
+                    .antMatchers(HttpMethod.GET, "/accounts/**", "/recipes/**")
                         .permitAll()
                     .antMatchers(HttpMethod.PUT, "/accounts/activate/*", "/accounts/deactivate/*")
                         .hasAuthority(AccessLevel.ADMIN)
