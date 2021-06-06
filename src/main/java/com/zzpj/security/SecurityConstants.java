@@ -6,4 +6,7 @@ public class SecurityConstants {
     public static final long JWT_TIMEOUT = 15 * 60 * 1000;
     public static final String ISSUER = "zzpj";
     public static final String BEARER = "Bearer ";
+
+    public static final String API_APP_ID = "2b779c24";
+    public static final String API_APPLICATION_KEYS = "30e0fde1bdd3f9da8c0c067886853494";
 }

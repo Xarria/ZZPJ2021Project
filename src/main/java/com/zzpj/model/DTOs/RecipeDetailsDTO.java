@@ -22,7 +22,7 @@ public class RecipeDetailsDTO {
     private String name;
 
     @NotNull
-    private String authorLogin;
+    private AccountNoRecipesDTO author;
 
     @NotBlank
     private String description;
@@ -33,6 +33,8 @@ public class RecipeDetailsDTO {
     @NotNull
     @Range(min = 1, max = 5)
     private Float rating;
+
+    private int ratingsCount;
 
     private List<String> tags = new ArrayList<>();
 
