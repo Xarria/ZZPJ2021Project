@@ -17,10 +17,10 @@ VALUES ('a', 1, 2, 3, 4, 5),
        ('e', 1, 2, 3, 4, 5),
        ('f', 1, 2, 3, 4, 5);
 
-INSERT INTO Recipe (name, author, description, rating, image, servings , calories, prepare_time_in_minutes, difficulty)
-VALUES ('Carbonara', 3, 'pychotka', 5, null, 4, 1000, 50, 2),
-       ('Nalesniki', 4, 'pychotka', 5, null, 4, 400, 50, 1),
-       ('Spaghetti', 4, 'pychotka', 5, null, 4, 800, 50, 2);
+INSERT INTO Recipe (name, author, description, rating, ratings_count, image, servings , calories, prepare_time_in_minutes, difficulty)
+VALUES ('Carbonara', 3, 'pychotka', 5, 2, null, 4, 1000, 50, 2),
+       ('Nalesniki', 4, 'pychotka', 5, 4, null, 4, 400, 50, 1),
+       ('Spaghetti', 4, 'pychotka', 5, 13, null, 4, 800, 50, 2);
 
 INSERT INTO Recipe_Account (recipe_id, account_id)
 VALUES (1, 4),

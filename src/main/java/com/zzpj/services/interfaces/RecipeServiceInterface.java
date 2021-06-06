@@ -1,8 +1,6 @@
 package com.zzpj.services.interfaces;
 
 import com.zzpj.exceptions.RecipeDoesNotExistException;
-import com.zzpj.model.DTOs.RecipeDetailsDTO;
-import com.zzpj.model.DTOs.RecipeGeneralDTO;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 
@@ -13,9 +11,9 @@ public interface RecipeServiceInterface {
 
     void createRecipe(Recipe recipe);
 
-    RecipeDetailsDTO getRecipeById(Long id) throws RecipeDoesNotExistException;
+    Recipe getRecipeById(Long id) throws RecipeDoesNotExistException;
 
-    List<RecipeGeneralDTO> getAllRecipes();
+    List<Recipe> getAllRecipes();
 
     void deleteRecipe(Long id) throws RecipeDoesNotExistException;
 
