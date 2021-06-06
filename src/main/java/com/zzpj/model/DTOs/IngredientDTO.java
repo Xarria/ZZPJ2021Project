@@ -22,7 +22,7 @@ public class IngredientDTO {
     private String name;
 
     @NotNull
-    private Long quantity;
+    private Double quantity;
 
     @Positive
     private int calories;

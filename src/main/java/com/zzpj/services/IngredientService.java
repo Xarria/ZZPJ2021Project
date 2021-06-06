@@ -6,6 +6,7 @@ import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.parsers.IngredientJsonParser;
 import com.zzpj.security.SecurityConstants;
 import com.zzpj.services.interfaces.IngredientServiceInterface;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+@Service
 public class IngredientService implements IngredientServiceInterface {
 
     @Override
