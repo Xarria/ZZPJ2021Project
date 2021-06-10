@@ -27,7 +27,7 @@ public class AccountController {
     private final AccessLevelServiceInterface accessLevelService;
 
     @Autowired
-    public AccountController(AccountService accountService, AccessLevelService accessLevelService) {
+    public AccountController(AccountServiceInterface accountService, AccessLevelServiceInterface accessLevelService) {
         this.accountService = accountService;
         this.accessLevelService = accessLevelService;
     }
@@ -97,8 +97,9 @@ public class AccountController {
     @GetMapping(path = "/accounts", produces = "application/json")
     public ResponseEntity<?> getAllAccounts() {
         //TODO
-        List<AccountNoRecipesDTO> accounts = accountService.getAllAccounts()
-                .stream().map(AccountMapper::entityToAdminDTO).collect(Collectors.toList());
+        List<AccountNoRecipesDTO> accounts = accountService.getAllAccounts().stream()
+                .map(AccountMapper::entityToAdminDTO)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(accounts);
     }
