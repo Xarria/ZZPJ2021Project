@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -149,11 +148,29 @@ class AccountControllerTest {
     }
 
     @Test
-    void activateAccount() {
+    void activateAccount() throws AccountDoesNotExistException {
+        account1.setActive(false);
+        doAnswer(invocationOnMock -> {
+            account1.setActive(true);
+            return null;
+        }).when(accountService).activateAccount(login1);
 
+        assertFalse(accounts.get(0).getActive());
+        assertDoesNotThrow(() -> accountController.activateAccount(login1));
+        assertTrue(accounts.get(0).getActive());
+        verify(accountService).activateAccount(login1);
     }
 
     @Test
-    void deactivateAccount() {
+    void deactivateAccount() throws AccountDoesNotExistException {
+        doAnswer(invocationOnMock -> {
+            account1.setActive(false);
+            return null;
+        }).when(accountService).deactivateAccount(login1);
+
+        assertTrue(accounts.get(0).getActive());
+        assertDoesNotThrow(() -> accountController.deactivateAccount(login1));
+        assertFalse(accounts.get(0).getActive());
+        verify(accountService).deactivateAccount(login1);
     }
 }
