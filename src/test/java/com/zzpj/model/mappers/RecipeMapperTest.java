@@ -2,51 +2,92 @@ package com.zzpj.model.mappers;
 
 
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
-import com.zzpj.model.entities.Account;
+import com.zzpj.model.DTOs.RecipeGeneralDTO;
 import com.zzpj.model.entities.Recipe;
-import com.zzpj.model.mappers.RecipeMapper;
 import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class RecipeMapperTest {
 
-//    @Test
-//    void recipeDTOtoRecipeTest() {
-//        RecipeDetailsDTO recipeDTO = new RecipeDetailsDTO("Bułeczki", "user1", "Fajne bułeczki",
-//                new ArrayList<>(), 5F, new ArrayList<>(), null, 4,
-//                400, 45L, "EASY");
-//
-//        assertDoesNotThrow(() -> RecipeMapper.recipeDTOtoRecipe(recipeDTO));
-//
-//        Recipe recipe = RecipeMapper.recipeDTOtoRecipe(recipeDTO);
-//
-//        assertEquals("Bułeczki", recipe.getName());
-//        assertEquals("Fajne bułeczki", recipe.getDescription());
-//        assertEquals(5F, recipe.getRating());
-//        assertEquals(4, recipe.getServings());
-//        assertEquals(400, recipe.getCalories());
-//        assertEquals(45L, recipe.getPrepareTimeInMinutes());
-//        assertEquals("EASY", recipe.getDifficulty());
-//    }
+    @Test
+    void recipeDetailsDTOtoRecipeTest() {
+        RecipeDetailsDTO recipeDTO = new RecipeDetailsDTO("Bułeczki", "Login", "Fajne bułeczki",
+                new ArrayList<>(), 5F, 3, "vegan", null, 4,
+                400, 45L, "EASY");
 
-//    @Test
-//    void entityToDetailsDTOTest() {
-//        Recipe recipe = new Recipe(1L, "Bułeczki", new Account(), "Fajne bułeczki",
-//                new ArrayList<>(), 5F, new ArrayList<>(), null, 4,
-//                400, 45L, "EASY");
-//
-//        assertDoesNotThrow(() -> RecipeMapper.entityToDetailsDTO(recipe));
-//
-//        RecipeDetailsDTO recipeDTO = RecipeMapper.entityToDetailsDTO(recipe);
-//
-//        assertEquals("Bułeczki", recipeDTO.getName());
-//        assertEquals("Fajne bułeczki", recipeDTO.getDescription());
-//        assertEquals(5F, recipeDTO.getRating());
-//        assertEquals(4, recipeDTO.getServings());
-//        assertEquals(400, recipeDTO.getCalories());
-//        assertEquals(45L, recipeDTO.getPreparationTimeInMinutes());
-//        assertEquals("EASY", recipeDTO.getDifficulty());
-//    }
+        assertDoesNotThrow(() -> RecipeMapper.detailsDTOtoEntity(recipeDTO));
+
+        Recipe recipe = RecipeMapper.detailsDTOtoEntity(recipeDTO);
+
+        assertEquals("Bułeczki", recipe.getName());
+        assertEquals("Fajne bułeczki", recipe.getDescription());
+        assertEquals(5F, recipe.getRating());
+        assertEquals("Login", recipe.getAuthorLogin());
+        assertEquals(3, recipe.getRatingsCount());
+        assertEquals(4, recipe.getServings());
+        assertEquals(400, recipe.getCalories());
+        assertEquals(45L, recipe.getPrepareTimeInMinutes());
+        assertEquals("EASY", recipe.getDifficulty());
+    }
+
+    @Test
+    void entityToDetailsDTOTest() {
+        Recipe recipe = new Recipe(1L, "Bułeczki", "Login", "Fajne bułeczki",
+                new ArrayList<>(), 4F, 5, "vegan", null, 4,
+                400, 45L, "EASY");
+
+        assertDoesNotThrow(() -> RecipeMapper.entityToDetailsDTO(recipe));
+
+        RecipeDetailsDTO recipeDTO = RecipeMapper.entityToDetailsDTO(recipe);
+
+        assertEquals("Bułeczki", recipeDTO.getName());
+        assertEquals("Login", recipeDTO.getAuthor());
+        assertEquals("Fajne bułeczki", recipeDTO.getDescription());
+        assertEquals(4F, recipeDTO.getRating());
+        assertEquals(5, recipeDTO.getRatingsCount());
+        assertEquals(4, recipeDTO.getServings());
+        assertEquals(400, recipeDTO.getCalories());
+        assertEquals(45L, recipeDTO.getPreparationTimeInMinutes());
+        assertEquals("EASY", recipeDTO.getDifficulty());
+    }
+
+    @Test
+    void entityToGeneralDTO() {
+        Recipe recipe = new Recipe(1L, "Bułeczki", "Login", "Fajne bułeczki",
+                new ArrayList<>(), 4F, 5, "vegan", null, 4,
+                400, 45L, "EASY");
+        assertDoesNotThrow(() -> RecipeMapper.entityToGeneralDTO(recipe));
+
+        RecipeGeneralDTO recipeDTO = RecipeMapper.entityToGeneralDTO(recipe);
+
+        assertEquals("Bułeczki", recipeDTO.getName());
+        assertEquals("Login", recipeDTO.getAuthor());
+        assertEquals(4F, recipeDTO.getRating());
+        assertEquals(5, recipeDTO.getRatingsCount());
+        assertEquals(400, recipeDTO.getCalories());
+        assertEquals(45L, recipeDTO.getPreparationTimeInMinutes());
+        assertEquals("EASY", recipeDTO.getDifficulty());
+    }
+
+    @Test
+    void generalDTOToEntity() {
+        RecipeGeneralDTO recipeDTO = new RecipeGeneralDTO("Bułeczki", "Login",
+                5F, 3, 400, 45L,"EASY", null);
+
+        assertDoesNotThrow(() -> RecipeMapper.generalDTOToEntity(recipeDTO));
+
+        Recipe recipe = RecipeMapper.generalDTOToEntity(recipeDTO);
+
+        assertEquals("Bułeczki", recipe.getName());
+        assertEquals(5F, recipe.getRating());
+        assertEquals("Login", recipe.getAuthorLogin());
+        assertEquals(3, recipe.getRatingsCount());
+        assertEquals(400, recipe.getCalories());
+        assertEquals(45L, recipe.getPrepareTimeInMinutes());
+        assertEquals("EASY", recipe.getDifficulty());
+    }
 }
