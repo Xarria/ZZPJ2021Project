@@ -18,7 +18,7 @@ public class RecipeGeneralDTO {
     private String name;
 
     @NotNull
-    private String author;
+    private String authorLogin;
 
     @NotNull
     @Range(min = 1, max = 5)
