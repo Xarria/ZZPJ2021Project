@@ -31,11 +31,7 @@ public class AccountController {
         this.accountService = accountService;
         this.accessLevelService = accessLevelService;
     }
-
     // TODO Wszystko opakować wyjątkami
-
-
-    //region CREATE
 
     @PostMapping(path = "/accounts", consumes = "application/json")
     public ResponseEntity<AccountNoRecipesDTO> createAccount(@RequestBody AccountNoRecipesDTO accountDTO) {
@@ -67,10 +63,6 @@ public class AccountController {
 
         return ResponseEntity.ok().build();
     }
-    //endregion
-
-
-    //region READ
 
     @GetMapping(path = "/accounts/{login}", produces = "application/json")
     public ResponseEntity<AccountNoRecipesDTO> getAccount(@PathVariable String login) {
@@ -83,7 +75,7 @@ public class AccountController {
         return ResponseEntity.ok(accountNoRecipesDTO);
     }
 
-    @GetMapping(path = "/accounts/r/{login}", produces = "application/json")
+    @GetMapping(path = "/accounts/recipes/{login}", produces = "application/json")
     public ResponseEntity<AccountRecipesDTO> getAccountRecipes(@PathVariable String login) {
         AccountRecipesDTO accountRecipesDTO;
         try {
@@ -103,7 +95,7 @@ public class AccountController {
         return ResponseEntity.ok(accounts);
     }
 
-    @GetMapping(path = "/accounts/r", produces = "application/json")
+    @GetMapping(path = "/accounts/recipes", produces = "application/json")
     public ResponseEntity<?> getAllAccountsRecipes() {
         List<AccountRecipesDTO> accountRecipesDTOs = accountService.getAllAccounts().stream()
                 .map(AccountMapper::entityToRecipesDTO)
@@ -111,11 +103,7 @@ public class AccountController {
 
         return ResponseEntity.ok(accountRecipesDTOs);
     }
-    //endregion
 
-    //region UPDATE
-
-    // update
     @PutMapping(path = "/accounts/{login}", consumes = "application/json")
     public ResponseEntity<?> updateAccount(@PathVariable String login, @RequestBody AccountNoRecipesDTO accountDTO) {
         try {
@@ -127,7 +115,6 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    // activity
     @PutMapping(path = "accounts/activate/{login}")
     public ResponseEntity<?> activateAccount(@PathVariable String login) {
         try {
@@ -147,5 +134,4 @@ public class AccountController {
         }
         return ResponseEntity.ok().build();
     }
-    //endregion
 }

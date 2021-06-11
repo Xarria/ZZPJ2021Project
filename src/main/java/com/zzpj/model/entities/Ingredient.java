@@ -12,6 +12,7 @@ import java.util.List;
 @Table(name = "Ingredient")
 public class Ingredient {
 
+    @Id
     @NotNull
     @Column(name = "id", nullable = false, updatable = false)
     private String id;
