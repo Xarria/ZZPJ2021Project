@@ -13,9 +13,9 @@ import java.util.List;
 public class Ingredient {
 
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
-    private String id;
+    private Long id;
 
     @NotNull
     @Column(name = "name", nullable = false)

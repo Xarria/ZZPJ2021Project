@@ -5,7 +5,6 @@ import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.DTOs.IngredientDTO;
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
-import com.zzpj.model.entities.AccessLevel;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.mappers.IngredientsMapper;
 import com.zzpj.model.mappers.RecipeMapper;
@@ -14,6 +13,7 @@ import com.zzpj.services.interfaces.RecipeServiceInterface;
 import com.zzpj.utils.EmailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,7 +35,7 @@ public class RecipeController {
         this.accountService = accountService;
     }
 
-    @PostMapping(path = "/recipes", consumes = "application/json")
+    @PostMapping(path = "/recipes", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RecipeDetailsDTO> createRecipe(@RequestBody RecipeDetailsDTO recipe) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         recipe.setAuthorLogin(authentication.getName());

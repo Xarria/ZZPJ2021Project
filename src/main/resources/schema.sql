@@ -51,7 +51,7 @@ CREATE TABLE Recipe
     rating                  float4 DEFAULT 0 NOT NULL,
     ratings_count           integer DEFAULT 0 NOT NULL,
     tags                    varchar(255),
-    image                   bytea[],
+    image                   bytea,
     servings                integer          NOT NULL,
     calories                integer,
     prepare_time_in_minutes bigint           NOT NULL,

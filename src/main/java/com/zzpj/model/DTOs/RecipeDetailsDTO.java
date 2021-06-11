@@ -38,7 +38,7 @@ public class RecipeDetailsDTO {
 
     private String tags;
 
-    private Byte[] image;
+    private byte[] image;
 
     @NotNull
     @Min(1)

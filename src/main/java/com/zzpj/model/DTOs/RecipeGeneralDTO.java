@@ -36,5 +36,5 @@ public class RecipeGeneralDTO {
     @NotBlank
     private String difficulty;
 
-    private Byte[] image;
+    private byte[] image;
 }

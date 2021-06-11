@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+cypress/cypress/integration/examples/
+cypress/node_modules/

@@ -18,7 +18,6 @@ import java.util.List;
 public class Recipe implements Serializable {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
@@ -53,9 +52,8 @@ public class Recipe implements Serializable {
     @Column(name = "tags", nullable = true)
     private String recipeTags;
 
-    @NotNull
-    @Column(name = "image", nullable = false)
-    private Byte[] image;
+    @Column(name = "image", nullable = true)
+    private byte[] image;
 
     @NotNull
     @Column(name = "servings", nullable = false)

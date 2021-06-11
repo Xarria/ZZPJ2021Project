@@ -5,12 +5,14 @@ import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 import com.zzpj.repository.AccountRepository;
+import com.zzpj.repository.IngredientRepository;
 import com.zzpj.repository.RecipeRepository;
 import com.zzpj.services.interfaces.RecipeServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,15 +22,19 @@ public class RecipeService implements RecipeServiceInterface {
 
     private final AccountRepository accountRepository;
 
+    private final IngredientRepository ingredientRepository;
+
     @Autowired
-    public RecipeService(RecipeRepository recipeRepository, AccountRepository accountRepository) {
+    public RecipeService(RecipeRepository recipeRepository, AccountRepository accountRepository, IngredientRepository ingredientRepository) {
         this.recipeRepository = recipeRepository;
         this.accountRepository = accountRepository;
+        this.ingredientRepository = ingredientRepository;
     }
 
 
     @Override
     public void createRecipe(Recipe recipe) {
+        recipe.getRecipeIngredients().forEach(ingredientRepository::save);
         recipeRepository.save(recipe);
     }
 
