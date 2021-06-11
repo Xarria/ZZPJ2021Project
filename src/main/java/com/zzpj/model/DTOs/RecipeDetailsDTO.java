@@ -22,7 +22,7 @@ public class RecipeDetailsDTO {
     private String name;
 
     @NotNull
-    private String author;
+    private String authorLogin;
 
     @NotBlank
     private String description;
