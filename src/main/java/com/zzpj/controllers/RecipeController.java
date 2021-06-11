@@ -38,7 +38,7 @@ public class RecipeController {
     @PostMapping(path = "/recipes", consumes = "application/json")
     public ResponseEntity<RecipeDetailsDTO> createRecipe(@RequestBody RecipeDetailsDTO recipe) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        recipe.setAuthor(authentication.getName());
+        recipe.setAuthorLogin(authentication.getName());
         recipeService.createRecipe(RecipeMapper.detailsDTOtoEntity(recipe));
         return ResponseEntity.ok().build();
     }

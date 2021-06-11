@@ -13,7 +13,7 @@ public class RecipeMapper {
         RecipeGeneralDTO recipeGeneralDTO = new RecipeGeneralDTO();
 
         recipeGeneralDTO.setName(recipe.getName());
-        recipeGeneralDTO.setAuthor(recipe.getAuthorLogin());
+        recipeGeneralDTO.setAuthorLogin(recipe.getAuthorLogin());
         recipeGeneralDTO.setRating(recipe.getRating());
         recipeGeneralDTO.setRatingsCount(recipe.getRatingsCount());
         recipeGeneralDTO.setCalories(recipe.getCalories());
@@ -28,7 +28,7 @@ public class RecipeMapper {
         RecipeDetailsDTO recipeDetailsDTO = new RecipeDetailsDTO();
 
         recipeDetailsDTO.setName(recipe.getName());
-        recipeDetailsDTO.setAuthor(recipe.getAuthorLogin());
+        recipeDetailsDTO.setAuthorLogin(recipe.getAuthorLogin());
         recipeDetailsDTO.setDescription(recipe.getDescription());
         recipeDetailsDTO.setIngredients(recipe.getRecipeIngredients().stream()
                 .map(IngredientsMapper::entityToDTO)
@@ -49,7 +49,7 @@ public class RecipeMapper {
         Recipe recipe = new Recipe();
 
         recipe.setName(recipeGeneralDTO.getName());
-        recipe.setAuthorLogin(recipeGeneralDTO.getAuthor());
+        recipe.setAuthorLogin(recipeGeneralDTO.getAuthorLogin());
         recipe.setRating(recipeGeneralDTO.getRating());
         recipe.setRatingsCount(recipeGeneralDTO.getRatingsCount());
         recipe.setCalories(recipeGeneralDTO.getCalories());
@@ -64,7 +64,7 @@ public class RecipeMapper {
         Recipe recipe = new Recipe();
 
         recipe.setName(recipeDetailsDTO.getName());
-        recipe.setAuthorLogin(recipeDetailsDTO.getAuthor());
+        recipe.setAuthorLogin(recipeDetailsDTO.getAuthorLogin());
         recipe.setDescription(recipeDetailsDTO.getDescription());
         recipe.setRecipeIngredients(recipeDetailsDTO.getIngredients().stream()
                 .map(IngredientsMapper::dtoToEntity)
