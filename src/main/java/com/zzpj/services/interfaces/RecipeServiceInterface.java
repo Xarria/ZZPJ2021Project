@@ -2,10 +2,12 @@ package com.zzpj.services.interfaces;
 
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
+import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public interface RecipeServiceInterface {
@@ -31,4 +33,6 @@ public interface RecipeServiceInterface {
     List<Recipe> getAllRecipesForAccount(String login);
 
     List<Recipe> getFavouriteRecipesForAccount(String login);
+
+    List<Recipe> getRecommendationBasedOnLikings(Account account, List<String> unwantedTags);
 }

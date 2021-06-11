@@ -60,6 +60,21 @@ public class RecipeController {
                 collect(Collectors.toList()));
     }
 
+    @GetMapping(path = "/recipes/recommendation/like", produces = "application/json")
+    public ResponseEntity<List<RecipeGeneralDTO>> getRecommendationBasedOnLikings(@RequestBody List<String> unwantedTags) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        try {
+            Account account = accountService.getAccountByLogin(authentication.getName());
+            return ResponseEntity.ok(recipeService.getRecommendationBasedOnLikings(account, unwantedTags).stream().
+                    map(RecipeMapper::entityToGeneralDTO).
+                    collect(Collectors.toList()));
+        } catch (AccountDoesNotExistException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+    }
+
     @GetMapping(path = "/recipes/account/{login}", produces = "application/json")
     public ResponseEntity<List<RecipeGeneralDTO>> getAllRecipesForAccount(@PathVariable String login) {
         return ResponseEntity.ok(recipeService.getAllRecipesForAccount(login).stream().
@@ -108,10 +123,10 @@ public class RecipeController {
 
     @GetMapping(path = "/recipes/save/{id}")
     public ResponseEntity<?> sendRecipeByMail(@PathVariable Long id)  {
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         try {
-            Account account = accountService.getAccountByLogin("user1");
+            Account account = accountService.getAccountByLogin(authentication.getName());
             String text = recipeService.sendRecipeByMail(id);
             EmailSender.sendEmail(account.getLogin(), account.getEmail(), "RECIPE", text);
             return ResponseEntity.ok().build();
@@ -124,9 +139,9 @@ public class RecipeController {
 
     @GetMapping(path = "/recipes/shopping_list", consumes = "application/json")
     public ResponseEntity<?> sendShoppingListByMail(@RequestBody List<Long> recipesId) {
-        //Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
-            Account account = accountService.getAccountByLogin("user1");
+            Account account = accountService.getAccountByLogin(authentication.getName());
             String text = recipeService.getShoppingList(recipesId);
             EmailSender.sendEmail(account.getLogin(), account.getEmail(), "SHOPPING LIST", text);
             return ResponseEntity.ok().build();

@@ -1,8 +1,10 @@
 package com.zzpj.services;
 
 import com.zzpj.exceptions.RecipeDoesNotExistException;
+import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
+import com.zzpj.repository.AccountRepository;
 import com.zzpj.repository.RecipeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,8 @@ class RecipeServiceTest {
 
     @Mock
     private RecipeRepository recipeRepository;
+    @Mock
+    private AccountRepository accountRepository;
     @InjectMocks
     private RecipeService recipeService;
     @Spy
@@ -34,6 +38,8 @@ class RecipeServiceTest {
     @Spy
     private final Recipe updatedRecipe = new Recipe();
 
+    private final Account account = new Account();
+
     private final String name = "Bułeczki";
     private String description = "Smaczne bułeczki";
     private int calories = 500;
@@ -43,6 +49,7 @@ class RecipeServiceTest {
     private String newIngredientName = "Mleko";
     private Float rating = 5F;
     private int ratingsCount = 5;
+
 
     @BeforeEach
     void initMocks() {
@@ -55,9 +62,13 @@ class RecipeServiceTest {
         Mockito.when(recipe.getId()).thenReturn(id);
         Mockito.when(recipe.getRating()).thenReturn(rating);
         Mockito.when(recipe.getRatingsCount()).thenReturn(ratingsCount);
+        Mockito.when(recipe.getAuthorLogin()).thenReturn("Login");
         recipes.add(recipe);
         Mockito.when(ingredient.getName()).thenReturn(ingredientName);
         ingredients.add(ingredient);
+        Mockito.when(newRecipe.getName()).thenReturn("Pączek");
+        account.setLogin("Login");
+        account.setFavouriteRecipes(List.of(recipe, newRecipe));
     }
 
 
@@ -210,5 +221,21 @@ class RecipeServiceTest {
     @Test
     void addRatingException() {
         assertThrows(RecipeDoesNotExistException.class, () -> recipeService.addRatingToRecipe(123L, 3F));
+    }
+
+    @Test
+    void getAllRecipesForAccount() {
+        Mockito.doAnswer(invocation -> recipes).when(recipeRepository).findAll();
+
+        assertDoesNotThrow(() -> recipeService.getAllRecipesForAccount("Login"));
+        assertEquals(1, recipeService.getAllRecipesForAccount("Login").size());
+    }
+
+    @Test
+    void getFavouriteRecipesForAccount() {
+        Mockito.when(accountRepository.findByLogin("Login")).thenReturn(account);
+
+        assertDoesNotThrow(() -> recipeService.getFavouriteRecipesForAccount("Login"));
+        assertEquals(2, recipeService.getFavouriteRecipesForAccount("Login").size());
     }
 }

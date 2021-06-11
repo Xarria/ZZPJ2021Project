@@ -25,7 +25,7 @@ public class EmailSender {
 
             Email email = EmailBuilder.startingBlank()
                     .from("Recipes", emailAddress)
-                    .to(recipientName, "flowerka99@gmail.com")
+                    .to(recipientName, recipientEmailAddress)
                     .withSubject(subject)
                     .withHTMLText(text)
                     .buildEmail();

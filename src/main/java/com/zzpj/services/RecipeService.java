@@ -1,6 +1,7 @@
 package com.zzpj.services;
 
 import com.zzpj.exceptions.RecipeDoesNotExistException;
+import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 import com.zzpj.repository.AccountRepository;
@@ -52,6 +53,73 @@ public class RecipeService implements RecipeServiceInterface {
     @Override
     public List<Recipe> getFavouriteRecipesForAccount(String login) {
         return accountRepository.findByLogin(login).getFavouriteRecipes();
+    }
+
+    @Override
+    public List<Recipe> getRecommendationBasedOnLikings(Account account, List<String> unwantedTags) {
+        List<String> favouriteRecipesTags = account.getFavouriteRecipes().stream()
+                .map(r -> List.of(r.getRecipeTags().split(",")))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        List<String> filteredTags = favouriteRecipesTags.stream().filter(r -> !unwantedTags.contains(r)).collect(Collectors.toList());
+
+        HashMap<String, Integer> tagsQuantities = new HashMap<>();
+
+        for (String tag : filteredTags) {
+            if (tagsQuantities.containsKey(tag)) {
+                tagsQuantities.put(tag, tagsQuantities.get(tag) + 1);
+            } else {
+                tagsQuantities.put(tag, 1);
+            }
+        }
+
+        List<String> tagsSortedByQantity = sortKeysByValue(tagsQuantities, false);
+
+        List<String> mostLiked = new ArrayList<>();
+
+        for (int i = 0; i < tagsSortedByQantity.size(); i++) {
+            if(i < 5){
+                mostLiked.add(tagsSortedByQantity.get(i));
+            }
+            else{
+                break;
+            }
+        }
+
+        List<Recipe> allRecipes = recipeRepository.findAll();
+
+        List<Recipe> notFavouriteRecipes = allRecipes.stream().filter(r -> !account.getFavouriteRecipes().contains(r)).collect(Collectors.toList());
+        Set<Recipe> recommended = new HashSet<>();
+
+        for (Recipe notFavouriteRecipe : notFavouriteRecipes) {
+            for (String s : mostLiked) {
+                if (notFavouriteRecipe.getRecipeTags().contains(s)) {
+                    recommended.add(notFavouriteRecipe);
+                }
+            }
+        }
+
+        return List.copyOf(recommended);
+    }
+
+    private List<String> sortKeysByValue(HashMap<String, Integer> map, boolean ascending)
+    {
+        List<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
+        list.sort((o1, o2) -> {
+            if (ascending) {
+                return o1.getValue().compareTo(o2.getValue());
+            } else {
+                return o2.getValue().compareTo(o1.getValue());
+            }
+        });
+
+        List<String> keysSortedByValue = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : list)
+        {
+            keysSortedByValue.add(entry.getKey());
+        }
+        return keysSortedByValue;
     }
 
     @Override
@@ -137,18 +205,17 @@ public class RecipeService implements RecipeServiceInterface {
                 .filter(r -> recipes.contains(r.getId())).collect(Collectors.toList());
         Map<String, Double> ingredients = new HashMap<>();
         for (Recipe recipe : filteredRecipes) {
-            for(Ingredient i : recipe.getRecipeIngredients()){
-                if(ingredients.containsKey(i.getName())){
+            for (Ingredient i : recipe.getRecipeIngredients()) {
+                if (ingredients.containsKey(i.getName())) {
                     ingredients.put(i.getName(), ingredients.get(i.getName()) + i.getQuantity());
-                }
-                else{
+                } else {
                     ingredients.put(i.getName(), i.getQuantity());
                 }
             }
         }
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("<b>Your shopping list: </b> <br> <br>");
-        for (Map.Entry<String, Double> entry : ingredients.entrySet()){
+        for (Map.Entry<String, Double> entry : ingredients.entrySet()) {
             stringBuilder.append("Name: ")
                     .append(entry.getKey())
                     .append(", Quantity: ")
