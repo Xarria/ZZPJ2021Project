@@ -25,6 +25,13 @@ import static org.mockito.Mockito.*;
 
 class AccountControllerTest {
 
+<<<<<<< HEAD
+=======
+    @Spy
+    private final Account account = new Account();
+    @Spy
+    private final Account account1 = new Account();
+>>>>>>> de208f8c371df7967658d5cd28fe9567a5e8c43b
     private final String login = "Login";
     private final String login1 = "Login1";
     private final String email = "email@email.com";
@@ -32,10 +39,13 @@ class AccountControllerTest {
     private final String accessLevelName = "user";
     private final List<Account> accounts = new ArrayList<>();
     @Spy
+<<<<<<< HEAD
     private final Account account = new Account();
     @Spy
     private final Account account1 = new Account();
     @Spy
+=======
+>>>>>>> de208f8c371df7967658d5cd28fe9567a5e8c43b
     private final AccessLevel accessLevel = new AccessLevel();
     @Mock
     private AccountServiceInterface accountService;

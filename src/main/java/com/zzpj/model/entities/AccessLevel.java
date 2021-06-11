@@ -1,6 +1,8 @@
 package com.zzpj.model.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -8,6 +10,8 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "AccessLevel")
 public class AccessLevel implements GrantedAuthority {
 
