@@ -64,8 +64,7 @@ public class IngredientService implements IngredientServiceInterface {
         return "https://api.edamam.com/api/food-database/v2/parser?" +
             "app_id=" + SecurityConstants.API_APP_ID +
             "&app_key=" + SecurityConstants.API_APPLICATION_KEYS +
-//            "&ingr=" + replaceSpacesInKeyword(keyword) +
-            "&ingr=" + keyword +
+            "&ingr=" + replaceSpacesInKeyword(keyword) +
             "&categoryLabel=food";
     }
 
