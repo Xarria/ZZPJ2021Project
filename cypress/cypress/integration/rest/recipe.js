@@ -4,20 +4,14 @@ describe('Recipe REST API Tests', () => {
         "username": "user1",
         "password": "password"
     }
-    let recipesArrayLength;
+    let lastRecipeId;
+    const unwantedTags = ["meat"];
 
     let jwt;
+    const recipeInitialRating = 5
+    const recipeInitialCount = 1
+    const newRecipeRating = 1
     const recipeId = 1;
-    const recipeGeneral1 = {
-        "name": "Carbonara",
-        "authorLogin": "user1",
-        "rating": 5.0,
-        "ratingsCount": 2,
-        "calories": 1000,
-        "preparationTimeInMinutes": 50,
-        "difficulty": "2",
-        "image": null
-    }
     const recipeDetails = {
         "name": "Carbonara",
         "authorLogin": "user1",
@@ -103,8 +97,8 @@ describe('Recipe REST API Tests', () => {
                 "fats": 0.16
             }
         ],
-        "rating": 5,
-        "ratingsCount": 0,
+        "rating": recipeInitialRating,
+        "ratingsCount": recipeInitialCount,
         "tags": "pasta,garlic,olive oil",
         "image": null,
         "servings": 4,
@@ -112,7 +106,6 @@ describe('Recipe REST API Tests', () => {
         "preparationTimeInMinutes": 20,
         "difficulty": "2"
     }
-
 
     beforeEach('Authenticate', () => {
         cy.request({
@@ -135,8 +128,7 @@ describe('Recipe REST API Tests', () => {
         }).then((response) => {
             expect(response.status).equal(200)
             expect(response.body).to.be.an('array')
-            expect(response.body).deep.contains(recipeGeneral1)
-            recipesArrayLength = response.body.length
+            lastRecipeId = response.body[response.body.length - 1].id
         })
     })
 
@@ -149,7 +141,7 @@ describe('Recipe REST API Tests', () => {
             }
         }).then((response) => {
             expect(response.status).equal(200)
-            expect(response.body).deep.contains(recipeDetails)
+            expect(response.body).to.deep.include(recipeDetails)
         })
     })
 
@@ -166,15 +158,177 @@ describe('Recipe REST API Tests', () => {
 
             cy.request({
                 method: 'GET',
-                url: '/recipes/' + (recipesArrayLength + 1),
+                url: '/recipes',
+                headers: {
+                    'Authorization': 'Bearer ' + jwt
+                }
+            }).then((response) => {
+                lastRecipeId = response.body[response.body.length - 1].id
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes/' + lastRecipeId,
+                    headers: {
+                        Authorization: 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.status).equal(200)
+                    expect(response.body).to.deep.include(newRecipe)
+                })
+            })
+        })
+    })
+
+    // TODO requires method fixing and finishing the test expectations
+    // it('Get recommendations with unwanted tags', () => {
+    //     cy.request({
+    //         method: 'GET',
+    //         url: '/recipes/recommendation/like',
+    //         body: unwantedTags,
+    //         headers: {
+    //             Authorization: 'Bearer ' + jwt
+    //         }
+    //     }).then((response) => {
+    //         expect(response.body).to.be.an('array')
+    //     })
+    // });
+
+    it('Get all recipes created by account', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes/account/' + userCredentials.username,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            expect(response.status).to.equal(200)
+            expect(response.body).to.be.an('array')
+            response.body.forEach((recipe) => {
+                expect(recipe.authorLogin).to.eql(userCredentials.username)
+            })
+        })
+    });
+
+    it('Get favourite recipes for account', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes/favourite/' + userCredentials.username,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            expect(response.status).to.equal(200)
+            expect(response.body).to.be.an('array')
+            response.body.forEach((recipe) => {
+                expect(recipe.id).to.be.oneOf([2, 3])
+            })
+        })
+    });
+
+    it('Update recipe', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes',
+            headers: {
+                'Authorization': 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            lastRecipeId = response.body[response.body.length - 1].id
+
+            cy.request({
+                method: 'PUT',
+                url: '/recipes/' + lastRecipeId,
+                body: {
+                    "description": "Changed text"
+                },
                 headers: {
                     Authorization: 'Bearer ' + jwt
                 }
             }).then((response) => {
-                expect(response.status).equal(200)
-                expect(response.body).to.deep.equal(newRecipe)
+                expect(response.status).to.equal(200)
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes/' + lastRecipeId,
+                    headers: {
+                        Authorization: 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.body.description).to.equal("Changed text")
+                })
+            })
+
+        })
+    });
+
+    // Can not pass number as a body dont know what to do
+    // it('Add rating to recipe', () => {
+    //     cy.request({
+    //         method: 'GET',
+    //         url: '/recipes',
+    //         headers: {
+    //             'Authorization': 'Bearer ' + jwt
+    //         }
+    //     }).then((response) => {
+    //         lastRecipeId = response.body[response.body.length - 1].id
+    //
+    //         cy.request({
+    //             method: 'PUT',
+    //             url: '/recipes/ratings/' + lastRecipeId,
+    //             headers: {
+    //                 Authorization: 'Bearer ' + jwt,
+    //                 'Content-Type': 'text/plain'
+    //             },
+    //             body: newRecipeRating
+    //         }).then((response) => {
+    //             expect(response.status).to.equal(200)
+    //
+    //             cy.request({
+    //                 method: 'GET',
+    //                 url: '/recipes/' + lasteRecipeId,
+    //                 headers: {
+    //                     Authorization: 'Bearer ' + jwt
+    //                 }
+    //             }).then((response) => {
+    //                 expect(response.body.rating).to.eql(
+    //                     (recipeInitialRating * recipeInitialCount + newRecipeRating) / (recipeInitialCount + 1)
+    //                 )
+    //                 expect(response.body.ratingsCount).to.eql(recipeInitialCount + 1)
+    //             })
+    //         })
+    //     })
+    // });
+
+    it('Delete previously created recipe', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes',
+            headers: {
+                'Authorization': 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            lastRecipeId = response.body[response.body.length - 1].id
+
+            cy.request({
+                method: 'DELETE',
+                url: '/recipes/' + lastRecipeId,
+                headers: {
+                    'Authorization': 'Bearer ' + jwt,
+                }
+            }).then((response) => {
+                expect(response.status).to.equal(200)
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.body).to.not.deep.include(newRecipe)
+                })
             })
         })
-    })
+    });
 
 })

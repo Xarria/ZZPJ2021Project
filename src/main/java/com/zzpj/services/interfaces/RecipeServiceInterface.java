@@ -35,4 +35,6 @@ public interface RecipeServiceInterface {
     List<Recipe> getFavouriteRecipesForAccount(String login);
 
     List<Recipe> getRecommendationBasedOnLikings(Account account, List<String> unwantedTags);
+
+    void addRecipeToFavourites(String login, Long id);
 }

@@ -36,7 +36,4 @@ public class Ingredient {
 
     @Column(name = "fats")
     private Double fats;
-
-    @ManyToMany(mappedBy = "recipeIngredients")
-    List<Recipe> recipes = new ArrayList<>();
 }

@@ -163,4 +163,11 @@ public class RecipeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+    @PutMapping(path = "/recipes/favourite/add/{id}",
+        consumes = {MediaType.TEXT_PLAIN_VALUE})
+    public ResponseEntity<?> addRecipeToFavourites(@PathVariable Long id) {
+        recipeService.addRecipeToFavourites(SecurityContextHolder.getContext().getAuthentication().getName(), id);
+        return ResponseEntity.ok().build();
+    }
 }

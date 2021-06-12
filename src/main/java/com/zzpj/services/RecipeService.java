@@ -80,13 +80,13 @@ public class RecipeService implements RecipeServiceInterface {
             }
         }
 
-        List<String> tagsSortedByQantity = sortKeysByValue(tagsQuantities, false);
+        List<String> tagsSortedByQuantity = sortKeysByValue(tagsQuantities, false);
 
         List<String> mostLiked = new ArrayList<>();
 
-        for (int i = 0; i < tagsSortedByQantity.size(); i++) {
+        for (int i = 0; i < tagsSortedByQuantity.size(); i++) {
             if(i < 5){
-                mostLiked.add(tagsSortedByQantity.get(i));
+                mostLiked.add(tagsSortedByQuantity.get(i));
             }
             else{
                 break;
@@ -139,19 +139,13 @@ public class RecipeService implements RecipeServiceInterface {
 
     @Override
     public void updateRecipe(Long id, Recipe updatedRecipe) throws RecipeDoesNotExistException {
+        // TODO works for recipe part, ingredients arent mapped from db and saved so they wont update
         if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(id))) {
             throw new RecipeDoesNotExistException("Recipe with id " + id + " was not found.");
         }
         Recipe recipe = recipeRepository.findRecipeById(id);
-        recipe.setName(updatedRecipe.getName());
-        recipe.setDescription(updatedRecipe.getDescription());
-        recipe.setCalories(updatedRecipe.getCalories());
-        recipe.setRecipeTags(updatedRecipe.getRecipeTags());
-        recipe.setRecipeIngredients(updatedRecipe.getRecipeIngredients());
-        recipe.setPrepareTimeInMinutes(updatedRecipe.getPrepareTimeInMinutes());
-        recipe.setDifficulty(updatedRecipe.getDifficulty());
-        recipe.setServings(updatedRecipe.getServings());
-        recipe.setImage(updatedRecipe.getImage());
+        updateNotBlankRecipeFields(recipe, updatedRecipe);
+
         recipeRepository.save(recipe);
     }
 
@@ -231,7 +225,66 @@ public class RecipeService implements RecipeServiceInterface {
         return stringBuilder.toString();
     }
 
+    @Override
+    public void addRecipeToFavourites(String login, Long id) {
+        Account account = accountRepository.findByLogin(login);
+        Recipe recipe = recipeRepository.findRecipeById(id);
+        account.getFavouriteRecipes().add(recipe);
+        accountRepository.save(account);
+    }
 
+    private void updateNotBlankRecipeFields(Recipe base, Recipe changes) {
+        if (changes.getName() != null && !changes.getName().isBlank()) {
+            base.setName(changes.getName());
+        }
+        if (changes.getDescription() != null && !changes.getDescription().isBlank()) {
+            base.setDescription(changes.getDescription());
+        }
+        if (changes.getRecipeIngredients() != null) {
+            for (int i = 0; i < changes.getRecipeIngredients().size(); i++) {
+                updateNotBlankIngredientFields(
+                        base.getRecipeIngredients().get(i),
+                        changes.getRecipeIngredients().get(i)
+                );
+            }
+        }
+        if (changes.getImage() != null) {
+            base.setImage(changes.getImage());
+        }
+        if (changes.getServings() != null) {
+            base.setServings(changes.getServings());
+        }
+        if (changes.getCalories() != null) {
+            base.setCalories(changes.getCalories());
+        }
+        if (changes.getPrepareTimeInMinutes() != null) {
+            base.setPrepareTimeInMinutes(changes.getPrepareTimeInMinutes());
+        }
+        if (changes.getDifficulty() != null && !changes.getName().isBlank()) {
+            base.setDifficulty(changes.getDifficulty());
+        }
+    }
+
+    private void updateNotBlankIngredientFields(Ingredient base, Ingredient changes) {
+        if (changes.getName() != null && !changes.getName().isBlank()) {
+            base.setName(changes.getName());
+        }
+        if (changes.getQuantity() != null) {
+            base.setQuantity(changes.getQuantity());
+        }
+        if (changes.getCalories() != null) {
+            base.setCalories(changes.getCalories());
+        }
+        if (changes.getProtein() != null) {
+            base.setProtein(changes.getProtein());
+        }
+        if (changes.getCarbohydrates() != null) {
+            base.setCarbohydrates(changes.getCarbohydrates());
+        }
+        if (changes.getFats() != null) {
+            base.setFats(changes.getFats());
+        }
+    }
 }
 
 
