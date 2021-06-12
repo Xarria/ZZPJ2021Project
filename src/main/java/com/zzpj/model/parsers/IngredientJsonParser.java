@@ -50,6 +50,7 @@ public class IngredientJsonParser {
         i.setProtein((double) food.getNutrients().getPROCNT());
         i.setCarbohydrates((double) food.getNutrients().getCHOCDF());
         i.setFats((double) food.getNutrients().getFAT());
+        i.setQuantity(1.0);
 
         return i;
     }
