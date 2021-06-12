@@ -2,7 +2,6 @@ package com.zzpj.model.mappers;
 
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
-import com.zzpj.model.entities.AccessLevel;
 import com.zzpj.model.entities.Recipe;
 
 import java.util.stream.Collectors;
@@ -12,6 +11,7 @@ public class RecipeMapper {
     public static RecipeGeneralDTO entityToGeneralDTO(Recipe recipe) {
         RecipeGeneralDTO recipeGeneralDTO = new RecipeGeneralDTO();
 
+        recipeGeneralDTO.setId(recipe.getId());
         recipeGeneralDTO.setName(recipe.getName());
         recipeGeneralDTO.setAuthorLogin(recipe.getAuthorLogin());
         recipeGeneralDTO.setRating(recipe.getRating());
@@ -27,6 +27,7 @@ public class RecipeMapper {
     public static RecipeDetailsDTO entityToDetailsDTO(Recipe recipe) {
         RecipeDetailsDTO recipeDetailsDTO = new RecipeDetailsDTO();
 
+        recipeDetailsDTO.setId(recipe.getId());
         recipeDetailsDTO.setName(recipe.getName());
         recipeDetailsDTO.setAuthorLogin(recipe.getAuthorLogin());
         recipeDetailsDTO.setDescription(recipe.getDescription());
@@ -48,6 +49,9 @@ public class RecipeMapper {
     public static Recipe generalDTOToEntity(RecipeGeneralDTO recipeGeneralDTO) {
         Recipe recipe = new Recipe();
 
+        if (recipeGeneralDTO.getId() != null) {
+            recipe.setId(recipeGeneralDTO.getId());
+        }
         recipe.setName(recipeGeneralDTO.getName());
         recipe.setAuthorLogin(recipeGeneralDTO.getAuthorLogin());
         recipe.setRating(recipeGeneralDTO.getRating());
@@ -63,6 +67,9 @@ public class RecipeMapper {
     public static Recipe detailsDTOtoEntity(RecipeDetailsDTO recipeDetailsDTO) {
         Recipe recipe = new Recipe();
 
+        if (recipeDetailsDTO.getId() != null) {
+            recipe.setId(recipeDetailsDTO.getId());
+        }
         recipe.setName(recipeDetailsDTO.getName());
         recipe.setAuthorLogin(recipeDetailsDTO.getAuthorLogin());
         recipe.setDescription(recipeDetailsDTO.getDescription());
