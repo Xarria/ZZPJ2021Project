@@ -33,11 +33,11 @@ CREATE TABLE Ingredient
 (
     id            bigint NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 ),
     name          varchar(60),
-    quantity      bigint NOT NULL,
-    calories      integer,
-    proteins      integer,
-    carbohydrates integer,
-    fats          integer,
+    quantity      double precision NOT NULL,
+    calories      double precision,
+    proteins      double precision,
+    carbohydrates double precision,
+    fats          double precision,
 
     CONSTRAINT ingredient_primary_key_constraint PRIMARY KEY (id)
 );

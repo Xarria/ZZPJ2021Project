@@ -26,16 +26,16 @@ public class Ingredient {
     private Double quantity;
 
     @Column(name = "calories")
-    private int calories;
+    private Double calories;
 
     @Column(name = "proteins")
-    private int protein;
+    private Double protein;
 
     @Column(name = "carbohydrates")
-    private int carbohydrates;
+    private Double carbohydrates;
 
     @Column(name = "fats")
-    private int fats;
+    private Double fats;
 
     @ManyToMany(mappedBy = "recipeIngredients")
     List<Recipe> recipes = new ArrayList<>();

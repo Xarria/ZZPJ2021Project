@@ -1,6 +1,5 @@
 package com.zzpj.model.DTOs;
 
-import com.zzpj.model.entities.Recipe;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,8 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -20,19 +17,17 @@ public class IngredientRecipesDTO {
     private String name;
 
     @NotNull
-    private Long quantity;
+    private Double quantity;
 
     @Positive
-    private int calories;
+    private Double calories;
 
     @PositiveOrZero
-    private int protein;
+    private Double protein;
 
     @PositiveOrZero
-    private int carbohydrates;
+    private Double carbohydrates;
 
     @PositiveOrZero
-    private int fats;
-
-    List<Recipe> recipes = new ArrayList<>();
+    private Double fats;
 }
