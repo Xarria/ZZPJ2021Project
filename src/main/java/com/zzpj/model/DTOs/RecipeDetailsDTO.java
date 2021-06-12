@@ -22,7 +22,7 @@ public class RecipeDetailsDTO {
     private String name;
 
     @NotNull
-    private AccountNoRecipesDTO author;
+    private String authorLogin;
 
     @NotBlank
     private String description;
@@ -36,9 +36,9 @@ public class RecipeDetailsDTO {
 
     private int ratingsCount;
 
-    private List<String> tags = new ArrayList<>();
+    private String tags;
 
-    private Byte[] image;
+    private byte[] image;
 
     @NotNull
     @Min(1)

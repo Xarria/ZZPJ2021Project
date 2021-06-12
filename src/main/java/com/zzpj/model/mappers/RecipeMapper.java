@@ -13,11 +13,12 @@ public class RecipeMapper {
         RecipeGeneralDTO recipeGeneralDTO = new RecipeGeneralDTO();
 
         recipeGeneralDTO.setName(recipe.getName());
-        recipeGeneralDTO.setAuthor(AccountMapper.entityToAdminDTO(recipe.getAuthor()));
+        recipeGeneralDTO.setAuthorLogin(recipe.getAuthorLogin());
         recipeGeneralDTO.setRating(recipe.getRating());
         recipeGeneralDTO.setRatingsCount(recipe.getRatingsCount());
         recipeGeneralDTO.setCalories(recipe.getCalories());
         recipeGeneralDTO.setPreparationTimeInMinutes(recipe.getPrepareTimeInMinutes());
+        recipeGeneralDTO.setDifficulty(recipe.getDifficulty());
         recipeGeneralDTO.setImage(recipe.getImage());
 
         return recipeGeneralDTO;
@@ -27,7 +28,7 @@ public class RecipeMapper {
         RecipeDetailsDTO recipeDetailsDTO = new RecipeDetailsDTO();
 
         recipeDetailsDTO.setName(recipe.getName());
-        recipeDetailsDTO.setAuthor(AccountMapper.entityToAdminDTO(recipe.getAuthor()));
+        recipeDetailsDTO.setAuthorLogin(recipe.getAuthorLogin());
         recipeDetailsDTO.setDescription(recipe.getDescription());
         recipeDetailsDTO.setIngredients(recipe.getRecipeIngredients().stream()
                 .map(IngredientsMapper::entityToDTO)
@@ -48,19 +49,22 @@ public class RecipeMapper {
         Recipe recipe = new Recipe();
 
         recipe.setName(recipeGeneralDTO.getName());
+        recipe.setAuthorLogin(recipeGeneralDTO.getAuthorLogin());
         recipe.setRating(recipeGeneralDTO.getRating());
+        recipe.setRatingsCount(recipeGeneralDTO.getRatingsCount());
         recipe.setCalories(recipeGeneralDTO.getCalories());
         recipe.setPrepareTimeInMinutes(recipeGeneralDTO.getPreparationTimeInMinutes());
+        recipe.setDifficulty(recipeGeneralDTO.getDifficulty());
         recipe.setImage(recipeGeneralDTO.getImage());
 
         return recipe;
     }
 
-    public static Recipe detailsDTOtoEntity(RecipeDetailsDTO recipeDetailsDTO, AccessLevel accessLevel) {
+    public static Recipe detailsDTOtoEntity(RecipeDetailsDTO recipeDetailsDTO) {
         Recipe recipe = new Recipe();
 
         recipe.setName(recipeDetailsDTO.getName());
-        recipe.setAuthor(AccountMapper.noRecipesDTOWithAccessLevelToEntity(recipeDetailsDTO.getAuthor(), accessLevel));
+        recipe.setAuthorLogin(recipeDetailsDTO.getAuthorLogin());
         recipe.setDescription(recipeDetailsDTO.getDescription());
         recipe.setRecipeIngredients(recipeDetailsDTO.getIngredients().stream()
                 .map(IngredientsMapper::dtoToEntity)

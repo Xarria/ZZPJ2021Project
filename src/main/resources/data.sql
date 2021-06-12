@@ -11,16 +11,16 @@ VALUES ('admin', 'b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8b
 
 INSERT INTO Ingredient (name, quantity, calories, proteins, carbohydrates, fats)
 VALUES ('a', 1, 2, 3, 4, 5),
-       ('b', 1, 2, 3, 4, 5),
+       ('a', 1, 2, 3, 4, 5),
        ('c', 1, 2, 3, 4, 5),
-       ('d', 1, 2, 3, 4, 5),
+       ('c', 4, 2, 3, 4, 5),
        ('e', 1, 2, 3, 4, 5),
        ('f', 1, 2, 3, 4, 5);
 
-INSERT INTO Recipe (name, author, description, rating, ratings_count, image, servings , calories, prepare_time_in_minutes, difficulty)
-VALUES ('Carbonara', 3, 'pychotka', 5, 2, null, 4, 1000, 50, 2),
-       ('Nalesniki', 4, 'pychotka', 5, 4, null, 4, 400, 50, 1),
-       ('Spaghetti', 4, 'pychotka', 5, 13, null, 4, 800, 50, 2);
+INSERT INTO Recipe (name, author, description, rating, ratings_count, tags, image, servings , calories, prepare_time_in_minutes, difficulty)
+VALUES ('Carbonara', 'user1', 'pychotka', 5, 2, 'meat,noodle', null, 4, 1000, 50, 2),
+       ('Nalesniki', 'user1', 'pychotka', 5, 4, 'vegan,sweet', null, 4, 400, 50, 1),
+       ('Spaghetti', 'user2', 'pychotka', 5, 13, 'meat,noodle', null, 4, 800, 50, 2);
 
 INSERT INTO Recipe_Account (recipe_id, account_id)
 VALUES (1, 4),

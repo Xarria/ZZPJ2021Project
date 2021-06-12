@@ -18,7 +18,6 @@ import java.util.List;
 public class Recipe implements Serializable {
 
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
@@ -28,9 +27,8 @@ public class Recipe implements Serializable {
     private String name;
 
     @NotNull
-    @ManyToOne(optional = false, cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "author", nullable = false, updatable = false)
-    private Account author;
+    @Column(name = "author", nullable = false, updatable = false)
+    private String authorLogin;
 
     @NotNull
     @Column(name = "description", nullable = false)
@@ -51,12 +49,11 @@ public class Recipe implements Serializable {
     @Column(name = "ratings_count", nullable = false)
     private Integer ratingsCount;
 
-    @ElementCollection
-    private List<String> recipeTags = new ArrayList<>();
+    @Column(name = "tags", nullable = true)
+    private String recipeTags;
 
-    @NotNull
-    @Column(name = "image", nullable = false)
-    private Byte[] image;
+    @Column(name = "image", nullable = true)
+    private byte[] image;
 
     @NotNull
     @Column(name = "servings", nullable = false)

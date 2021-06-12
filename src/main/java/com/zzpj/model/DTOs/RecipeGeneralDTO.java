@@ -18,7 +18,7 @@ public class RecipeGeneralDTO {
     private String name;
 
     @NotNull
-    private AccountNoRecipesDTO author;
+    private String authorLogin;
 
     @NotNull
     @Range(min = 1, max = 5)
@@ -33,5 +33,8 @@ public class RecipeGeneralDTO {
     @Positive
     private Long preparationTimeInMinutes;
 
-    private Byte[] image;
+    @NotBlank
+    private String difficulty;
+
+    private byte[] image;
 }

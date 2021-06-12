@@ -105,6 +105,7 @@ public class AccountController {
         return ResponseEntity.ok(accountRecipesDTOs);
     }
 
+
     @PutMapping(path = "/accounts/{login}", consumes = "application/json")
     public ResponseEntity<?> updateAccount(@PathVariable String login, @RequestBody AccountNoRecipesDTO accountDTO) {
         try {
