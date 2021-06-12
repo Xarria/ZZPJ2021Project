@@ -60,7 +60,7 @@ public class RecipeController {
                 collect(Collectors.toList()));
     }
 
-    @GetMapping(path = "/recipes/recommendation/like", produces = "application/json")
+    @GetMapping(path = "/recipes/recommendation", produces = "application/json")
     public ResponseEntity<List<RecipeGeneralDTO>> getRecommendationBasedOnLikings(@RequestBody List<String> unwantedTags) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

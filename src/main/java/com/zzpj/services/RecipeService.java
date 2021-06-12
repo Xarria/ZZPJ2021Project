@@ -68,11 +68,9 @@ public class RecipeService implements RecipeServiceInterface {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        List<String> filteredTags = favouriteRecipesTags.stream().filter(r -> !unwantedTags.contains(r)).collect(Collectors.toList());
-
         HashMap<String, Integer> tagsQuantities = new HashMap<>();
 
-        for (String tag : filteredTags) {
+        for (String tag : favouriteRecipesTags) {
             if (tagsQuantities.containsKey(tag)) {
                 tagsQuantities.put(tag, tagsQuantities.get(tag) + 1);
             } else {
@@ -80,13 +78,15 @@ public class RecipeService implements RecipeServiceInterface {
             }
         }
 
-        List<String> tagsSortedByQantity = sortKeysByValue(tagsQuantities, false);
+        List<String> tagsSortedByQuantity = sortKeysByValue(tagsQuantities, false);
+
+        List<String> filteredTags = tagsSortedByQuantity.stream().filter(r -> !unwantedTags.contains(r)).collect(Collectors.toList());
 
         List<String> mostLiked = new ArrayList<>();
 
-        for (int i = 0; i < tagsSortedByQantity.size(); i++) {
-            if(i < 5){
-                mostLiked.add(tagsSortedByQantity.get(i));
+        for (int i = 0; i < filteredTags.size(); i++) {
+            if(i < 3){
+                mostLiked.add(filteredTags.get(i));
             }
             else{
                 break;
