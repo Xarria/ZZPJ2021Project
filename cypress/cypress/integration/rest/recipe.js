@@ -4,6 +4,7 @@ describe('Recipe REST API Tests', () => {
         "username": "user1",
         "password": "password"
     }
+    let recipesArrayLength;
 
     let jwt;
     const recipeId = 1;
@@ -130,12 +131,12 @@ describe('Recipe REST API Tests', () => {
             headers: {
                 'Authorization': 'Bearer ' + jwt
             }
+        }).then((response) => {
+            expect(response.status).equal(200)
+            expect(response.body).to.be.an('array')
+            expect(response.body).deep.contains(recipeGeneral1)
+            recipesArrayLength = response.body.length
         })
-            .then((response) => {
-                expect(response.status).equal(200)
-                expect(response.body.length).equals(3)
-                expect(response.body).deep.contains(recipeGeneral1)
-            })
     })
 
     it('Get recipe details', () => {
@@ -143,23 +144,36 @@ describe('Recipe REST API Tests', () => {
             method: 'GET',
             url: '/recipes/' + recipeId,
             headers: {
-                Authorization: jwt
+                Authorization: 'Bearer ' + jwt
             }
+        }).then((response) => {
+            expect(response.status).equal(200)
+            expect(response.body).deep.contains(recipeDetails)
         })
-            .then((response) => {
-                expect(response.status).equal(200)
-                expect(response.body).deep.contains(recipeDetails)
-            })
     })
 
-    it('Create recipe', () => {
+    it('Create recipe, and get it', () => {
         cy.request({
             method: 'POST',
             url: '/recipes',
             body: newRecipe,
             headers: {
-                Authorization: jwt
+                Authorization: 'Bearer ' + jwt
             }
+        }).then((response) => {
+            expect(response.status).equal(200)
+
+            cy.request({
+                method: 'GET',
+                url: '/recipes/' + (recipesArrayLength + 1),
+                headers: {
+                    Authorization: 'Bearer ' + jwt
+                }
+            }).then((response) => {
+                expect(response.status).equal(200)
+                expect(response.body).to.deep.equal(newRecipe)
+            })
         })
     })
+
 })
