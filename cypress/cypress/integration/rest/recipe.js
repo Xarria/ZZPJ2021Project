@@ -113,6 +113,7 @@ describe('Recipe REST API Tests', () => {
         "difficulty": "2"
     }
 
+
     beforeEach('Authenticate', () => {
         cy.request({
             method: 'POST',
