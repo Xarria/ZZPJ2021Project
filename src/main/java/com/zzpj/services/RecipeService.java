@@ -4,15 +4,14 @@ import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
-import com.zzpj.repository.AccountRepository;
-import com.zzpj.repository.IngredientRepository;
-import com.zzpj.repository.RecipeRepository;
+import com.zzpj.repositories.AccountRepository;
+import com.zzpj.repositories.IngredientRepository;
+import com.zzpj.repositories.RecipeRepository;
 import com.zzpj.services.interfaces.RecipeServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -166,6 +165,7 @@ public class RecipeService implements RecipeServiceInterface {
         ingredients.add(ingredient);
         recipe.setRecipeIngredients(ingredients);
         recipeRepository.save(recipe);
+        recipeRepository.flush();
     }
 
     @Override

@@ -1,13 +1,13 @@
 package com.zzpj.utils;
 
-import java.io.IOException;
-import java.io.InputStream;
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.Mailer;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
 import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.MailerBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class EmailSender {

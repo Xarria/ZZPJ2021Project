@@ -45,7 +45,7 @@ class RecipeMapperTest {
         RecipeDetailsDTO recipeDTO = RecipeMapper.entityToDetailsDTO(recipe);
 
         assertEquals("Bułeczki", recipeDTO.getName());
-        assertEquals("Login", recipeDTO.getAuthor());
+        assertEquals("Login", recipeDTO.getAuthorLogin());
         assertEquals("Fajne bułeczki", recipeDTO.getDescription());
         assertEquals(4F, recipeDTO.getRating());
         assertEquals(5, recipeDTO.getRatingsCount());
@@ -65,7 +65,7 @@ class RecipeMapperTest {
         RecipeGeneralDTO recipeDTO = RecipeMapper.entityToGeneralDTO(recipe);
 
         assertEquals("Bułeczki", recipeDTO.getName());
-        assertEquals("Login", recipeDTO.getAuthor());
+        assertEquals("Login", recipeDTO.getAuthorLogin());
         assertEquals(4F, recipeDTO.getRating());
         assertEquals(5, recipeDTO.getRatingsCount());
         assertEquals(400, recipeDTO.getCalories());

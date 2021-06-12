@@ -11,12 +11,12 @@ VALUES ('admin', 'b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8b
        ('user3', 'b109f3bbbc244eb82441917ed06d618b9008dd09b3befd1b5e07394c706a8bb980b1d7785e5976ec049b46df5f1326af5a2ea6d103fd07c95385ffab0cacbc86', 'user3cos.com', 3, true);
 
 INSERT INTO Ingredient (name, quantity, calories, proteins, carbohydrates, fats)
-VALUES ('a', 1, 2, 3, 4, 5),
-       ('a', 1, 2, 3, 4, 5),
-       ('c', 1, 2, 3, 4, 5),
-       ('c', 4, 2, 3, 4, 5),
-       ('e', 1, 2, 3, 4, 5),
-       ('f', 1, 2, 3, 4, 5);
+VALUES ('mąka', 500, 2, 3, 4, 5),
+       ('woda', 200, 2, 3, 4, 5),
+       ('cukier', 220, 2, 3, 4, 5),
+       ('sól', 2, 2, 3, 4, 5),
+       ('drożdże', 50, 2, 3, 4, 5),
+       ('magiczny składnik', 10000, 2, 3, 4, 5);
 
 INSERT INTO Recipe (name, author, description, rating, ratings_count, tags, image, servings , calories, prepare_time_in_minutes, difficulty)
 VALUES ('Spaghetti carbonara', 'user1', 'pychotka', 5, 2, 'meat,noodle,pasta,savoury,gluten', null, 4, 1000, 50, 2),
