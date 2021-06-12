@@ -1,7 +1,7 @@
 package com.zzpj.services;
 
 import com.zzpj.model.entities.AccessLevel;
-import com.zzpj.repository.AccessLevelRepository;
+import com.zzpj.repositories.AccessLevelRepository;
 import com.zzpj.services.interfaces.AccessLevelServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

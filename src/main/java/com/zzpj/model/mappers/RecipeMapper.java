@@ -2,7 +2,6 @@ package com.zzpj.model.mappers;
 
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
 import com.zzpj.model.DTOs.RecipeGeneralDTO;
-import com.zzpj.model.entities.AccessLevel;
 import com.zzpj.model.entities.Recipe;
 
 import java.util.stream.Collectors;
