@@ -5,7 +5,7 @@ import com.zzpj.exceptions.EmailAlreadyExistsException;
 import com.zzpj.exceptions.LoginAlreadyExistsException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.AccountPrincipal;
-import com.zzpj.repository.AccountRepository;
+import com.zzpj.repositories.AccountRepository;
 import com.zzpj.services.interfaces.AccountServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.token.Sha512DigestUtils;

@@ -1,4 +1,4 @@
-package com.zzpj.repository;
+package com.zzpj.repositories;
 
 import com.zzpj.model.entities.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;

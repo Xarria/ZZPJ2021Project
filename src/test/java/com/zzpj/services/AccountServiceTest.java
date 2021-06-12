@@ -5,7 +5,7 @@ import com.zzpj.exceptions.EmailAlreadyExistsException;
 import com.zzpj.exceptions.LoginAlreadyExistsException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.AccountPrincipal;
-import com.zzpj.repository.AccountRepository;
+import com.zzpj.repositories.AccountRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
