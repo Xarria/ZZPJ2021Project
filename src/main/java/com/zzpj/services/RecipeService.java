@@ -84,10 +84,9 @@ public class RecipeService implements RecipeServiceInterface {
         List<String> mostLiked = new ArrayList<>();
 
         for (int i = 0; i < filteredTags.size(); i++) {
-            if(i < 3){
+            if (i < 3) {
                 mostLiked.add(filteredTags.get(i));
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -105,11 +104,19 @@ public class RecipeService implements RecipeServiceInterface {
             }
         }
 
-        return List.copyOf(recommended);
+        Set<Recipe> finalRecommendations = new HashSet<>();
+
+
+        for (Recipe recommendation : recommended) {
+            if (unwantedTags.stream().noneMatch(recommendation.getRecipeTags()::contains)) {
+                finalRecommendations.add(recommendation);
+            }
+        }
+
+        return List.copyOf(finalRecommendations);
     }
 
-    private List<String> sortKeysByValue(HashMap<String, Integer> map, boolean ascending)
-    {
+    private List<String> sortKeysByValue(HashMap<String, Integer> map, boolean ascending) {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
         list.sort((o1, o2) -> {
             if (ascending) {
@@ -120,8 +127,7 @@ public class RecipeService implements RecipeServiceInterface {
         });
 
         List<String> keysSortedByValue = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : list)
-        {
+        for (Map.Entry<String, Integer> entry : list) {
             keysSortedByValue.add(entry.getKey());
         }
         return keysSortedByValue;
@@ -165,7 +171,6 @@ public class RecipeService implements RecipeServiceInterface {
         ingredients.add(ingredient);
         recipe.setRecipeIngredients(ingredients);
         recipeRepository.save(recipe);
-        recipeRepository.flush();
     }
 
     @Override

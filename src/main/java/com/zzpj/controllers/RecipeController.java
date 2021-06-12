@@ -119,7 +119,6 @@ public class RecipeController {
         try {
             IngredientDTO ingredientDTO = IngredientsMapper
                     .entityToDTO(ingredientService.getIngredientsByKeyword(customIngredientDTO.getName()));
-            ingredientService.addIngredient(IngredientsMapper.dtoToEntity(ingredientDTO, customIngredientDTO.getQuantity()));
             recipeService.addIngredient(id, IngredientsMapper.dtoToEntity(ingredientDTO, customIngredientDTO.getQuantity()));
             return ResponseEntity.ok().build();
         } catch (RecipeDoesNotExistException | IngredientNotFoundException | URLNotFoundException | IOException e) {
