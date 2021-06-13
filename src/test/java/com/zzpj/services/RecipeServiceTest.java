@@ -7,6 +7,7 @@ import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 import com.zzpj.repositories.AccountRepository;
+import com.zzpj.repositories.IngredientRepository;
 import com.zzpj.repositories.RecipeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,8 @@ class RecipeServiceTest {
 
     @Mock
     private RecipeRepository recipeRepository;
+    @Mock
+    private IngredientRepository ingredientRepository;
     @Mock
     private AccountRepository accountRepository;
     @InjectMocks
@@ -67,6 +70,8 @@ class RecipeServiceTest {
         Mockito.when(recipe.getAuthorLogin()).thenReturn("Login");
         recipes.add(recipe);
         Mockito.when(ingredient.getName()).thenReturn(ingredientName);
+        Mockito.when(ingredient.getQuantity()).thenReturn(100D);
+        Mockito.when(ingredient.getCalories()).thenReturn(100D);
         ingredients.add(ingredient);
         Mockito.when(newRecipe.getName()).thenReturn("Pączek");
         account.setLogin("Login");
@@ -74,31 +79,32 @@ class RecipeServiceTest {
     }
 
 
-//    @Test
-//    void createRecipe() {
-//
-//        String newName = "Chlebek";
-//        newRecipe.setName(newName);
-//        Long newTime = 120L;
-//        newRecipe.setPrepareTimeInMinutes(newTime);
-//
-//        Mockito.doAnswer(invocation -> {
-//            recipes.add(invocation.getArgument(0));
-//            return null;
-//        }).when(recipeRepository).save(newRecipe);
-//
-//        Mockito.when(newRecipe.getName()).thenReturn(newName);
-//        Mockito.when(newRecipe.getPrepareTimeInMinutes()).thenReturn(newTime);
-//
-//        assertEquals(1, recipes.size());
-//        assertDoesNotThrow(() -> recipeService.createRecipe(newRecipe));
-//        Mockito.verify(recipeRepository).save(newRecipe);
-//        Assertions.assertEquals(2, recipes.size());
-//        Assertions.assertEquals(newRecipe, recipes.get(1));
-//        Assertions.assertEquals(newName, recipes.get(1).getName());
-//        Assertions.assertEquals(newTime, recipes.get(1).getPrepareTimeInMinutes());
-//
-//    }
+    @Test
+    void createRecipe() {
+
+        String newName = "Chlebek";
+        newRecipe.setName(newName);
+        Long newTime = 120L;
+        newRecipe.setPrepareTimeInMinutes(newTime);
+        newRecipe.setRecipeIngredients(ingredients);
+
+        Mockito.doAnswer(invocation -> {
+            recipes.add(invocation.getArgument(0));
+            return null;
+        }).when(recipeRepository).save(newRecipe);
+
+        Mockito.when(newRecipe.getName()).thenReturn(newName);
+        Mockito.when(newRecipe.getPrepareTimeInMinutes()).thenReturn(newTime);
+
+        assertEquals(1, recipes.size());
+        assertDoesNotThrow(() -> recipeService.createRecipe(newRecipe));
+        Mockito.verify(recipeRepository).save(newRecipe);
+        Assertions.assertEquals(2, recipes.size());
+        Assertions.assertEquals(newRecipe, recipes.get(1));
+        Assertions.assertEquals(newName, recipes.get(1).getName());
+        Assertions.assertEquals(newTime, recipes.get(1).getPrepareTimeInMinutes());
+
+    }
 
     @Test
     void getRecipeById() throws RecipeDoesNotExistException {
@@ -173,9 +179,12 @@ class RecipeServiceTest {
     @Test
     void addIngredient() throws RecipeDoesNotExistException {
         newIngredient.setName(newIngredientName);
+        newIngredient.setCalories(250D);
+        newIngredient.setQuantity(300D);
         ingredients.add(newIngredient);
         updatedRecipe.setRecipeIngredients(ingredients);
         updatedRecipe.setAuthorLogin("Login");
+        updatedRecipe.setCalories(300);
 
         Mockito.when(recipeRepository.findAll()).thenReturn(recipes);
 
