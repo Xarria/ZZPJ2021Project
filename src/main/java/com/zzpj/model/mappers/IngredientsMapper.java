@@ -25,9 +25,9 @@ public class IngredientsMapper {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(ingredientDTO.getName());
         ingredient.setCalories(ingredientDTO.getCalories());
-        ingredientDTO.setCarbohydrates(Precision.round(ingredient.getCarbohydrates(), 2));
-        ingredientDTO.setProtein(Precision.round(ingredient.getProtein(), 2));
-        ingredientDTO.setFats(Precision.round(ingredient.getFats(), 2));
+        ingredient.setCarbohydrates(Precision.round(ingredientDTO.getCarbohydrates(), 2));
+        ingredient.setProtein(Precision.round(ingredientDTO.getProtein(), 2));
+        ingredient.setFats(Precision.round(ingredientDTO.getFats(), 2));
         ingredient.setQuantity(ingredientDTO.getQuantity());
         return ingredient;
     }

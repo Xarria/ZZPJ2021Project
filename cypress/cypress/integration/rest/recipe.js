@@ -13,46 +13,46 @@ describe('Recipe REST API Tests', () => {
     const newRecipeRating = 1
     const recipeId = 1;
     const recipeDetails = {
-        "name": "Carbonara",
+        "name": "Spaghetti carbonara",
         "authorLogin": "user1",
         "description": "pychotka",
         "ingredients": [
             {
-                "name": "a",
-                "quantity": 1.0,
-                "calories": 2,
-                "protein": 3,
-                "carbohydrates": 4,
-                "fats": 5
+                "name": "flour",
+                "quantity": 500.0,
+                "calories": 2.0,
+                "protein": 3.0,
+                "carbohydrates": 4.0,
+                "fats": 5.0
             },
             {
-                "name": "a",
-                "quantity": 1.0,
-                "calories": 2,
-                "protein": 3,
-                "carbohydrates": 4,
-                "fats": 5
+                "name": "water",
+                "quantity": 200.0,
+                "calories": 2.0,
+                "protein": 3.0,
+                "carbohydrates": 4.0,
+                "fats": 5.0
             },
             {
-                "name": "c",
-                "quantity": 1.0,
-                "calories": 2,
-                "protein": 3,
-                "carbohydrates": 4,
-                "fats": 5
+                "name": "sugar",
+                "quantity": 220.0,
+                "calories": 2.0,
+                "protein": 3.0,
+                "carbohydrates": 4.0,
+                "fats": 5.0
             },
             {
-                "name": "c",
-                "quantity": 4.0,
-                "calories": 2,
-                "protein": 3,
-                "carbohydrates": 4,
-                "fats": 5
+                "name": "salt",
+                "quantity": 2.0,
+                "calories": 2.0,
+                "protein": 3.0,
+                "carbohydrates": 4.0,
+                "fats": 5.0
             }
         ],
         "rating": 5.0,
         "ratingsCount": 2,
-        "tags": "meat,noodle",
+        "tags": "meat,noodle,pasta,savoury,gluten",
         "image": null,
         "servings": 4,
         "calories": 1000,
@@ -106,6 +106,50 @@ describe('Recipe REST API Tests', () => {
         "preparationTimeInMinutes": 20,
         "difficulty": "2"
     }
+    const favouriteRecipes = [
+        {
+            "id": 3,
+            "name": "Crepes",
+            "authorLogin": "user1",
+            "description": "pychotka",
+            "rating": 5.0,
+            "ratingsCount": 4,
+            "tags": "vegan,sweet,gluten,dairy",
+            "image": null,
+            "servings": 4,
+            "calories": 400,
+            "preparationTimeInMinutes": 50,
+            "difficulty": "1"
+        },
+        {
+            "id": 5,
+            "name": "Spaghetti aglio olio",
+            "authorLogin": "user2",
+            "description": "pychotka",
+            "rating": 5.0,
+            "ratingsCount": 13,
+            "tags": "vegan,noodle,pasta,savoury,gluten",
+            "image": null,
+            "servings": 4,
+            "calories": 800,
+            "preparationTimeInMinutes": 50,
+            "difficulty": "2"
+        },
+        {
+            "id": 7,
+            "name": "Cherry soup",
+            "authorLogin": "user2",
+            "description": "pychotka",
+            "rating": 5.0,
+            "ratingsCount": 13,
+            "tags": "vegan,soup,sweet,fruit",
+            "image": null,
+            "servings": 4,
+            "calories": 800,
+            "preparationTimeInMinutes": 50,
+            "difficulty": "2"
+        }
+    ]
 
     beforeEach('Authenticate', () => {
         cy.request({
@@ -219,9 +263,7 @@ describe('Recipe REST API Tests', () => {
         }).then((response) => {
             expect(response.status).to.equal(200)
             expect(response.body).to.be.an('array')
-            response.body.forEach((recipe) => {
-                expect(recipe.id).to.be.oneOf([2, 3])
-            })
+            expect(response.body).to.eql(favouriteRecipes)
         })
     });
 
