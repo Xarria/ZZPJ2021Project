@@ -37,6 +37,8 @@ public class RecipeService implements RecipeServiceInterface {
     @Override
     public void createRecipe(Recipe recipe) {
         recipe.getRecipeIngredients().forEach(ingredientRepository::save);
+        int calories = recipe.getRecipeIngredients().stream().mapToInt(i -> (int) (i.getCalories() * i.getQuantity() / 100)).sum();
+        recipe.setCalories(calories);
         recipeRepository.save(recipe);
     }
 
@@ -169,9 +171,11 @@ public class RecipeService implements RecipeServiceInterface {
         if(!authorLogin.equals(recipe.getAuthorLogin())){
             throw new NotAnAuthorException("Authenticated user is not an author of this recipe");
         }
+        int addCalories = (int) (ingredient.getCalories() * ingredient.getQuantity() / 100);
         List<Ingredient> ingredients = recipe.getRecipeIngredients();
         ingredients.add(ingredient);
         recipe.setRecipeIngredients(ingredients);
+        recipe.setCalories(recipe.getCalories() + addCalories);
         recipeRepository.save(recipe);
     }
 
@@ -189,7 +193,10 @@ public class RecipeService implements RecipeServiceInterface {
         Ingredient toRemove = recipe.getRecipeIngredients().stream()
                 .filter(i -> i.getName().equals(ingredientName))
                 .findAny().orElseThrow(() -> new IngredientNotFoundException("Ingredient not found in a recipe"));
+        int subtractCalories = (int) (toRemove.getCalories() * toRemove.getQuantity() / 100);
         ingredients.remove(toRemove);
+        recipe.setRecipeIngredients(ingredients);
+        recipe.setCalories(recipe.getCalories() - subtractCalories);
         recipeRepository.save(recipe);
     }
 
