@@ -16,6 +16,8 @@ public class RecipeMapper {
         recipeGeneralDTO.setRating(recipe.getRating());
         recipeGeneralDTO.setRatingsCount(recipe.getRatingsCount());
         recipeGeneralDTO.setCalories(recipe.getCalories());
+        recipeGeneralDTO.setDescription(recipe.getDescription());
+        recipeGeneralDTO.setServings(recipe.getServings());
         recipeGeneralDTO.setPreparationTimeInMinutes(recipe.getPrepareTimeInMinutes());
         recipeGeneralDTO.setDifficulty(recipe.getDifficulty());
         recipeGeneralDTO.setTags(recipe.getRecipeTags());
@@ -53,6 +55,8 @@ public class RecipeMapper {
         recipe.setRating(recipeGeneralDTO.getRating());
         recipe.setRatingsCount(recipeGeneralDTO.getRatingsCount());
         recipe.setCalories(recipeGeneralDTO.getCalories());
+        recipe.setDescription(recipeGeneralDTO.getDescription());
+        recipe.setServings(recipeGeneralDTO.getServings());
         recipe.setPrepareTimeInMinutes(recipeGeneralDTO.getPreparationTimeInMinutes());
         recipe.setDifficulty(recipeGeneralDTO.getDifficulty());
         recipe.setRecipeTags(recipeGeneralDTO.getTags());

@@ -1,5 +1,7 @@
 package com.zzpj.services;
 
+import com.zzpj.exceptions.IngredientNotFoundException;
+import com.zzpj.exceptions.NotAnAuthorException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
@@ -116,6 +118,7 @@ public class RecipeService implements RecipeServiceInterface {
         return List.copyOf(finalRecommendations);
     }
 
+
     private List<String> sortKeysByValue(HashMap<String, Integer> map, boolean ascending) {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
         list.sort((o1, o2) -> {
@@ -143,16 +146,18 @@ public class RecipeService implements RecipeServiceInterface {
     }
 
     @Override
-    public void updateRecipe(Long id, Recipe updatedRecipe) throws RecipeDoesNotExistException {
+    public void updateRecipe(Long id, Recipe updatedRecipe, String authorLogin) throws RecipeDoesNotExistException, NotAnAuthorException {
         if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(id))) {
             throw new RecipeDoesNotExistException("Recipe with id " + id + " was not found.");
         }
         Recipe recipe = recipeRepository.findRecipeById(id);
+        if(!authorLogin.equals(recipe.getAuthorLogin())){
+            throw new NotAnAuthorException("Authenticated user is not an author of this recipe");
+        }
         recipe.setName(updatedRecipe.getName());
         recipe.setDescription(updatedRecipe.getDescription());
         recipe.setCalories(updatedRecipe.getCalories());
         recipe.setRecipeTags(updatedRecipe.getRecipeTags());
-        recipe.setRecipeIngredients(updatedRecipe.getRecipeIngredients());
         recipe.setPrepareTimeInMinutes(updatedRecipe.getPrepareTimeInMinutes());
         recipe.setDifficulty(updatedRecipe.getDifficulty());
         recipe.setServings(updatedRecipe.getServings());
@@ -161,15 +166,35 @@ public class RecipeService implements RecipeServiceInterface {
     }
 
     @Override
-    public void addIngredient(Long recipeId, Ingredient ingredient) throws RecipeDoesNotExistException {
+    public void addIngredient(Long recipeId, Ingredient ingredient, String authorLogin) throws RecipeDoesNotExistException, NotAnAuthorException {
         if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(recipeId))) {
             throw new RecipeDoesNotExistException("Recipe with id " + recipeId + " was not found.");
         }
         Recipe recipe = recipeRepository.findRecipeById(recipeId);
-
+        if(!authorLogin.equals(recipe.getAuthorLogin())){
+            throw new NotAnAuthorException("Authenticated user is not an author of this recipe");
+        }
         List<Ingredient> ingredients = recipe.getRecipeIngredients();
         ingredients.add(ingredient);
         recipe.setRecipeIngredients(ingredients);
+        recipeRepository.save(recipe);
+    }
+
+    @Override
+    public void removeIngredientFromRecipe(Long recipeId, String ingredientName, String authorLogin) throws RecipeDoesNotExistException, NotAnAuthorException, IngredientNotFoundException {
+        if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(recipeId))) {
+            throw new RecipeDoesNotExistException("Recipe with id " + recipeId + " was not found.");
+        }
+        Recipe recipe = recipeRepository.findRecipeById(recipeId);
+        if(!authorLogin.equals(recipe.getAuthorLogin())){
+            throw new NotAnAuthorException("Authenticated user is not an author of this recipe");
+        }
+
+        List<Ingredient> ingredients = recipe.getRecipeIngredients();
+        Ingredient toRemove = recipe.getRecipeIngredients().stream()
+                .filter(i -> i.getName().equals(ingredientName))
+                .findAny().orElseThrow(() -> new IngredientNotFoundException("Ingredient not found in a recipe"));
+        ingredients.remove(toRemove);
         recipeRepository.save(recipe);
     }
 

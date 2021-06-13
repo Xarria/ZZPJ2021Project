@@ -1,5 +1,7 @@
 package com.zzpj.services.interfaces;
 
+import com.zzpj.exceptions.IngredientNotFoundException;
+import com.zzpj.exceptions.NotAnAuthorException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
@@ -18,9 +20,9 @@ public interface RecipeServiceInterface {
 
     void deleteRecipe(Long id) throws RecipeDoesNotExistException;
 
-    void updateRecipe(Long id, Recipe updatedRecipe) throws RecipeDoesNotExistException;
+    void updateRecipe(Long id, Recipe updatedRecipe, String authorLogin) throws RecipeDoesNotExistException, NotAnAuthorException;
 
-    void addIngredient(Long recipeId, Ingredient ingredient) throws RecipeDoesNotExistException;
+    void addIngredient(Long recipeId, Ingredient ingredient, String authorLogin) throws RecipeDoesNotExistException, NotAnAuthorException;
 
     String sendRecipeByMail(Long id) throws IOException, RecipeDoesNotExistException;
 
@@ -33,4 +35,6 @@ public interface RecipeServiceInterface {
     List<Recipe> getFavouriteRecipesForAccount(String login);
 
     List<Recipe> getRecommendationBasedOnLikings(Account account, List<String> unwantedTags);
+
+    void removeIngredientFromRecipe(Long id, String ingredientName, String name) throws RecipeDoesNotExistException, NotAnAuthorException, IngredientNotFoundException;
 }
