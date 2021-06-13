@@ -15,6 +15,8 @@ import javax.validation.constraints.Positive;
 @AllArgsConstructor
 public class RecipeGeneralDTO {
 
+    private Long id;
+
     @NotBlank
     private String name;
 

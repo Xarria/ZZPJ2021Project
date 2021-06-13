@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -261,6 +262,13 @@ public class RecipeService implements RecipeServiceInterface {
         return stringBuilder.toString();
     }
 
+    @Override
+    public void addRecipeToFavourites(String login, Long id) {
+        Account account = accountRepository.findByLogin(login);
+        Recipe recipe = recipeRepository.findRecipeById(id);
+        account.getFavouriteRecipes().add(recipe);
+        accountRepository.save(account);
+    }
 
 }
 
