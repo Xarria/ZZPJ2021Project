@@ -173,7 +173,7 @@ public class RecipeController {
         }
     }
 
-    @PutMapping(path = "/recipes/ratings/{id}", consumes = "application/text")
+    @PutMapping(path = "/recipes/ratings/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addRatingToRecipe(@PathVariable Long id, @RequestBody float rating) {
         try {
             recipeService.addRatingToRecipe(id, rating);
@@ -183,8 +183,7 @@ public class RecipeController {
         }
     }
 
-    @PutMapping(path = "/recipes/favourite/add/{id}",
-        consumes = {MediaType.TEXT_PLAIN_VALUE})
+    @PutMapping(path = "/recipes/favourite/add/{id}", consumes = {MediaType.TEXT_PLAIN_VALUE})
     public ResponseEntity<?> addRecipeToFavourites(@PathVariable Long id) {
         recipeService.addRecipeToFavourites(SecurityContextHolder.getContext().getAuthentication().getName(), id);
         return ResponseEntity.ok().build();

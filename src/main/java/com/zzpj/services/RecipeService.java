@@ -119,7 +119,6 @@ public class RecipeService implements RecipeServiceInterface {
         return List.copyOf(finalRecommendations);
     }
 
-
     private List<String> sortKeysByValue(HashMap<String, Integer> map, boolean ascending) {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
         list.sort((o1, o2) -> {
@@ -155,14 +154,9 @@ public class RecipeService implements RecipeServiceInterface {
         if(!authorLogin.equals(recipe.getAuthorLogin())){
             throw new NotAnAuthorException("Authenticated user is not an author of this recipe");
         }
-        recipe.setName(updatedRecipe.getName());
-        recipe.setDescription(updatedRecipe.getDescription());
-        recipe.setCalories(updatedRecipe.getCalories());
-        recipe.setRecipeTags(updatedRecipe.getRecipeTags());
-        recipe.setPrepareTimeInMinutes(updatedRecipe.getPrepareTimeInMinutes());
-        recipe.setDifficulty(updatedRecipe.getDifficulty());
-        recipe.setServings(updatedRecipe.getServings());
-        recipe.setImage(updatedRecipe.getImage());
+
+        updateNotBlankRecipeFields(recipe, updatedRecipe);
+
         recipeRepository.save(recipe);
     }
 
@@ -268,6 +262,33 @@ public class RecipeService implements RecipeServiceInterface {
         Recipe recipe = recipeRepository.findRecipeById(id);
         account.getFavouriteRecipes().add(recipe);
         accountRepository.save(account);
+    }
+
+    private void updateNotBlankRecipeFields(Recipe base, Recipe changes) {
+        if (changes.getRecipeTags() != null && !changes.getRecipeTags().isBlank()) {
+            base.setRecipeTags(changes.getRecipeTags());
+        }
+        if (changes.getName() != null && !changes.getName().isBlank()) {
+            base.setName(changes.getName());
+        }
+        if (changes.getDescription() != null && !changes.getDescription().isBlank()) {
+            base.setDescription(changes.getDescription());
+        }
+        if (changes.getImage() != null) {
+            base.setImage(changes.getImage());
+        }
+        if (changes.getServings() != null) {
+            base.setServings(changes.getServings());
+        }
+        if (changes.getCalories() != null) {
+            base.setCalories(changes.getCalories());
+        }
+        if (changes.getPrepareTimeInMinutes() != null) {
+            base.setPrepareTimeInMinutes(changes.getPrepareTimeInMinutes());
+        }
+        if (changes.getDifficulty() != null && !changes.getName().isBlank()) {
+            base.setDifficulty(changes.getDifficulty());
+        }
     }
 
 }

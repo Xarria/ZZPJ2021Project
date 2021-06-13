@@ -1,16 +1,15 @@
 describe('Recipe REST API Tests', () => {
 
+    let jwt
+    let lastRecipeId
     const userCredentials = {
         "username": "user1",
         "password": "password"
     }
-    let lastRecipeId;
     const unwantedTags = ["meat"];
-
-    let jwt;
     const recipeInitialRating = 5
     const recipeInitialCount = 1
-    const newRecipeRating = 1
+    const newRecipeRating = 1.0
     const recipeId = 1;
     const recipeDetails = {
         "name": "Spaghetti carbonara",
@@ -158,7 +157,6 @@ describe('Recipe REST API Tests', () => {
             body: userCredentials
         }).then((response) => {
             jwt = response.body;
-            console.log(jwt)
         })
     })
 
@@ -188,6 +186,22 @@ describe('Recipe REST API Tests', () => {
             expect(response.body).to.deep.include(recipeDetails)
         })
     })
+
+    it('Get recommendations with unwanted tags', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes/recommendation',
+            body: unwantedTags,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            expect(response.body).to.be.an('array')
+            response.body.forEach((recipe) => {
+                expect(recipe.tags).to.not.contain('meat')
+            })
+        })
+    });
 
     it('Create recipe, and get it', () => {
         cy.request({
@@ -222,20 +236,6 @@ describe('Recipe REST API Tests', () => {
             })
         })
     })
-
-    // TODO requires method fixing and finishing the test expectations
-    // it('Get recommendations with unwanted tags', () => {
-    //     cy.request({
-    //         method: 'GET',
-    //         url: '/recipes/recommendation/like',
-    //         body: unwantedTags,
-    //         headers: {
-    //             Authorization: 'Bearer ' + jwt
-    //         }
-    //     }).then((response) => {
-    //         expect(response.body).to.be.an('array')
-    //     })
-    // });
 
     it('Get all recipes created by account', () => {
         cy.request({
@@ -303,43 +303,42 @@ describe('Recipe REST API Tests', () => {
         })
     });
 
-    // Can not pass number as a body dont know what to do
-    // it('Add rating to recipe', () => {
-    //     cy.request({
-    //         method: 'GET',
-    //         url: '/recipes',
-    //         headers: {
-    //             'Authorization': 'Bearer ' + jwt
-    //         }
-    //     }).then((response) => {
-    //         lastRecipeId = response.body[response.body.length - 1].id
-    //
-    //         cy.request({
-    //             method: 'PUT',
-    //             url: '/recipes/ratings/' + lastRecipeId,
-    //             headers: {
-    //                 Authorization: 'Bearer ' + jwt,
-    //                 'Content-Type': 'text/plain'
-    //             },
-    //             body: newRecipeRating
-    //         }).then((response) => {
-    //             expect(response.status).to.equal(200)
-    //
-    //             cy.request({
-    //                 method: 'GET',
-    //                 url: '/recipes/' + lasteRecipeId,
-    //                 headers: {
-    //                     Authorization: 'Bearer ' + jwt
-    //                 }
-    //             }).then((response) => {
-    //                 expect(response.body.rating).to.eql(
-    //                     (recipeInitialRating * recipeInitialCount + newRecipeRating) / (recipeInitialCount + 1)
-    //                 )
-    //                 expect(response.body.ratingsCount).to.eql(recipeInitialCount + 1)
-    //             })
-    //         })
-    //     })
-    // });
+    it('Add rating to recipe', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes',
+            headers: {
+                'Authorization': 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            lastRecipeId = response.body[response.body.length - 1].id
+
+            cy.request({
+                method: 'PUT',
+                url: '/recipes/ratings/' + lastRecipeId,
+                body: "1.0",
+                headers: {
+                    Authorization: 'Bearer ' + jwt,
+                    'content-type': 'application/json'
+                },
+            }).then((response) => {
+                expect(response.status).to.equal(200)
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes/' + lastRecipeId,
+                    headers: {
+                        Authorization: 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.body.rating).to.eql(
+                        (recipeInitialRating * recipeInitialCount + newRecipeRating) / (recipeInitialCount + 1)
+                    )
+                    expect(response.body.ratingsCount).to.eql(recipeInitialCount + 1)
+                })
+            })
+        })
+    });
 
     it('Delete previously created recipe', () => {
         cy.request({
