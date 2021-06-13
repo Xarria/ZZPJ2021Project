@@ -101,7 +101,7 @@ describe('Recipe REST API Tests', () => {
         "tags": "pasta,garlic,olive oil",
         "image": null,
         "servings": 4,
-        "calories": 755,
+        "calories": 4812,
         "preparationTimeInMinutes": 20,
         "difficulty": "2"
     }
