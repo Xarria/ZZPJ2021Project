@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -273,4 +274,36 @@ class RecipeServiceTest {
         assertDoesNotThrow(() -> recipeService.getFavouriteRecipesForAccount("Login"));
         assertEquals(2, recipeService.getFavouriteRecipesForAccount("Login").size());
     }
+
+    @Test
+    void addRecipeToFavourites() {
+        String login = "Login";
+        account.setFavouriteRecipes(new ArrayList<>());
+        Recipe favRecipe = new Recipe();
+        Mockito.when(accountRepository.findByLogin(login)).thenReturn(account);
+        Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(favRecipe);
+
+        assertEquals(0, account.getFavouriteRecipes().size());
+
+        recipeService.addRecipeToFavourites(login, id);
+
+        assertEquals(1, account.getFavouriteRecipes().size());
+        assertEquals(favRecipe, account.getFavouriteRecipes().get(0));
+    }
+
+    @Test
+    void getShoppingList() {
+        Mockito.when(ingredient.getProtein()).thenReturn(100D);
+        Mockito.when(ingredient.getFats()).thenReturn(100D);
+        Mockito.when(ingredient.getCarbohydrates()).thenReturn(100D);
+        Mockito.when(ingredient.getId()).thenReturn(1L);
+
+        Mockito.when(recipeRepository.findAll()).thenReturn(Collections.singletonList(recipe));
+
+        String shoppingList = recipeService.getShoppingList(Collections.singletonList(recipe.getId()));
+
+        assertTrue(shoppingList.contains("Name: " + ingredientName));
+        assertTrue(shoppingList.contains("Quantity: " + ingredient.getQuantity().toString()));
+    }
+
 }
