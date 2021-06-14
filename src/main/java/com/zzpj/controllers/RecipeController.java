@@ -16,11 +16,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,9 +41,8 @@ public class RecipeController {
     }
 
     @PostMapping(path = "/recipes", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RecipeDetailsDTO> createRecipe(@RequestBody RecipeDetailsDTO recipe) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        recipe.setAuthorLogin(authentication.getName());
+    public ResponseEntity<RecipeDetailsDTO> createRecipe(@RequestBody RecipeDetailsDTO recipe, Principal principal) {
+        recipe.setAuthorLogin(principal.getName());
         recipeService.createRecipe(RecipeMapper.detailsDTOtoEntity(recipe));
         return ResponseEntity.ok().build();
     }
@@ -63,11 +64,10 @@ public class RecipeController {
     }
 
     @GetMapping(path = "/recipes/recommendation", produces = "application/json")
-    public ResponseEntity<List<RecipeGeneralDTO>> getRecommendationBasedOnLikings(@RequestBody List<String> unwantedTags) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<List<RecipeGeneralDTO>> getRecommendationBasedOnLikings(@RequestBody List<String> unwantedTags, Principal principal) {
 
         try {
-            Account account = accountService.getAccountByLogin(authentication.getName());
+            Account account = accountService.getAccountByLogin(principal.getName());
             return ResponseEntity.ok(recipeService.getRecommendationBasedOnLikings(account, unwantedTags).stream().
                     map(RecipeMapper::entityToGeneralDTO).
                     collect(Collectors.toList()));
@@ -102,10 +102,9 @@ public class RecipeController {
     }
 
     @PutMapping(path = "/recipes/{id}", consumes = "application/json")
-    public ResponseEntity<?> updateRecipe(@PathVariable Long id, @RequestBody RecipeGeneralDTO updatedRecipe) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> updateRecipe(@PathVariable Long id, @RequestBody RecipeGeneralDTO updatedRecipe, Principal principal) {
         try {
-            recipeService.updateRecipe(id, RecipeMapper.generalDTOToEntity(updatedRecipe), authentication.getName());
+            recipeService.updateRecipe(id, RecipeMapper.generalDTOToEntity(updatedRecipe), principal.getName());
             return ResponseEntity.ok().build();
         } catch (RecipeDoesNotExistException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -115,10 +114,9 @@ public class RecipeController {
     }
 
     @DeleteMapping(path = "recipes/ingredients/{id}")
-    public ResponseEntity<String> removeIngredientFromRecipe(@PathVariable Long id, @RequestBody String ingredientName) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<String> removeIngredientFromRecipe(@PathVariable Long id, @RequestBody String ingredientName, Principal principal) {
         try {
-            recipeService.removeIngredientFromRecipe(id, ingredientName, authentication.getName());
+            recipeService.removeIngredientFromRecipe(id, ingredientName, principal.getName());
             return ResponseEntity.ok().build();
         } catch (RecipeDoesNotExistException | IngredientNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -128,12 +126,11 @@ public class RecipeController {
     }
 
     @PostMapping(path = "/recipes/ingredients/{id}", consumes = "application/json")
-    public ResponseEntity<?> addIngredient(@PathVariable Long id, @RequestBody CustomIngredientDTO customIngredientDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<?> addIngredient(@PathVariable Long id, @RequestBody CustomIngredientDTO customIngredientDTO, Principal principal) {
         try {
             IngredientDTO ingredientDTO = IngredientsMapper
                     .entityToDTO(ingredientService.getIngredientsByKeyword(customIngredientDTO.getName()));
-            recipeService.addIngredient(id, IngredientsMapper.dtoToEntity(ingredientDTO, customIngredientDTO.getQuantity()), authentication.getName());
+            recipeService.addIngredient(id, IngredientsMapper.dtoToEntity(ingredientDTO, customIngredientDTO.getQuantity()), principal.getName());
             return ResponseEntity.ok().build();
         } catch (RecipeDoesNotExistException | IngredientNotFoundException | IOException | URLNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -184,8 +181,8 @@ public class RecipeController {
     }
 
     @PutMapping(path = "/recipes/favourite/add/{id}", consumes = {MediaType.TEXT_PLAIN_VALUE})
-    public ResponseEntity<?> addRecipeToFavourites(@PathVariable Long id) {
-        recipeService.addRecipeToFavourites(SecurityContextHolder.getContext().getAuthentication().getName(), id);
+    public ResponseEntity<?> addRecipeToFavourites(@PathVariable Long id, Principal principal) {
+        recipeService.addRecipeToFavourites(principal.getName(), id);
         return ResponseEntity.ok().build();
     }
 }
