@@ -8,6 +8,7 @@ import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public interface RecipeServiceInterface {
@@ -35,6 +36,8 @@ public interface RecipeServiceInterface {
     List<Recipe> getFavouriteRecipesForAccount(String login);
 
     List<Recipe> getRecommendationBasedOnLikings(Account account, List<String> unwantedTags);
+
+    List<String> sortKeysByValue(HashMap<String, Integer> map, boolean ascending);
 
     void removeIngredientFromRecipe(Long id, String ingredientName, String name) throws RecipeDoesNotExistException, NotAnAuthorException, IngredientNotFoundException;
 

@@ -15,6 +15,7 @@ import org.mockito.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -304,6 +305,30 @@ class RecipeServiceTest {
 
         assertTrue(shoppingList.contains("Name: " + ingredientName));
         assertTrue(shoppingList.contains("Quantity: " + ingredient.getQuantity().toString()));
+    }
+
+    @Test
+    void sortKeysByValueAscending() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("meat", 3);
+        map.put("vegan", 8);
+        map.put("gluten", 1);
+        map.put("dairy", 4);
+
+        List<String> ascendingKeys = List.of("gluten","meat","dairy","vegan");
+        assertEquals(ascendingKeys, recipeService.sortKeysByValue(map, true));
+    }
+
+    @Test
+    void sortKeysByValueDescending() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("meat", 3);
+        map.put("vegan", 8);
+        map.put("gluten", 1);
+        map.put("dairy", 4);
+
+        List<String> descendingKeys = List.of("vegan", "dairy", "meat", "gluten");
+        assertEquals(descendingKeys, recipeService.sortKeysByValue(map, false));
     }
 
 }
