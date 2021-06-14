@@ -4,24 +4,20 @@ import com.zzpj.exceptions.AccountDoesNotExistException;
 import com.zzpj.exceptions.IngredientNotFoundException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.exceptions.URLNotFoundException;
-import com.zzpj.model.DTOs.*;
+import com.zzpj.model.DTOs.CustomIngredientDTO;
+import com.zzpj.model.DTOs.RecipeGeneralDTO;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
-import com.zzpj.model.mappers.AccountMapper;
 import com.zzpj.model.mappers.RecipeMapper;
 import com.zzpj.services.AccountService;
 import com.zzpj.services.IngredientService;
 import com.zzpj.services.interfaces.RecipeServiceInterface;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +27,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 class RecipeControllerTest {
 
