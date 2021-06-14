@@ -17,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 public class RecipeDetailsDTO {
 
-
     private Long id;
 
     @NotBlank

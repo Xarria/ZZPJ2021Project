@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
+import { RecipeGeneral } from '../model/RecipeGeneral';
 
 @Component({
   selector: 'app-user-panel',
@@ -9,15 +11,28 @@ import { Router } from '@angular/router';
 
 export class UserPanelComponent implements OnInit {
 
-  number = 5;
-
-  constructor(private router: Router) { }
+  constructor(private router: Router,
+              public userService: UserService) {
+  }
 
   ngOnInit(): void {
+    this.getRecipes();
+  }
+
+  getRecipes(): void {
+    this.userService.getRecipes().subscribe(
+      (response: RecipeGeneral[]) => {
+        this.userService.recipes = response;
+      }
+    );
+  }
+
+  openRecipeDetails(id: number): void {
+    this.router.navigate(['/recipe', id]);
   }
 
   signOut(): void {
-    this.router.navigate([''])
+    this.router.navigate(['/']);
   }
 }
 

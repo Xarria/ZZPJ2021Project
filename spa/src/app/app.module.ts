@@ -15,12 +15,18 @@ import { UserPanelComponent } from './user-panel/user-panel.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { HttpClientModule } from '@angular/common/http';
+import { RecipeDetailsComponent } from './recipe-details/recipe-details.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
+import { MatGridListModule } from '@angular/material/grid-list';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    UserPanelComponent
+    UserPanelComponent,
+    RecipeDetailsComponent
   ],
   imports: [
     BrowserModule,
@@ -34,7 +40,11 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     MatToolbarModule,
     MatSidenavModule,
     MatIconModule,
-    ScrollingModule
+    ScrollingModule,
+    HttpClientModule,
+    MatDialogModule,
+    MatListModule,
+    MatGridListModule
   ],
   providers: [],
   bootstrap: [AppComponent]

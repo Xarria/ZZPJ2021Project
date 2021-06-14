@@ -4,37 +4,40 @@
     <div class="spacer"></div>
 
     <a mat-button>Home</a>
-    <a mat-button>Recipes</a>
-    <a mat-button>Fav</a>
-    <a mat-button>Costam</a>
-    <a mat-button>Parapapa</a>
+    <a mat-button>My recipes</a>
+    <a mat-button>My favourite recipes</a>
+    <a mat-button>Find something new</a>
     <a mat-raised-button color="primary" (click)="signOut()">Sign out</a>
     <a></a>
   </mat-toolbar>
 
-  <table>
-    <tr>
-      <th>Recipe1</th>
-      <th>Recipe1</th>
-      <th>Recipe1</th>
-      <th>Recipe1</th>
-      <th>Recipe1</th>
-    </tr>
-    <tr>
-      <td>Recipe1111</td>
-      <td>Recipe11111</td>
-      <td>Recipe11111</td>
-      <td>Recipe11111</td>
-      <td>Recipe11111</td>
-    </tr>
-    <tr>
-      <td>Recipe1111</td>
-      <td>Recipe11111</td>
-      <td>Recipe11111</td>
-      <td>Recipe11111</td>
-      <td>Recipe11111</td>
-    </tr>
-  </table>
+  <div class="table-container">
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Rating</th>
+        <th>Tags</th>
+        <th>Servings</th>
+        <th>Calories</th>
+        <th>Preparation time</th>
+        <th>Difficulty</th>
+        <th>Details</th>
+      </tr>
+      <tr *ngFor="let recipe of userService.recipes">
+        <td>{{recipe.name}}</td>
+        <td>{{recipe.rating}}</td>
+        <td>{{recipe.tags}}</td>
+        <td>{{recipe.servings}}</td>
+        <td>{{recipe.calories}}</td>
+        <td>{{recipe.preparationTimeInMinutes}} minutes</td>
+        <td>{{recipe.difficulty}}</td>
+        <td>
+          <button mat-raised-button color="primary" (click)="openRecipeDetails(recipe.id)">Details</button>
+        </td>
+      </tr>
+    </table>
+  </div>
 
 
 </div>
+<router-outlet></router-outlet>
