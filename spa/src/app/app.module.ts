@@ -20,6 +20,9 @@ import { RecipeDetailsComponent } from './recipe-details/recipe-details.componen
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
+import {UserService} from "./services/user.service";
+import {RecipeService} from "./services/recipe.service";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -44,9 +47,10 @@ import { MatGridListModule } from '@angular/material/grid-list';
     HttpClientModule,
     MatDialogModule,
     MatListModule,
-    MatGridListModule
+    MatGridListModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [UserService, RecipeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
