@@ -187,23 +187,6 @@ class RecipeControllerTest {
         assertEquals(0, recipes.size());
     }
 
-    @Test
-    void updateRecipe() {
-
-        assertEquals(description, recipes.get(0).getDescription());
-        when(recipe.getDescription()).thenReturn(name);
-        assertDoesNotThrow(() -> recipeController.updateRecipe(id1, RecipeMapper.entityToGeneralDTO(recipe)));
-        assertEquals(name, recipes.get(0).getDescription());
-    }
-
-    @Test
-    void addIngredient() throws IngredientNotFoundException, URLNotFoundException, IOException {
-        when(ingredientService.getIngredientsByKeyword("mint")).thenReturn(ingredient1);
-        assertEquals(2, recipes.get(0).getRecipeIngredients().size());
-
-        assertDoesNotThrow(() -> recipeController.addIngredient(id1, customIngredientDTO));
-        assertEquals(3, recipes.get(0).getRecipeIngredients().size());
-    }
 
     @Test
     void addRatingToRecipe() throws RecipeDoesNotExistException {
