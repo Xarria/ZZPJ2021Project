@@ -78,8 +78,8 @@ class RecipeMapperTest {
 
     @Test
     void generalDTOToEntity() {
-        RecipeGeneralDTO recipeDTO = new RecipeGeneralDTO("Bułeczki", "Login",
-                5F, 3, 400, 45L,"EASY", null, null);
+        RecipeGeneralDTO recipeDTO = new RecipeGeneralDTO(1L, "Bułeczki", "Login", "Mniam",
+                5F, 3, "dairy,gluten" ,null, 4,400, 40L, "EASY");
 
         assertDoesNotThrow(() -> RecipeMapper.generalDTOToEntity(recipeDTO));
 
@@ -89,7 +89,7 @@ class RecipeMapperTest {
         assertEquals("Mniam", recipe.getDescription());
         assertEquals(5F, recipe.getRating());
         assertEquals("Login", recipe.getAuthorLogin());
-        assertEquals(5, recipe.getRatingsCount());
+        assertEquals(3, recipe.getRatingsCount());
         assertEquals("dairy,gluten", recipe.getRecipeTags());
         assertEquals(400, recipe.getCalories());
         assertEquals(4, recipe.getServings());

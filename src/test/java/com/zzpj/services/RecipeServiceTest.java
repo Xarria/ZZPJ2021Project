@@ -1,7 +1,6 @@
 package com.zzpj.services;
 
 import com.zzpj.exceptions.IngredientNotFoundException;
-import com.zzpj.exceptions.NotAnAuthorException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
