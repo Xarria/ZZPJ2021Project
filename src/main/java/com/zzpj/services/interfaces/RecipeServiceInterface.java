@@ -3,13 +3,11 @@ package com.zzpj.services.interfaces;
 import com.zzpj.exceptions.IngredientNotFoundException;
 import com.zzpj.exceptions.NotAnAuthorException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
-import com.zzpj.model.DTOs.RecipeGeneralDTO;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 public interface RecipeServiceInterface {
