@@ -120,7 +120,8 @@ public class RecipeService implements RecipeServiceInterface {
         return List.copyOf(finalRecommendations);
     }
 
-    private List<String> sortKeysByValue(HashMap<String, Integer> map, boolean ascending) {
+    @Override
+    public List<String> sortKeysByValue(HashMap<String, Integer> map, boolean ascending) {
         List<Map.Entry<String, Integer>> list = new LinkedList<>(map.entrySet());
         list.sort((o1, o2) -> {
             if (ascending) {
