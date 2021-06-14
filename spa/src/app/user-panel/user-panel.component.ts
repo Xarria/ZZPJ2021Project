@@ -11,6 +11,8 @@ import { RecipeGeneral } from '../model/RecipeGeneral';
 
 export class UserPanelComponent implements OnInit {
 
+  unwantedTags: string;
+
   constructor(private router: Router,
               public userService: UserService) {
   }
@@ -36,7 +38,9 @@ export class UserPanelComponent implements OnInit {
   }
 
   getRecommendation(): void {
-    this.userService.getRecommendation().subscribe(
+    const tagArray = this.unwantedTags.split(',');
+    if(tagArray.length)
+    this.userService.getRecommendation(tagArray).subscribe(
       (response: RecipeGeneral[]) => {
         this.userService.recipes = response;
       }

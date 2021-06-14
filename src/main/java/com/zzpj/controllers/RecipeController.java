@@ -62,7 +62,7 @@ public class RecipeController {
                 collect(Collectors.toList()));
     }
 
-    @GetMapping(path = "/recipes/recommendation", produces = "application/json")
+    @PostMapping(path = "/recipes/recommendation", produces = "application/json")
     public ResponseEntity<List<RecipeGeneralDTO>> getRecommendationBasedOnLikings(@RequestBody List<String> unwantedTags, Principal principal) {
 
         try {

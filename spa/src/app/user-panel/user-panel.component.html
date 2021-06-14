@@ -7,6 +7,7 @@
     <a mat-button>My recipes</a>
     <a mat-button>My favourite recipes</a>
     <a mat-button (click)="getRecommendation()">Find something new</a>
+    <input matInput [(ngModel)]="unwantedTags" name="tags" type="text" placeholder="Unwanted tags">
     <a mat-raised-button color="primary" (click)="signOut()">Sign out</a>
     <a></a>
   </mat-toolbar>

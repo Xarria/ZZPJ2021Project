@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
   }
 
   signIn(): void {
-    this.userService.auth('user1', 'password').subscribe(
+    this.userService.auth(this.login, this.password).subscribe(
       (response: string) => {
         this.userService.setSession(response);
           this.router.navigateByUrl('/user');

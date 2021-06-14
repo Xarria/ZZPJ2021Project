@@ -9,6 +9,7 @@ import jwtDecode from 'jwt-decode';
 export class UserService {
 
   recipes: RecipeGeneral[] = [];
+  tags: string[];
 
   private readonly url: string;
 
@@ -50,8 +51,9 @@ export class UserService {
     });
   }
 
-  getRecommendation(): any {
-    return this.httpClient.get<any>(this.url, {
+  getRecommendation(unwantedTags: string[]): any {
+    return this.httpClient.post<any>(this.url + '/recommendation', unwantedTags,
+      {
       observe: 'body',
       responseType: 'json',
       headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}

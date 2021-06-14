@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .hasAnyAuthority(AccessLevel.USER, AccessLevel.MODERATOR)
                 .antMatchers(HttpMethod.POST, "/recipes")
                     .hasAuthority(AccessLevel.USER)
-                .antMatchers(HttpMethod.GET, "/recipes/recommendation")
+                .antMatchers(HttpMethod.POST, "/recipes/recommendation")
                     .hasAuthority(AccessLevel.USER)
                 .antMatchers(HttpMethod.GET, "/recipes/favourite")
                     .hasAuthority(AccessLevel.USER)
