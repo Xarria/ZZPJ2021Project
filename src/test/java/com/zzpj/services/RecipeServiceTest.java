@@ -23,14 +23,6 @@ import static org.mockito.ArgumentMatchers.any;
 
 class RecipeServiceTest {
 
-    @Mock
-    private RecipeRepository recipeRepository;
-    @Mock
-    private IngredientRepository ingredientRepository;
-    @Mock
-    private AccountRepository accountRepository;
-    @InjectMocks
-    private RecipeService recipeService;
     @Spy
     private final Recipe recipe = new Recipe();
     @Spy
@@ -43,13 +35,19 @@ class RecipeServiceTest {
     private final List<Ingredient> ingredients = new ArrayList<>();
     @Spy
     private final Recipe updatedRecipe = new Recipe();
-
     private final Account account = new Account();
-
     private final String name = "Bułeczki";
+    private final List<Recipe> recipes = new ArrayList<>();
+    @Mock
+    private RecipeRepository recipeRepository;
+    @Mock
+    private IngredientRepository ingredientRepository;
+    @Mock
+    private AccountRepository accountRepository;
+    @InjectMocks
+    private RecipeService recipeService;
     private String description = "Smaczne bułeczki";
     private int calories = 500;
-    private final List<Recipe> recipes = new ArrayList<>();
     private Long id = 1L;
     private String ingredientName = "Mąka";
     private String newIngredientName = "Mleko";
@@ -173,7 +171,7 @@ class RecipeServiceTest {
     }
 
     @Test
-    void updateRecipeException(){
+    void updateRecipeException() {
         assertThrows(RecipeDoesNotExistException.class, () -> recipeService.updateRecipe(123L, updatedRecipe, "Login"));
     }
 
@@ -222,7 +220,7 @@ class RecipeServiceTest {
     }
 
     @Test
-    void removeIngredientFromRecipeException(){
+    void removeIngredientFromRecipeException() {
         Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(recipe);
         assertThrows(IngredientNotFoundException.class, () -> recipeService.removeIngredientFromRecipe(id, "Nieistnieje", "Login"));
     }
@@ -331,4 +329,12 @@ class RecipeServiceTest {
         assertEquals(descendingKeys, recipeService.sortKeysByValue(map, false));
     }
 
+    @Test
+    void sendRecipeByMail() throws RecipeDoesNotExistException {
+        String str = recipeService.sendRecipeByMail(recipe.getId());
+        assertDoesNotThrow(() -> recipeService.sendRecipeByMail(recipe.getId()));
+        Assertions.assertThrows(RecipeDoesNotExistException.class, () -> recipeService.sendRecipeByMail(-2115L));
+        assertEquals("<b>BUŁECZKI</b><br><b> Ingredients: </b> <br>Mąka: " +
+            "100.0g <br><br><b> Steps: </b><br>Smaczne bułeczki<br>", str);
+    }
 }
