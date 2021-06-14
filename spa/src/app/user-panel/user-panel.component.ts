@@ -62,14 +62,14 @@ export class UserPanelComponent implements OnInit {
       )
     }
     const tagArray = this.unwantedTags.split(',');
-    if(tagArray.length > 1){
+    if(tagArray[0].length > 1){
       this.userService.getRecommendation(tagArray).subscribe(
         (response: RecipeGeneral[]) => {
           this.userService.recipes = response;
         }
       )
     }
-    if(tagArray.length == 1){
+    if(tagArray[0].length == 0){
       this.userService.getRecommendation([]).subscribe(
         (response: RecipeGeneral[]) => {
           this.userService.recipes = response;
