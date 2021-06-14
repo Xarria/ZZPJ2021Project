@@ -67,19 +67,19 @@ class AccountMapperTest {
     void entityToAdminDTO() {
         AccountNoRecipesDTO newAccountNoRecipesDTO = AccountMapper.entityToAdminDTO(account);
 
-        assertEquals(newAccountNoRecipesDTO.getLogin(), login);
-        assertEquals(newAccountNoRecipesDTO.getPassword(), "");    // Because password is not sent in response
-        assertEquals(newAccountNoRecipesDTO.getEmail(), email);
-        assertEquals(newAccountNoRecipesDTO.getAccessLevel(), accessLevel.getName());
-        assertEquals(newAccountNoRecipesDTO.getActive(), active);
+        assertEquals(login, newAccountNoRecipesDTO.getLogin());
+        assertEquals("", newAccountNoRecipesDTO.getPassword());
+        assertEquals(email, newAccountNoRecipesDTO.getEmail());
+        assertEquals(accessLevel.getName(), newAccountNoRecipesDTO.getAccessLevel());
+        assertEquals(active, newAccountNoRecipesDTO.getActive());
     }
 
     @Test
     void entityToRecipesDTO() {
         AccountRecipesDTO newAccountRecipesDTO = AccountMapper.entityToRecipesDTO(account);
 
-        assertEquals(newAccountRecipesDTO.getLogin(), login);
-        assertEquals(newAccountRecipesDTO.getEmail(), email);
+        assertEquals(login, newAccountRecipesDTO.getLogin());
+        assertEquals(email, newAccountRecipesDTO.getEmail());
         assertNotNull(newAccountRecipesDTO.getFavouriteRecipes());
     }
 
@@ -87,11 +87,11 @@ class AccountMapperTest {
     void noRecipesDTOWithAccessLevelToEntity() {
         Account newAccount = AccountMapper.noRecipesDTOWithAccessLevelToEntity(accountNoRecipesDTO, accessLevel);
 
-        assertEquals(newAccount.getLogin(), login);
-        assertEquals(newAccount.getPassword(), "");
-        assertEquals(newAccount.getEmail(), email);
-        assertEquals(newAccount.getAccessLevel(), accessLevel);
-        assertEquals(newAccount.getActive(), active);
+        assertEquals(login, newAccount.getLogin());
+        assertEquals("", newAccount.getPassword());
+        assertEquals(email, newAccount.getEmail());
+        assertEquals(accessLevel, newAccount.getAccessLevel());
+        assertEquals(active, newAccount.getActive());
     }
 
 

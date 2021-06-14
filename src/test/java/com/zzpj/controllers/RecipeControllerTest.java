@@ -1,7 +1,9 @@
 package com.zzpj.controllers;
 
 import com.zzpj.exceptions.AccountDoesNotExistException;
+import com.zzpj.exceptions.IngredientNotFoundException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
+import com.zzpj.exceptions.URLNotFoundException;
 import com.zzpj.model.DTOs.*;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
@@ -9,13 +11,19 @@ import com.zzpj.model.entities.Recipe;
 import com.zzpj.model.mappers.AccountMapper;
 import com.zzpj.model.mappers.RecipeMapper;
 import com.zzpj.services.AccountService;
+import com.zzpj.services.IngredientService;
 import com.zzpj.services.interfaces.RecipeServiceInterface;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,6 +68,12 @@ class RecipeControllerTest {
     private RecipeServiceInterface recipeService;
     @Mock
     private AccountService accountService;
+    @Mock
+    private IngredientService ingredientService;
+    @Mock
+    private Authentication authentication;
+    @Mock
+    private SecurityContext securityContext;
 
     @InjectMocks
     private RecipeController recipeController;
@@ -67,6 +81,9 @@ class RecipeControllerTest {
     @BeforeEach
     void initMocks() {
         MockitoAnnotations.openMocks(this);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("Login");
+
         when(ingredient1.getName()).thenReturn("Mint");
         when(ingredient1.getQuantity()).thenReturn(1.0);
         when(ingredient1.getCalories()).thenReturn(44.0);
@@ -176,33 +193,41 @@ class RecipeControllerTest {
 
     @Test
     void updateRecipe() {
+
         assertEquals(description, recipes.get(0).getDescription());
         when(recipe.getDescription()).thenReturn(name);
-        assertDoesNotThrow(() -> recipeController.updateRecipe(id1, RecipeMapper.entityToDetailsDTO(recipe)));
+        assertDoesNotThrow(() -> recipeController.updateRecipe(id1, RecipeMapper.entityToGeneralDTO(recipe)));
         assertEquals(name, recipes.get(0).getDescription());
     }
 
     @Test
-    void addIngredient() {
-//        assertEquals(2, recipes.get(0).getRecipeIngredients().size());
-//
-//        assertDoesNotThrow(() -> recipeController.addIngredient(id1, customIngredientDTO));
-////        assertEquals(3, recipes.get(0).getRecipeIngredients().size());
+    void addIngredient() throws IngredientNotFoundException, URLNotFoundException, IOException {
+        when(ingredientService.getIngredientsByKeyword("mint")).thenReturn(ingredient1);
+        assertEquals(2, recipes.get(0).getRecipeIngredients().size());
+
+        assertDoesNotThrow(() -> recipeController.addIngredient(id1, customIngredientDTO));
+        assertEquals(3, recipes.get(0).getRecipeIngredients().size());
     }
 
     @Test
-    void addRatingToRecipe() {
-//        Recipe r = new Recipe();
-//        r.setId(2115L);
-//        r.setRating(5.0f);
-//        r.setRatingsCount(1);
-//
-//        assertEquals(5.0f, r.getRating(), 0.001);
-//        assertEquals(1, r.getRatingsCount());
-//
-//        assertDoesNotThrow(() -> recipeController.addRatingToRecipe(r.getId(), 3.0f));
-//
-////        assertEquals(4.0f, r.getRating(), 0.001);
-//        assertEquals(2, r.getRatingsCount());
+    void addRatingToRecipe() throws RecipeDoesNotExistException {
+        Recipe r = new Recipe();
+        r.setId(2115L);
+        r.setRating(5.0f);
+        r.setRatingsCount(1);
+
+        assertEquals(5.0f, r.getRating(), 0.001);
+        assertEquals(1, r.getRatingsCount());
+
+        Mockito.doAnswer(invocation -> {
+            r.setRatingsCount(2);
+            r.setRating((5.0F * 2 + 3.0f) / (2 + 1));
+            return null;
+        }).when(recipeService).addRatingToRecipe(r.getId(), 3.0f);
+
+        assertDoesNotThrow(() -> recipeController.addRatingToRecipe(2115L, 3.0f));
+
+        assertEquals(4.3f, r.getRating(), 0.1);
+        assertEquals(2, r.getRatingsCount());
     }
 }
