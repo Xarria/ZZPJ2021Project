@@ -83,7 +83,7 @@ public class AccountController {
 
     @GetMapping(path = "/accounts", produces = "application/json")
     public ResponseEntity<?> getAllAccounts() {
-        //TODO
+
         List<AccountNoRecipesDTO> accounts = accountService.getAllAccounts().stream()
                 .map(AccountMapper::entityToAdminDTO)
                 .collect(Collectors.toList());
