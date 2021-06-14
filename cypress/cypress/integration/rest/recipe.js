@@ -1,64 +1,57 @@
 describe('Recipe REST API Tests', () => {
 
+    let jwt
+    let lastRecipeId
     const userCredentials = {
         "username": "user1",
         "password": "password"
     }
-    let recipesArrayLength;
-
-    let jwt;
+    const unwantedTags = ["meat"];
+    const recipeInitialRating = 5
+    const recipeInitialCount = 1
+    const newRecipeRating = 1.0
     const recipeId = 1;
-    const recipeGeneral1 = {
-        "name": "Carbonara",
-        "authorLogin": "user1",
-        "rating": 5.0,
-        "ratingsCount": 2,
-        "calories": 1000,
-        "preparationTimeInMinutes": 50,
-        "difficulty": "2",
-        "image": null
-    }
     const recipeDetails = {
-        "name": "Carbonara",
+        "name": "Spaghetti carbonara",
         "authorLogin": "user1",
         "description": "pychotka",
         "ingredients": [
             {
-                "name": "a",
-                "quantity": 1.0,
-                "calories": 2,
-                "protein": 3,
-                "carbohydrates": 4,
-                "fats": 5
+                "name": "flour",
+                "quantity": 500.0,
+                "calories": 2.0,
+                "protein": 3.0,
+                "carbohydrates": 4.0,
+                "fats": 5.0
             },
             {
-                "name": "a",
-                "quantity": 1.0,
-                "calories": 2,
-                "protein": 3,
-                "carbohydrates": 4,
-                "fats": 5
+                "name": "water",
+                "quantity": 200.0,
+                "calories": 2.0,
+                "protein": 3.0,
+                "carbohydrates": 4.0,
+                "fats": 5.0
             },
             {
-                "name": "c",
-                "quantity": 1.0,
-                "calories": 2,
-                "protein": 3,
-                "carbohydrates": 4,
-                "fats": 5
+                "name": "sugar",
+                "quantity": 220.0,
+                "calories": 2.0,
+                "protein": 3.0,
+                "carbohydrates": 4.0,
+                "fats": 5.0
             },
             {
-                "name": "c",
-                "quantity": 4.0,
-                "calories": 2,
-                "protein": 3,
-                "carbohydrates": 4,
-                "fats": 5
+                "name": "salt",
+                "quantity": 2.0,
+                "calories": 2.0,
+                "protein": 3.0,
+                "carbohydrates": 4.0,
+                "fats": 5.0
             }
         ],
         "rating": 5.0,
         "ratingsCount": 2,
-        "tags": "meat,noodle",
+        "tags": "meat,noodle,pasta,savoury,gluten",
         "image": null,
         "servings": 4,
         "calories": 1000,
@@ -103,16 +96,59 @@ describe('Recipe REST API Tests', () => {
                 "fats": 0.16
             }
         ],
-        "rating": 5,
-        "ratingsCount": 0,
+        "rating": recipeInitialRating,
+        "ratingsCount": recipeInitialCount,
         "tags": "pasta,garlic,olive oil",
         "image": null,
         "servings": 4,
-        "calories": 755,
+        "calories": 4812,
         "preparationTimeInMinutes": 20,
         "difficulty": "2"
     }
-
+    const favouriteRecipes = [
+        {
+            "id": 3,
+            "name": "Crepes",
+            "authorLogin": "user1",
+            "description": "pychotka",
+            "rating": 5.0,
+            "ratingsCount": 4,
+            "tags": "vegan,sweet,gluten,dairy",
+            "image": null,
+            "servings": 4,
+            "calories": 400,
+            "preparationTimeInMinutes": 50,
+            "difficulty": "1"
+        },
+        {
+            "id": 5,
+            "name": "Spaghetti aglio olio",
+            "authorLogin": "user2",
+            "description": "pychotka",
+            "rating": 5.0,
+            "ratingsCount": 13,
+            "tags": "vegan,noodle,pasta,savoury,gluten",
+            "image": null,
+            "servings": 4,
+            "calories": 800,
+            "preparationTimeInMinutes": 50,
+            "difficulty": "2"
+        },
+        {
+            "id": 7,
+            "name": "Cherry soup",
+            "authorLogin": "user2",
+            "description": "pychotka",
+            "rating": 5.0,
+            "ratingsCount": 13,
+            "tags": "vegan,soup,sweet,fruit",
+            "image": null,
+            "servings": 4,
+            "calories": 800,
+            "preparationTimeInMinutes": 50,
+            "difficulty": "2"
+        }
+    ]
 
     beforeEach('Authenticate', () => {
         cy.request({
@@ -121,7 +157,6 @@ describe('Recipe REST API Tests', () => {
             body: userCredentials
         }).then((response) => {
             jwt = response.body;
-            console.log(jwt)
         })
     })
 
@@ -135,8 +170,7 @@ describe('Recipe REST API Tests', () => {
         }).then((response) => {
             expect(response.status).equal(200)
             expect(response.body).to.be.an('array')
-            expect(response.body).deep.contains(recipeGeneral1)
-            recipesArrayLength = response.body.length
+            lastRecipeId = response.body[response.body.length - 1].id
         })
     })
 
@@ -149,9 +183,25 @@ describe('Recipe REST API Tests', () => {
             }
         }).then((response) => {
             expect(response.status).equal(200)
-            expect(response.body).deep.contains(recipeDetails)
+            expect(response.body).to.deep.include(recipeDetails)
         })
     })
+
+    it('Get recommendations with unwanted tags', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes/recommendation',
+            body: unwantedTags,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            expect(response.body).to.be.an('array')
+            response.body.forEach((recipe) => {
+                expect(recipe.tags).to.not.contain('meat')
+            })
+        })
+    });
 
     it('Create recipe, and get it', () => {
         cy.request({
@@ -166,15 +216,160 @@ describe('Recipe REST API Tests', () => {
 
             cy.request({
                 method: 'GET',
-                url: '/recipes/' + (recipesArrayLength + 1),
+                url: '/recipes',
+                headers: {
+                    'Authorization': 'Bearer ' + jwt
+                }
+            }).then((response) => {
+                lastRecipeId = response.body[response.body.length - 1].id
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes/' + lastRecipeId,
+                    headers: {
+                        Authorization: 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.status).equal(200)
+                    expect(response.body).to.deep.include(newRecipe)
+                })
+            })
+        })
+    })
+
+    it('Get all recipes created by account', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes/account/' + userCredentials.username,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            expect(response.status).to.equal(200)
+            expect(response.body).to.be.an('array')
+            response.body.forEach((recipe) => {
+                expect(recipe.authorLogin).to.eql(userCredentials.username)
+            })
+        })
+    });
+
+    it('Get favourite recipes for account', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes/favourite/' + userCredentials.username,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            expect(response.status).to.equal(200)
+            expect(response.body).to.be.an('array')
+            expect(response.body).to.eql(favouriteRecipes)
+        })
+    });
+
+    it('Update recipe', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes',
+            headers: {
+                'Authorization': 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            lastRecipeId = response.body[response.body.length - 1].id
+
+            cy.request({
+                method: 'PUT',
+                url: '/recipes/' + lastRecipeId,
+                body: {
+                    "description": "Changed text"
+                },
                 headers: {
                     Authorization: 'Bearer ' + jwt
                 }
             }).then((response) => {
-                expect(response.status).equal(200)
-                expect(response.body).to.deep.equal(newRecipe)
+                expect(response.status).to.equal(200)
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes/' + lastRecipeId,
+                    headers: {
+                        Authorization: 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.body.description).to.equal("Changed text")
+                })
+            })
+
+        })
+    });
+
+    it('Add rating to recipe', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes',
+            headers: {
+                'Authorization': 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            lastRecipeId = response.body[response.body.length - 1].id
+
+            cy.request({
+                method: 'PUT',
+                url: '/recipes/ratings/' + lastRecipeId,
+                body: "1.0",
+                headers: {
+                    Authorization: 'Bearer ' + jwt,
+                    'content-type': 'application/json'
+                },
+            }).then((response) => {
+                expect(response.status).to.equal(200)
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes/' + lastRecipeId,
+                    headers: {
+                        Authorization: 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.body.rating).to.eql(
+                        (recipeInitialRating * recipeInitialCount + newRecipeRating) / (recipeInitialCount + 1)
+                    )
+                    expect(response.body.ratingsCount).to.eql(recipeInitialCount + 1)
+                })
             })
         })
-    })
+    });
+
+    it('Delete previously created recipe', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes',
+            headers: {
+                'Authorization': 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            lastRecipeId = response.body[response.body.length - 1].id
+
+            cy.request({
+                method: 'DELETE',
+                url: '/recipes/' + lastRecipeId,
+                headers: {
+                    'Authorization': 'Bearer ' + jwt,
+                }
+            }).then((response) => {
+                expect(response.status).to.equal(200)
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes',
+                    headers: {
+                        'Authorization': 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.body).to.not.deep.include(newRecipe)
+                })
+            })
+        })
+    });
 
 })

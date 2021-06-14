@@ -18,6 +18,8 @@ import java.util.List;
 public class RecipeDetailsDTO {
 
 
+    private Long id;
+
     @NotBlank
     private String name;
 

@@ -1,5 +1,7 @@
 package com.zzpj.services;
 
+import com.zzpj.exceptions.IngredientNotFoundException;
+import com.zzpj.exceptions.NotAnAuthorException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +37,8 @@ public class RecipeService implements RecipeServiceInterface {
     @Override
     public void createRecipe(Recipe recipe) {
         recipe.getRecipeIngredients().forEach(ingredientRepository::save);
+        int calories = recipe.getRecipeIngredients().stream().mapToInt(i -> (int) (i.getCalories() * i.getQuantity() / 100)).sum();
+        recipe.setCalories(calories);
         recipeRepository.save(recipe);
     }
 
@@ -143,33 +148,55 @@ public class RecipeService implements RecipeServiceInterface {
     }
 
     @Override
-    public void updateRecipe(Long id, Recipe updatedRecipe) throws RecipeDoesNotExistException {
+    public void updateRecipe(Long id, Recipe updatedRecipe, String authorLogin) throws RecipeDoesNotExistException, NotAnAuthorException {
         if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(id))) {
             throw new RecipeDoesNotExistException("Recipe with id " + id + " was not found.");
         }
         Recipe recipe = recipeRepository.findRecipeById(id);
-        recipe.setName(updatedRecipe.getName());
-        recipe.setDescription(updatedRecipe.getDescription());
-        recipe.setCalories(updatedRecipe.getCalories());
-        recipe.setRecipeTags(updatedRecipe.getRecipeTags());
-        recipe.setRecipeIngredients(updatedRecipe.getRecipeIngredients());
-        recipe.setPrepareTimeInMinutes(updatedRecipe.getPrepareTimeInMinutes());
-        recipe.setDifficulty(updatedRecipe.getDifficulty());
-        recipe.setServings(updatedRecipe.getServings());
-        recipe.setImage(updatedRecipe.getImage());
+        if(!authorLogin.equals(recipe.getAuthorLogin())){
+            throw new NotAnAuthorException("Authenticated user is not an author of this recipe");
+        }
+
+        updateNotBlankRecipeFields(recipe, updatedRecipe);
+
         recipeRepository.save(recipe);
     }
 
     @Override
-    public void addIngredient(Long recipeId, Ingredient ingredient) throws RecipeDoesNotExistException {
+    public void addIngredient(Long recipeId, Ingredient ingredient, String authorLogin) throws RecipeDoesNotExistException, NotAnAuthorException {
         if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(recipeId))) {
             throw new RecipeDoesNotExistException("Recipe with id " + recipeId + " was not found.");
         }
         Recipe recipe = recipeRepository.findRecipeById(recipeId);
-
+        if(!authorLogin.equals(recipe.getAuthorLogin())){
+            throw new NotAnAuthorException("Authenticated user is not an author of this recipe");
+        }
+        int addCalories = (int) (ingredient.getCalories() * ingredient.getQuantity() / 100);
         List<Ingredient> ingredients = recipe.getRecipeIngredients();
         ingredients.add(ingredient);
         recipe.setRecipeIngredients(ingredients);
+        recipe.setCalories(recipe.getCalories() + addCalories);
+        recipeRepository.save(recipe);
+    }
+
+    @Override
+    public void removeIngredientFromRecipe(Long recipeId, String ingredientName, String authorLogin) throws RecipeDoesNotExistException, NotAnAuthorException, IngredientNotFoundException {
+        if (recipeRepository.findAll().stream().noneMatch(r -> r.getId().equals(recipeId))) {
+            throw new RecipeDoesNotExistException("Recipe with id " + recipeId + " was not found.");
+        }
+        Recipe recipe = recipeRepository.findRecipeById(recipeId);
+        if(!authorLogin.equals(recipe.getAuthorLogin())){
+            throw new NotAnAuthorException("Authenticated user is not an author of this recipe");
+        }
+
+        List<Ingredient> ingredients = recipe.getRecipeIngredients();
+        Ingredient toRemove = recipe.getRecipeIngredients().stream()
+                .filter(i -> i.getName().equals(ingredientName))
+                .findAny().orElseThrow(() -> new IngredientNotFoundException("Ingredient not found in a recipe"));
+        int subtractCalories = (int) (toRemove.getCalories() * toRemove.getQuantity() / 100);
+        ingredients.remove(toRemove);
+        recipe.setRecipeIngredients(ingredients);
+        recipe.setCalories(recipe.getCalories() - subtractCalories);
         recipeRepository.save(recipe);
     }
 
@@ -236,6 +263,40 @@ public class RecipeService implements RecipeServiceInterface {
         return stringBuilder.toString();
     }
 
+    @Override
+    public void addRecipeToFavourites(String login, Long id) {
+        Account account = accountRepository.findByLogin(login);
+        Recipe recipe = recipeRepository.findRecipeById(id);
+        account.getFavouriteRecipes().add(recipe);
+        accountRepository.save(account);
+    }
+
+    private void updateNotBlankRecipeFields(Recipe base, Recipe changes) {
+        if (changes.getRecipeTags() != null && !changes.getRecipeTags().isBlank()) {
+            base.setRecipeTags(changes.getRecipeTags());
+        }
+        if (changes.getName() != null && !changes.getName().isBlank()) {
+            base.setName(changes.getName());
+        }
+        if (changes.getDescription() != null && !changes.getDescription().isBlank()) {
+            base.setDescription(changes.getDescription());
+        }
+        if (changes.getImage() != null) {
+            base.setImage(changes.getImage());
+        }
+        if (changes.getServings() != null) {
+            base.setServings(changes.getServings());
+        }
+        if (changes.getCalories() != null) {
+            base.setCalories(changes.getCalories());
+        }
+        if (changes.getPrepareTimeInMinutes() != null) {
+            base.setPrepareTimeInMinutes(changes.getPrepareTimeInMinutes());
+        }
+        if (changes.getDifficulty() != null && !changes.getName().isBlank()) {
+            base.setDifficulty(changes.getDifficulty());
+        }
+    }
 
 }
 

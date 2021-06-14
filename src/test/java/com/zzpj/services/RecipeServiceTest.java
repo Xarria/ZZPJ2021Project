@@ -1,10 +1,13 @@
 package com.zzpj.services;
 
+import com.zzpj.exceptions.IngredientNotFoundException;
+import com.zzpj.exceptions.NotAnAuthorException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
 import com.zzpj.repositories.AccountRepository;
+import com.zzpj.repositories.IngredientRepository;
 import com.zzpj.repositories.RecipeRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +24,8 @@ class RecipeServiceTest {
 
     @Mock
     private RecipeRepository recipeRepository;
+    @Mock
+    private IngredientRepository ingredientRepository;
     @Mock
     private AccountRepository accountRepository;
     @InjectMocks
@@ -65,6 +70,8 @@ class RecipeServiceTest {
         Mockito.when(recipe.getAuthorLogin()).thenReturn("Login");
         recipes.add(recipe);
         Mockito.when(ingredient.getName()).thenReturn(ingredientName);
+        Mockito.when(ingredient.getQuantity()).thenReturn(100D);
+        Mockito.when(ingredient.getCalories()).thenReturn(100D);
         ingredients.add(ingredient);
         Mockito.when(newRecipe.getName()).thenReturn("Pączek");
         account.setLogin("Login");
@@ -79,6 +86,7 @@ class RecipeServiceTest {
         newRecipe.setName(newName);
         Long newTime = 120L;
         newRecipe.setPrepareTimeInMinutes(newTime);
+        newRecipe.setRecipeIngredients(ingredients);
 
         Mockito.doAnswer(invocation -> {
             recipes.add(invocation.getArgument(0));
@@ -144,6 +152,7 @@ class RecipeServiceTest {
     void updateRecipe() throws RecipeDoesNotExistException {
         updatedRecipe.setName("Bagietka");
         updatedRecipe.setCalories(300);
+        updatedRecipe.setAuthorLogin("Login");
 
         Mockito.doAnswer(invocation -> {
             Recipe recipe = invocation.getArgument(0);
@@ -154,7 +163,7 @@ class RecipeServiceTest {
 
         Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(updatedRecipe);
 
-        assertDoesNotThrow(() -> recipeService.updateRecipe(id, updatedRecipe));
+        assertDoesNotThrow(() -> recipeService.updateRecipe(id, updatedRecipe, "Login"));
         Mockito.verify(recipeRepository).save(updatedRecipe);
         Recipe recipeById = recipeService.getRecipeById(id);
 
@@ -164,14 +173,18 @@ class RecipeServiceTest {
 
     @Test
     void updateRecipeException(){
-        assertThrows(RecipeDoesNotExistException.class, () -> recipeService.updateRecipe(123L, updatedRecipe));
+        assertThrows(RecipeDoesNotExistException.class, () -> recipeService.updateRecipe(123L, updatedRecipe, "Login"));
     }
 
     @Test
     void addIngredient() throws RecipeDoesNotExistException {
         newIngredient.setName(newIngredientName);
+        newIngredient.setCalories(250D);
+        newIngredient.setQuantity(300D);
         ingredients.add(newIngredient);
         updatedRecipe.setRecipeIngredients(ingredients);
+        updatedRecipe.setAuthorLogin("Login");
+        updatedRecipe.setCalories(300);
 
         Mockito.when(recipeRepository.findAll()).thenReturn(recipes);
 
@@ -185,14 +198,37 @@ class RecipeServiceTest {
 
         Recipe recipeById = recipeService.getRecipeById(id);
         assertEquals(2, recipeById.getRecipeIngredients().size());
-        assertDoesNotThrow(() -> recipeService.addIngredient(id, newIngredient));
+        assertDoesNotThrow(() -> recipeService.addIngredient(id, newIngredient, "Login"));
         Mockito.verify(recipeRepository).save(any());
         assertEquals(newIngredientName, recipe.getRecipeIngredients().get(1).getName());
     }
 
     @Test
+    void removeIngredientFromRecipe() throws RecipeDoesNotExistException {
+        Mockito.when(recipeRepository.findAll()).thenReturn(recipes);
+        Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(recipe);
+
+        Mockito.doAnswer(invocation -> {
+            Recipe recipe = invocation.getArgument(0);
+            ingredients.remove(ingredient);
+            recipe.setRecipeIngredients(ingredients);
+            return null;
+        }).when(recipeRepository).save(any());
+
+        Recipe recipeById = recipeService.getRecipeById(id);
+        assertDoesNotThrow(() -> recipeService.removeIngredientFromRecipe(id, "Mąka", "Login"));
+        assertEquals(0, recipeById.getRecipeIngredients().size());
+    }
+
+    @Test
+    void removeIngredientFromRecipeException(){
+        Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(recipe);
+        assertThrows(IngredientNotFoundException.class, () -> recipeService.removeIngredientFromRecipe(id, "Nieistnieje", "Login"));
+    }
+
+    @Test
     void addIngredientException() {
-        assertThrows(RecipeDoesNotExistException.class, () -> recipeService.addIngredient(123L, ingredient));
+        assertThrows(RecipeDoesNotExistException.class, () -> recipeService.addIngredient(123L, ingredient, "Login"));
     }
 
     @Test

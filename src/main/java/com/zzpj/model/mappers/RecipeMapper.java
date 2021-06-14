@@ -11,11 +11,14 @@ public class RecipeMapper {
     public static RecipeGeneralDTO entityToGeneralDTO(Recipe recipe) {
         RecipeGeneralDTO recipeGeneralDTO = new RecipeGeneralDTO();
 
+        recipeGeneralDTO.setId(recipe.getId());
         recipeGeneralDTO.setName(recipe.getName());
         recipeGeneralDTO.setAuthorLogin(recipe.getAuthorLogin());
         recipeGeneralDTO.setRating(recipe.getRating());
         recipeGeneralDTO.setRatingsCount(recipe.getRatingsCount());
         recipeGeneralDTO.setCalories(recipe.getCalories());
+        recipeGeneralDTO.setDescription(recipe.getDescription());
+        recipeGeneralDTO.setServings(recipe.getServings());
         recipeGeneralDTO.setPreparationTimeInMinutes(recipe.getPrepareTimeInMinutes());
         recipeGeneralDTO.setDifficulty(recipe.getDifficulty());
         recipeGeneralDTO.setTags(recipe.getRecipeTags());
@@ -27,6 +30,7 @@ public class RecipeMapper {
     public static RecipeDetailsDTO entityToDetailsDTO(Recipe recipe) {
         RecipeDetailsDTO recipeDetailsDTO = new RecipeDetailsDTO();
 
+        recipeDetailsDTO.setId(recipe.getId());
         recipeDetailsDTO.setName(recipe.getName());
         recipeDetailsDTO.setAuthorLogin(recipe.getAuthorLogin());
         recipeDetailsDTO.setDescription(recipe.getDescription());
@@ -48,11 +52,16 @@ public class RecipeMapper {
     public static Recipe generalDTOToEntity(RecipeGeneralDTO recipeGeneralDTO) {
         Recipe recipe = new Recipe();
 
+        if (recipeGeneralDTO.getId() != null) {
+            recipe.setId(recipeGeneralDTO.getId());
+        }
         recipe.setName(recipeGeneralDTO.getName());
         recipe.setAuthorLogin(recipeGeneralDTO.getAuthorLogin());
         recipe.setRating(recipeGeneralDTO.getRating());
         recipe.setRatingsCount(recipeGeneralDTO.getRatingsCount());
         recipe.setCalories(recipeGeneralDTO.getCalories());
+        recipe.setDescription(recipeGeneralDTO.getDescription());
+        recipe.setServings(recipeGeneralDTO.getServings());
         recipe.setPrepareTimeInMinutes(recipeGeneralDTO.getPreparationTimeInMinutes());
         recipe.setDifficulty(recipeGeneralDTO.getDifficulty());
         recipe.setRecipeTags(recipeGeneralDTO.getTags());
@@ -64,6 +73,9 @@ public class RecipeMapper {
     public static Recipe detailsDTOtoEntity(RecipeDetailsDTO recipeDetailsDTO) {
         Recipe recipe = new Recipe();
 
+        if (recipeDetailsDTO.getId() != null) {
+            recipe.setId(recipeDetailsDTO.getId());
+        }
         recipe.setName(recipeDetailsDTO.getName());
         recipe.setAuthorLogin(recipeDetailsDTO.getAuthorLogin());
         recipe.setDescription(recipeDetailsDTO.getDescription());

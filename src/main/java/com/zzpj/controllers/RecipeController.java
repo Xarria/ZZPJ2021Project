@@ -1,9 +1,6 @@
 package com.zzpj.controllers;
 
-import com.zzpj.exceptions.AccountDoesNotExistException;
-import com.zzpj.exceptions.IngredientNotFoundException;
-import com.zzpj.exceptions.RecipeDoesNotExistException;
-import com.zzpj.exceptions.URLNotFoundException;
+import com.zzpj.exceptions.*;
 import com.zzpj.model.DTOs.CustomIngredientDTO;
 import com.zzpj.model.DTOs.IngredientDTO;
 import com.zzpj.model.DTOs.RecipeDetailsDTO;
@@ -105,24 +102,43 @@ public class RecipeController {
     }
 
     @PutMapping(path = "/recipes/{id}", consumes = "application/json")
-    public ResponseEntity<?> updateRecipe(@PathVariable Long id, @RequestBody RecipeDetailsDTO updatedRecipe) {
+    public ResponseEntity<?> updateRecipe(@PathVariable Long id, @RequestBody RecipeGeneralDTO updatedRecipe) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
-            recipeService.updateRecipe(id, RecipeMapper.detailsDTOtoEntity(updatedRecipe));
+            recipeService.updateRecipe(id, RecipeMapper.generalDTOToEntity(updatedRecipe), authentication.getName());
             return ResponseEntity.ok().build();
         } catch (RecipeDoesNotExistException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (NotAnAuthorException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @DeleteMapping(path = "recipes/ingredients/{id}")
+    public ResponseEntity<String> removeIngredientFromRecipe(@PathVariable Long id, @RequestBody String ingredientName) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            recipeService.removeIngredientFromRecipe(id, ingredientName, authentication.getName());
+            return ResponseEntity.ok().build();
+        } catch (RecipeDoesNotExistException | IngredientNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (NotAnAuthorException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
     @PostMapping(path = "/recipes/ingredients/{id}", consumes = "application/json")
     public ResponseEntity<?> addIngredient(@PathVariable Long id, @RequestBody CustomIngredientDTO customIngredientDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
             IngredientDTO ingredientDTO = IngredientsMapper
                     .entityToDTO(ingredientService.getIngredientsByKeyword(customIngredientDTO.getName()));
-            recipeService.addIngredient(id, IngredientsMapper.dtoToEntity(ingredientDTO, customIngredientDTO.getQuantity()));
+            recipeService.addIngredient(id, IngredientsMapper.dtoToEntity(ingredientDTO, customIngredientDTO.getQuantity()), authentication.getName());
             return ResponseEntity.ok().build();
-        } catch (RecipeDoesNotExistException | IngredientNotFoundException | URLNotFoundException | IOException e) {
+        } catch (RecipeDoesNotExistException | IngredientNotFoundException | IOException | URLNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (NotAnAuthorException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
@@ -157,7 +173,7 @@ public class RecipeController {
         }
     }
 
-    @PutMapping(path = "/recipes/ratings/{id}", consumes = "application/text")
+    @PutMapping(path = "/recipes/ratings/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> addRatingToRecipe(@PathVariable Long id, @RequestBody float rating) {
         try {
             recipeService.addRatingToRecipe(id, rating);
@@ -165,5 +181,11 @@ public class RecipeController {
         } catch (RecipeDoesNotExistException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @PutMapping(path = "/recipes/favourite/add/{id}", consumes = {MediaType.TEXT_PLAIN_VALUE})
+    public ResponseEntity<?> addRecipeToFavourites(@PathVariable Long id) {
+        recipeService.addRecipeToFavourites(SecurityContextHolder.getContext().getAuthentication().getName(), id);
+        return ResponseEntity.ok().build();
     }
 }
