@@ -1,15 +1,14 @@
 <div class="nav-bar-container">
   <mat-toolbar class="nav-bar">
+    <img class="small-logo" src="assets/icons/hop.png" alt="">
     <span>MydłoPowidłoBułkaChmiel</span>
     <div class="spacer"></div>
-
     <a mat-button (click)="getRecipes()">All recipes</a>
     <a mat-button (click)="getMyRecipes()">My recipes</a>
     <a mat-button (click)="getMyFavouriteRecipes()">My favourite recipes</a>
     <a mat-button (click)="getRecommendation()">Find something new</a>
-    <input matInput [(ngModel)]="unwantedTags" name="tags" type="text" placeholder="Unwanted tags">
+    <input placeholder="Unwanted tags..." name="tags" type="text" [(ngModel)]="unwantedTags">
     <a mat-raised-button color="primary" (click)="signOut()">Sign out</a>
-    <a></a>
   </mat-toolbar>
 
   <div class="table-container">

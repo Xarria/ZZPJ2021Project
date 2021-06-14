@@ -1,82 +1,81 @@
 <div class="nav-bar-container">
-<mat-toolbar class="nav-bar">
-  <span>MydłoPowidłoBułkaChmiel</span>
-  <div class="spacer"></div>
+  <mat-toolbar class="nav-bar">
+    <img class="small-logo" src="assets/icons/hop.png" alt="">
+    <span>MydłoPowidłoBułkaChmiel</span>
+    <div class="spacer"></div>
+      <a mat-button (click)="router.navigate(['/user'])">All recipes</a>
+      <a mat-raised-button color="primary">Sign out</a>
+  </mat-toolbar>
 
-  <a mat-button (click)="router.navigate(['/user'])">All recipes</a>
-  <a mat-raised-button color="primary">Sign out</a>
-</mat-toolbar>
-
-<div class="container">
-  <div class="center">
-    {{recipeService.recipe.name | uppercase}}
-  </div>
-  <div class="row">
-    <div class="column left"><label>ID:</label></div>
-    <div class="column right">{{recipeService.recipe.id}}</div>
-  </div>
-  <div class="row">
-    <div class="column left"><label>AUTHOR'S LOGIN:</label></div>
-    <div class="column right">{{recipeService.recipe.authorLogin}}</div>
-  </div>
-  <div class="row">
-    <div class="column left"><label>DESCRIPTION:</label></div>
-    <div class="column right">{{recipeService.recipe.description}}</div>
-  </div>
-  <div class="row">
-    <div class="column left"><label>INGREDIENTS:</label></div>
-    <div class="column right">
-      <div *ngFor="let ingredient of recipeService.recipe.ingredients">
-        <div class="row-ingredient">
-          <div class="column-ingredient-name">{{ingredient.name}}:</div>
-          <div class="column-ingredient-quantity">{{ingredient.quantity}} g</div>
+  <div class="container">
+    <div class="center">
+      {{recipeService.recipe.name | uppercase}}
+    </div>
+    <div class="row">
+      <div class="column left"><label>ID:</label></div>
+      <div class="column right">{{recipeService.recipe.id}}</div>
+    </div>
+    <div class="row">
+      <div class="column left"><label>AUTHOR'S LOGIN:</label></div>
+      <div class="column right">{{recipeService.recipe.authorLogin}}</div>
+    </div>
+    <div class="row">
+      <div class="column left"><label>INGREDIENTS:</label></div>
+      <div class="column right">
+        <div *ngFor="let ingredient of recipeService.recipe.ingredients">
+          <div class="row-ingredient">
+            <div class="column-ingredient-name">{{ingredient.name}}:</div>
+            <div class="column-ingredient-quantity">{{ingredient.quantity}} g</div>
+          </div>
         </div>
       </div>
-
     </div>
-  </div>
-  <div class="row">
-    <div class="column left">
-      <label>RATING:</label>
+    <div class="row">
+      <div class="column left"><label>DESCRIPTION:</label></div>
+      <div class="column right">{{recipeService.recipe.description}}</div>
     </div>
-    <div class="column right">{{recipeService.recipe.rating}}</div>
-  </div>
-  <div class="row">
-    <div class="column left">
-      <label>RATINGS COUNT:</label>
+    <div class="row">
+      <div class="column left">
+        <label>RATING:</label>
+      </div>
+      <div class="column right">{{recipeService.recipe.rating}}</div>
     </div>
-    <div class="column right">{{recipeService.recipe.ratingsCount}}</div>
-  </div>
-  <div class="row">
-    <div class="column left">
-      <label>TAGS:</label>
+    <div class="row">
+      <div class="column left">
+        <label>RATINGS COUNT:</label>
+      </div>
+      <div class="column right">{{recipeService.recipe.ratingsCount}}</div>
     </div>
-    <div class="column right">{{recipeService.recipe.tags}}</div>
-  </div>
-  <div class="row">
-    <div class="column left">
-      <label>SERVINGS:</label>
+    <div class="row">
+      <div class="column left">
+        <label>TAGS:</label>
+      </div>
+      <div class="column right">{{recipeService.recipe.tags}}</div>
     </div>
-    <div class="column right">{{recipeService.recipe.servings}}</div>
-  </div>
-  <div class="row">
-    <div class="column left">
-      <label>CALORIES:</label>
+    <div class="row">
+      <div class="column left">
+        <label>SERVINGS:</label>
+      </div>
+      <div class="column right">{{recipeService.recipe.servings}}</div>
     </div>
-    <div class="column right">{{recipeService.recipe.calories}} kcal</div>
-  </div>
-  <div class="row">
-    <div class="column left">
-      <label>PREPARATION TIME:</label>
+    <div class="row">
+      <div class="column left">
+        <label>CALORIES:</label>
+      </div>
+      <div class="column right">{{recipeService.recipe.calories}} kcal</div>
     </div>
-    <div class="column right">{{recipeService.recipe.preparationTimeInMinutes}} minutes</div>
-  </div>
-  <div class="row">
-    <div class="column left">
-      <label>DIFFICULTY:</label>
+    <div class="row">
+      <div class="column left">
+        <label>PREPARATION TIME:</label>
+      </div>
+      <div class="column right">{{recipeService.recipe.preparationTimeInMinutes}} minutes</div>
     </div>
-    <div class="column right">{{recipeService.recipe.difficulty}}</div>
+    <div class="row">
+      <div class="column left">
+        <label>DIFFICULTY:</label>
+      </div>
+      <div class="column right">{{recipeService.recipe.difficulty}}</div>
+    </div>
+    <button class="recipe-button" mat-raised-button (click)="sendRecipe()">Wyślij przepis na adres e-mail</button>
   </div>
-  <button class="recipe-button" mat-raised-button (click)="sendRecipe()">Wyślij przepis na adres e-mail</button>
-</div>
 </div>

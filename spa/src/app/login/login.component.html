@@ -1,10 +1,12 @@
 <div class="main-container" fxLayoutAlign="center center" fxFlexFill>
   <mat-card class="form-container" fxFlex="25">
-    <mat-toolbar color="primary">Smaczne jedzonko</mat-toolbar>
+    <mat-toolbar class="app-name" color="primary">
+      <img class="logo" src="assets/icons/hop.png" alt="">
+      MydłoPowidłoBułkaChmiel
+    </mat-toolbar>
     <form class="login-form" fxLayoutAlign="stretch" fxLayout="column">
       <mat-form-field>
         <input matInput placeholder="Username" name="login" type="text" [(ngModel)]="login">
-
       </mat-form-field>
       <mat-form-field>
         <input matInput type="password" placeholder="Password" name="login" [(ngModel)]="password">
