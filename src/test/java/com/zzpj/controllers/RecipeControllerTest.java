@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -146,7 +145,13 @@ class RecipeControllerTest {
     }
 
     @Test
-    void getRecommendationBasedOnLikings() throws AccountDoesNotExistException { }
+    void getRecommendationBasedOnLikings() throws AccountDoesNotExistException {
+//        when(accountService.getAccountByLogin("user1")).thenReturn(acc);
+        //
+        //
+        //
+        //
+    }
 
     @Test
     void getAllRecipesForAccount() {
@@ -182,28 +187,6 @@ class RecipeControllerTest {
         assertEquals(0, recipes.size());
     }
 
-    @Test
-    void updateRecipe() {
-        Authentication authentication = Mockito.mock(Authentication.class);
-        // Mockito.whens() for your authorization object
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-        Mockito.when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
-        assertEquals(description, recipes.get(0).getDescription());
-        when(recipe.getDescription()).thenReturn(name);
-        assertDoesNotThrow(() -> recipeController.updateRecipe(id1, RecipeMapper.entityToGeneralDTO(recipe)));
-        assertEquals(name, recipes.get(0).getDescription());
-    }
-
-    @Test
-    void addIngredient() throws IngredientNotFoundException, URLNotFoundException, IOException {
-//        when(ingredientService.getIngredientsByKeyword("mint")).thenReturn(ingredient1);
-//        assertEquals(2, recipes.get(0).getRecipeIngredients().size());
-//
-//        assertDoesNotThrow(() -> recipeController.addIngredient(id1, customIngredientDTO));
-//        assertEquals(3, recipes.get(0).getRecipeIngredients().size());
-    }
 
     @Test
     void addRatingToRecipe() throws RecipeDoesNotExistException {
