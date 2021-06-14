@@ -27,6 +27,7 @@ public class IngredientService implements IngredientServiceInterface {
         this.ingredientRepository = ingredientRepository;
     }
 
+    @Override
     public void addIngredient(Ingredient ingredient) {
         ingredientRepository.save(ingredient);
     }

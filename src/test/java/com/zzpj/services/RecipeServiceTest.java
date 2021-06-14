@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,14 +23,6 @@ import static org.mockito.ArgumentMatchers.any;
 
 class RecipeServiceTest {
 
-    @Mock
-    private RecipeRepository recipeRepository;
-    @Mock
-    private IngredientRepository ingredientRepository;
-    @Mock
-    private AccountRepository accountRepository;
-    @InjectMocks
-    private RecipeService recipeService;
     @Spy
     private final Recipe recipe = new Recipe();
     @Spy
@@ -41,13 +35,19 @@ class RecipeServiceTest {
     private final List<Ingredient> ingredients = new ArrayList<>();
     @Spy
     private final Recipe updatedRecipe = new Recipe();
-
     private final Account account = new Account();
-
     private final String name = "Bułeczki";
+    private final List<Recipe> recipes = new ArrayList<>();
+    @Mock
+    private RecipeRepository recipeRepository;
+    @Mock
+    private IngredientRepository ingredientRepository;
+    @Mock
+    private AccountRepository accountRepository;
+    @InjectMocks
+    private RecipeService recipeService;
     private String description = "Smaczne bułeczki";
     private int calories = 500;
-    private final List<Recipe> recipes = new ArrayList<>();
     private Long id = 1L;
     private String ingredientName = "Mąka";
     private String newIngredientName = "Mleko";
@@ -171,7 +171,7 @@ class RecipeServiceTest {
     }
 
     @Test
-    void updateRecipeException(){
+    void updateRecipeException() {
         assertThrows(RecipeDoesNotExistException.class, () -> recipeService.updateRecipe(123L, updatedRecipe, "Login"));
     }
 
@@ -220,7 +220,7 @@ class RecipeServiceTest {
     }
 
     @Test
-    void removeIngredientFromRecipeException(){
+    void removeIngredientFromRecipeException() {
         Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(recipe);
         assertThrows(IngredientNotFoundException.class, () -> recipeService.removeIngredientFromRecipe(id, "Nieistnieje", "Login"));
     }
@@ -272,5 +272,69 @@ class RecipeServiceTest {
 
         assertDoesNotThrow(() -> recipeService.getFavouriteRecipesForAccount("Login"));
         assertEquals(2, recipeService.getFavouriteRecipesForAccount("Login").size());
+    }
+
+    @Test
+    void addRecipeToFavourites() {
+        String login = "Login";
+        account.setFavouriteRecipes(new ArrayList<>());
+        Recipe favRecipe = new Recipe();
+        Mockito.when(accountRepository.findByLogin(login)).thenReturn(account);
+        Mockito.when(recipeRepository.findRecipeById(id)).thenReturn(favRecipe);
+
+        assertEquals(0, account.getFavouriteRecipes().size());
+
+        recipeService.addRecipeToFavourites(login, id);
+
+        assertEquals(1, account.getFavouriteRecipes().size());
+        assertEquals(favRecipe, account.getFavouriteRecipes().get(0));
+    }
+
+    @Test
+    void getShoppingList() {
+        Mockito.when(ingredient.getProtein()).thenReturn(100D);
+        Mockito.when(ingredient.getFats()).thenReturn(100D);
+        Mockito.when(ingredient.getCarbohydrates()).thenReturn(100D);
+        Mockito.when(ingredient.getId()).thenReturn(1L);
+
+        Mockito.when(recipeRepository.findAll()).thenReturn(Collections.singletonList(recipe));
+
+        String shoppingList = recipeService.getShoppingList(Collections.singletonList(recipe.getId()));
+
+        assertTrue(shoppingList.contains("Name: " + ingredientName));
+        assertTrue(shoppingList.contains("Quantity: " + ingredient.getQuantity().toString()));
+    }
+
+    @Test
+    void sortKeysByValueAscending() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("meat", 3);
+        map.put("vegan", 8);
+        map.put("gluten", 1);
+        map.put("dairy", 4);
+
+        List<String> ascendingKeys = List.of("gluten","meat","dairy","vegan");
+        assertEquals(ascendingKeys, recipeService.sortKeysByValue(map, true));
+    }
+
+    @Test
+    void sortKeysByValueDescending() {
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("meat", 3);
+        map.put("vegan", 8);
+        map.put("gluten", 1);
+        map.put("dairy", 4);
+
+        List<String> descendingKeys = List.of("vegan", "dairy", "meat", "gluten");
+        assertEquals(descendingKeys, recipeService.sortKeysByValue(map, false));
+    }
+
+    @Test
+    void sendRecipeByMail() throws RecipeDoesNotExistException {
+        String str = recipeService.sendRecipeByMail(recipe.getId());
+        assertDoesNotThrow(() -> recipeService.sendRecipeByMail(recipe.getId()));
+        Assertions.assertThrows(RecipeDoesNotExistException.class, () -> recipeService.sendRecipeByMail(-2115L));
+        assertEquals("<b>BUŁECZKI</b><br><b> Ingredients: </b> <br>Mąka: " +
+            "100.0g <br><br><b> Steps: </b><br>Smaczne bułeczki<br>", str);
     }
 }

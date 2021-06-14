@@ -29,7 +29,6 @@ public class AccountController {
         this.accountService = accountService;
         this.accessLevelService = accessLevelService;
     }
-    // TODO Wszystko opakować wyjątkami
 
     @PostMapping(path = "/accounts", consumes = "application/json")
     public ResponseEntity<AccountNoRecipesDTO> createAccount(@RequestBody AccountNoRecipesDTO accountDTO) {
@@ -40,7 +39,6 @@ public class AccountController {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        // TODO opakować wyjątkami
 
         return ResponseEntity.ok().build();
     }
@@ -57,7 +55,6 @@ public class AccountController {
             ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
-        // TODO opakować wyjątkami
 
         return ResponseEntity.ok().build();
     }
