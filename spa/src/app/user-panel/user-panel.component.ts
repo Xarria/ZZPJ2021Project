@@ -34,6 +34,14 @@ export class UserPanelComponent implements OnInit {
   signOut(): void {
     this.router.navigate(['/']);
   }
+
+  getRecommendation(): void {
+    this.userService.getRecommendation().subscribe(
+      (response: RecipeGeneral[]) => {
+        this.userService.recipes = response;
+      }
+    )
+  }
 }
 
 
