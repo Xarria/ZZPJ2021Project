@@ -35,6 +35,7 @@ export class UserPanelComponent implements OnInit {
 
   signOut(): void {
     this.router.navigate(['/']);
+    this.userService.signOut();
   }
 
   getMyRecipes(): void {
