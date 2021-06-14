@@ -1,6 +1,9 @@
+@import '../../styles.less';
+
 .container {
   width: 80%;
   margin: 5% 10%;
+  font-size: 2rem;
 }
 
 .row {
@@ -9,5 +12,49 @@
 
 .column {
   flex: 50%;
+}
+
+.center {
   text-align: center;
+  margin: 10px;
+  padding-bottom: 30px;
+}
+
+.left {
+  text-align: right;
+  padding-bottom: 15px;
+  padding-right: 10px;
+  font: lighter 1.2rem Source Sans Pro;
+}
+
+.right {
+  text-align: left;
+  padding-bottom: 15px;
+  padding-left: 10px;
+  font: bold 1.1rem Source Sans Pro;
+}
+
+.row-ingredient {
+  display: flex;
+  width: 50%;
+}
+
+.column-ingredient-name {
+  .column;
+  text-align: left;
+  font-weight: 300;
+}
+
+.column-ingredient-quantity {
+  .column;
+  padding-left: 5px;
+  font-weight: bolder;
+  font-style: italic;
+}
+
+.recipe-button {
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 30px;
+  font: lighter 1.2rem Source Sans Pro;
 }
