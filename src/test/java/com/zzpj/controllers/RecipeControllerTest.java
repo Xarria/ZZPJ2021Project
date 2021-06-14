@@ -1,29 +1,23 @@
 package com.zzpj.controllers;
 
-import com.zzpj.exceptions.AccountDoesNotExistException;
-import com.zzpj.exceptions.IngredientNotFoundException;
-import com.zzpj.exceptions.RecipeDoesNotExistException;
-import com.zzpj.exceptions.URLNotFoundException;
-import com.zzpj.model.DTOs.*;
+import com.zzpj.exceptions.*;
+import com.zzpj.model.DTOs.CustomIngredientDTO;
+import com.zzpj.model.DTOs.RecipeDetailsDTO;
+import com.zzpj.model.DTOs.RecipeGeneralDTO;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
 import com.zzpj.model.entities.Recipe;
-import com.zzpj.model.mappers.AccountMapper;
 import com.zzpj.model.mappers.RecipeMapper;
 import com.zzpj.services.AccountService;
 import com.zzpj.services.IngredientService;
 import com.zzpj.services.interfaces.RecipeServiceInterface;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,10 +64,8 @@ class RecipeControllerTest {
     private AccountService accountService;
     @Mock
     private IngredientService ingredientService;
-    @Mock
-    private Authentication authentication;
-    @Mock
-    private SecurityContext securityContext;
+    @Spy
+    private Principal principal;
 
     @InjectMocks
     private RecipeController recipeController;
@@ -81,8 +73,7 @@ class RecipeControllerTest {
     @BeforeEach
     void initMocks() {
         MockitoAnnotations.openMocks(this);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getName()).thenReturn("Login");
+        when(principal.getName()).thenReturn("Login");
 
         when(ingredient1.getName()).thenReturn("Mint");
         when(ingredient1.getQuantity()).thenReturn(1.0);
@@ -134,10 +125,27 @@ class RecipeControllerTest {
     }
 
     @Test
+    void createRecipe() {
+        RecipeDetailsDTO newRecipe = new RecipeDetailsDTO();
+        Mockito.doAnswer(invocationOnMock -> {
+            recipes.add(invocationOnMock.getArgument(0));
+            return null;
+        }).when(recipeService).createRecipe(any());
+
+        assertEquals(1, recipes.size());
+        assertDoesNotThrow(() -> recipeController.createRecipe(newRecipe, principal));
+        assertEquals(HttpStatus.OK, (recipeController.createRecipe(newRecipe, principal)).getStatusCode());
+
+        verify(recipeService, times(2)).createRecipe(any());
+        assertEquals(3, recipes.size());
+    }
+
+    @Test
     void getRecipeById() throws RecipeDoesNotExistException {
         when(recipeService.getRecipeById(0L)).thenReturn(recipe);
         assertDoesNotThrow(() -> recipeController.getRecipeById(0L));
         assertEquals(RecipeMapper.entityToDetailsDTO(recipe), recipeController.getRecipeById(0L).getBody());
+        assertEquals(HttpStatus.OK, (recipeController.getRecipeById(0L).getStatusCode()));
     }
 
     @Test
@@ -146,15 +154,18 @@ class RecipeControllerTest {
         assertDoesNotThrow(() -> recipeController.getAllRecipes());
         List<RecipeGeneralDTO> list = recipes.stream().map(RecipeMapper::entityToGeneralDTO).collect(Collectors.toList());
         assertEquals(list, recipeController.getAllRecipes().getBody());
+        assertEquals(HttpStatus.OK, (recipeController.getAllRecipes().getStatusCode()));
     }
 
     @Test
     void getRecommendationBasedOnLikings() throws AccountDoesNotExistException {
-//        when(accountService.getAccountByLogin("user1")).thenReturn(acc);
-        //
-        //
-        //
-        //
+        when(accountService.getAccountByLogin("Login")).thenReturn(acc);
+        List<Recipe> recommended = List.of(recipe, recipeSecond);
+        when(recipeService.getRecommendationBasedOnLikings(acc, List.of("meat","vegan"))).thenReturn(recommended);
+
+        assertEquals(recommended.stream().map(RecipeMapper::entityToGeneralDTO).collect(Collectors.toList()),
+                recipeController.getRecommendationBasedOnLikings(List.of("meat","vegan"), principal).getBody());
+        assertEquals(HttpStatus.OK, (recipeController.getRecommendationBasedOnLikings(List.of("meat","vegan"), principal).getStatusCode()));
     }
 
     @Test
@@ -164,6 +175,7 @@ class RecipeControllerTest {
         List<RecipeGeneralDTO> list = recipes.stream()
             .map(RecipeMapper::entityToGeneralDTO).collect(Collectors.toList());
         assertEquals(list, recipeController.getAllRecipesForAccount(login).getBody());
+        assertEquals(HttpStatus.OK, (recipeController.getAllRecipesForAccount(login).getStatusCode()));
     }
 
     @Test
@@ -188,25 +200,60 @@ class RecipeControllerTest {
         }).when(recipeService).deleteRecipe(any());
         assertEquals(1, recipes.size());
         assertDoesNotThrow(() -> recipeController.deleteRecipe(any()));
+        assertEquals(HttpStatus.OK, (recipeController.deleteRecipe(any()).getStatusCode()));
         assertEquals(0, recipes.size());
+
     }
 
     @Test
-    void updateRecipe() {
+    void updateRecipe() throws RecipeDoesNotExistException, NotAnAuthorException {
+        Recipe updatedRecipe = new Recipe();
+        updatedRecipe.setDescription(description);
+        updatedRecipe.setServings(6);
 
-        assertEquals(description, recipes.get(0).getDescription());
-        when(recipe.getDescription()).thenReturn(name);
-        assertDoesNotThrow(() -> recipeController.updateRecipe(id1, RecipeMapper.entityToGeneralDTO(recipe)));
-        assertEquals(name, recipes.get(0).getDescription());
+        when(recipeService.getAllRecipes()).thenReturn(recipes);
+        when(recipeService.getRecipeById(any())).thenReturn(updatedRecipe);
+        assertEquals(description, updatedRecipe.getDescription());
+
+        Mockito.doAnswer(invocation -> {
+            updatedRecipe.setDescription("Nowy");
+            updatedRecipe.setServings(7);
+            return null;
+        }).when(recipeService).updateRecipe(any(), any(), any());
+
+        assertDoesNotThrow(() -> recipeController.updateRecipe(id1, RecipeMapper.entityToGeneralDTO(recipe), principal));
+        assertEquals(HttpStatus.OK, (recipeController.updateRecipe(id1, RecipeMapper.entityToGeneralDTO(recipe), principal).getStatusCode()));
+        assertEquals("Nowy", updatedRecipe.getDescription());
+        assertEquals(7, updatedRecipe.getServings());
     }
 
     @Test
-    void addIngredient() throws IngredientNotFoundException, URLNotFoundException, IOException {
+    void addIngredient() throws IngredientNotFoundException, URLNotFoundException, IOException, NotAnAuthorException, RecipeDoesNotExistException {
         when(ingredientService.getIngredientsByKeyword("mint")).thenReturn(ingredient1);
         assertEquals(2, recipes.get(0).getRecipeIngredients().size());
 
-        assertDoesNotThrow(() -> recipeController.addIngredient(id1, customIngredientDTO));
-        assertEquals(3, recipes.get(0).getRecipeIngredients().size());
+        Mockito.doAnswer(invocation -> {
+            recipes.get(0).getRecipeIngredients().add(ingredient1);
+            return null;
+        }).when(recipeService).addIngredient(any(), any(), any());
+
+        assertDoesNotThrow(() -> recipeController.addIngredient(id1, customIngredientDTO, principal));
+        assertEquals(HttpStatus.OK, recipeController.addIngredient(id1, customIngredientDTO, principal).getStatusCode());
+        assertEquals(4, recipes.get(0).getRecipeIngredients().size());
+    }
+
+    @Test
+    void removeIngredientFromRecipe() throws IngredientNotFoundException, NotAnAuthorException, RecipeDoesNotExistException {
+        assertEquals(2, recipes.get(0).getRecipeIngredients().size());
+
+        Mockito.doAnswer(invocation -> {
+            recipe.getRecipeIngredients().remove(0);
+            return null;
+        }).when(recipeService).removeIngredientFromRecipe(any(), any(), any());
+
+        assertDoesNotThrow(() -> recipeController.removeIngredientFromRecipe(id1, "mąka", principal));
+        assertEquals(HttpStatus.OK, recipeController.removeIngredientFromRecipe(id1, "mąka", principal).getStatusCode());
+        assertEquals(0, recipes.get(0).getRecipeIngredients().size());
     }
 
     @Test
@@ -226,8 +273,10 @@ class RecipeControllerTest {
         }).when(recipeService).addRatingToRecipe(r.getId(), 3.0f);
 
         assertDoesNotThrow(() -> recipeController.addRatingToRecipe(2115L, 3.0f));
+        assertEquals(HttpStatus.OK, recipeController.addRatingToRecipe(2115L, 3.0f).getStatusCode());
 
         assertEquals(4.3f, r.getRating(), 0.1);
         assertEquals(2, r.getRatingsCount());
     }
+
 }
