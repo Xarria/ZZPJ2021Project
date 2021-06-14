@@ -4,11 +4,7 @@ import com.zzpj.model.DTOs.IngredientDTO;
 import com.zzpj.model.entities.Ingredient;
 import org.apache.commons.math3.util.Precision;
 
-import java.text.DecimalFormat;
-
 public class IngredientsMapper {
-
-    private static final DecimalFormat df = new DecimalFormat("##.00");
 
     public static IngredientDTO entityToDTO(Ingredient ingredient) {
         IngredientDTO ingredientDTO = new IngredientDTO();
