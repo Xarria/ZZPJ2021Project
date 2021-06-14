@@ -144,6 +144,10 @@ public class RecipeService implements RecipeServiceInterface {
                 .filter(r -> r.getId().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new RecipeDoesNotExistException("Recipe with id " + id + " was not found."));
+        List<Account> accountsWithFavouriteRecipe = accountRepository.findAccountsByFavouriteRecipesContaining(recipe);
+        accountsWithFavouriteRecipe.forEach(account -> {
+            account.getFavouriteRecipes().remove(recipe);
+        });
         recipeRepository.delete(recipe);
     }
 
@@ -267,6 +271,9 @@ public class RecipeService implements RecipeServiceInterface {
     public void addRecipeToFavourites(String login, Long id) {
         Account account = accountRepository.findByLogin(login);
         Recipe recipe = recipeRepository.findRecipeById(id);
+        if (account.getFavouriteRecipes().stream().anyMatch(recipe1 -> recipe1.getId().equals(id))) {
+            return;
+        }
         account.getFavouriteRecipes().add(recipe);
         accountRepository.save(account);
     }
