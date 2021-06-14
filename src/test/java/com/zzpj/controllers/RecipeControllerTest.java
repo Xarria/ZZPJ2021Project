@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -38,6 +39,7 @@ class RecipeControllerTest {
     private long id2 = 2L;
     private final String name = "Name";
     private final String login = "user1";
+    private final String badLogin = "NonExistent";
     private final String description = "Description";
     private final List<Ingredient> recipeIngredients = new ArrayList<>();
     private final List<Ingredient> changedIngredients = new ArrayList<>();
@@ -66,6 +68,8 @@ class RecipeControllerTest {
     private IngredientService ingredientService;
     @Spy
     private Principal principal;
+    @Spy
+    private Principal badPrincipal;
 
     @InjectMocks
     private RecipeController recipeController;
@@ -74,6 +78,7 @@ class RecipeControllerTest {
     void initMocks() {
         MockitoAnnotations.openMocks(this);
         when(principal.getName()).thenReturn("Login");
+        when(badPrincipal.getName()).thenReturn(badLogin);
 
         when(ingredient1.getName()).thenReturn("Mint");
         when(ingredient1.getQuantity()).thenReturn(1.0);
@@ -146,6 +151,11 @@ class RecipeControllerTest {
         assertDoesNotThrow(() -> recipeController.getRecipeById(0L));
         assertEquals(RecipeMapper.entityToDetailsDTO(recipe), recipeController.getRecipeById(0L).getBody());
         assertEquals(HttpStatus.OK, (recipeController.getRecipeById(0L).getStatusCode()));
+
+        when(recipeService.getRecipeById(123L)).thenThrow(RecipeDoesNotExistException.class);
+
+        ResponseEntity<?> response = recipeController.getRecipeById(123L);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -166,6 +176,11 @@ class RecipeControllerTest {
         assertEquals(recommended.stream().map(RecipeMapper::entityToGeneralDTO).collect(Collectors.toList()),
                 recipeController.getRecommendationBasedOnLikings(List.of("meat","vegan"), principal).getBody());
         assertEquals(HttpStatus.OK, (recipeController.getRecommendationBasedOnLikings(List.of("meat","vegan"), principal).getStatusCode()));
+
+        when(accountService.getAccountByLogin("NonExistent")).thenThrow(AccountDoesNotExistException.class);
+
+        ResponseEntity<?> response = recipeController.getRecommendationBasedOnLikings(List.of("meat","vegan"), badPrincipal);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -203,6 +218,9 @@ class RecipeControllerTest {
         assertEquals(HttpStatus.OK, (recipeController.deleteRecipe(any()).getStatusCode()));
         assertEquals(0, recipes.size());
 
+        doThrow(RecipeDoesNotExistException.class).when(recipeService).deleteRecipe(any());
+        ResponseEntity<?> response = recipeController.deleteRecipe(1L);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -225,6 +243,14 @@ class RecipeControllerTest {
         assertEquals(HttpStatus.OK, (recipeController.updateRecipe(id1, RecipeMapper.entityToGeneralDTO(recipe), principal).getStatusCode()));
         assertEquals("Nowy", updatedRecipe.getDescription());
         assertEquals(7, updatedRecipe.getServings());
+
+        doThrow(NotAnAuthorException.class).when(recipeService).updateRecipe(any(), any(), any());
+        ResponseEntity<?> response = recipeController.updateRecipe(1L, new RecipeGeneralDTO(), badPrincipal);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        doThrow(RecipeDoesNotExistException.class).when(recipeService).updateRecipe(any(), any(), any());
+        response = recipeController.updateRecipe(1L, new RecipeGeneralDTO(), badPrincipal);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -240,6 +266,7 @@ class RecipeControllerTest {
         assertDoesNotThrow(() -> recipeController.addIngredient(id1, customIngredientDTO, principal));
         assertEquals(HttpStatus.OK, recipeController.addIngredient(id1, customIngredientDTO, principal).getStatusCode());
         assertEquals(4, recipes.get(0).getRecipeIngredients().size());
+
     }
 
     @Test
@@ -254,6 +281,14 @@ class RecipeControllerTest {
         assertDoesNotThrow(() -> recipeController.removeIngredientFromRecipe(id1, "mąka", principal));
         assertEquals(HttpStatus.OK, recipeController.removeIngredientFromRecipe(id1, "mąka", principal).getStatusCode());
         assertEquals(0, recipes.get(0).getRecipeIngredients().size());
+
+        doThrow(NotAnAuthorException.class).when(recipeService).removeIngredientFromRecipe(any(), any(), any());
+        ResponseEntity<?> response = recipeController.removeIngredientFromRecipe(1L, ingredient1.getName(), badPrincipal);
+        assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+        doThrow(RecipeDoesNotExistException.class).when(recipeService).removeIngredientFromRecipe(any(), any(), any());
+        response = recipeController.removeIngredientFromRecipe(1L, ingredient1.getName(), badPrincipal);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test

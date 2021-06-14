@@ -149,6 +149,10 @@ describe('Recipe REST API Tests', () => {
             "difficulty": "2"
         }
     ]
+    const newIngredient = {
+        "name": "Vodka",
+        "quantity": 0.5
+    }
 
     beforeEach('Authenticate', () => {
         cy.request({
@@ -340,6 +344,96 @@ describe('Recipe REST API Tests', () => {
         })
     });
 
+    it('Add ingredient to recipe', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes/' + lastRecipeId,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            let ingredientsCount = response.body.ingredients.length;
+
+            cy.request({
+                method: 'POST',
+                url: '/recipes/ingredients/' + lastRecipeId,
+                body: newIngredient,
+                headers: {
+                    'Authorization': 'Bearer ' + jwt,
+                    'content-type': 'application/json'
+                }
+            }).then((response) => {
+                expect(response.status).to.equal(200)
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes/' + lastRecipeId,
+                    headers: {
+                        Authorization: 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.body.ingredients.length).to.equal(ingredientsCount + 1)
+                })
+            })
+        })
+    })
+
+    it('Remove ingredient from recipe', () => {
+        cy.request({
+            method: 'GET',
+            url: '/recipes/' + lastRecipeId,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            let ingredientsCount = response.body.ingredients.length;
+
+            cy.request({
+                method: 'DELETE',
+                url: '/recipes/ingredients/' + lastRecipeId,
+                body: "Vodka",
+                headers: {
+                    Authorization: 'Bearer ' + jwt
+                }
+            }).then((response) => {
+                expect(response.status).to.equal(200)
+
+                cy.request({
+                    method: 'GET',
+                    url: '/recipes/' + lastRecipeId,
+                    headers: {
+                        Authorization: 'Bearer ' + jwt
+                    }
+                }).then((response) => {
+                    expect(response.body.ingredients.length).to.equal(ingredientsCount - 1)
+                })
+            })
+        })
+    });
+
+    it('Add recipe to favourites', () => {
+        let initialFavouriteRecipesCount;
+        cy.request({
+            method: 'GET',
+            url: '/recipes/favourite/' + userCredentials.username,
+            headers: {
+                Authorization: 'Bearer ' + jwt
+            }
+        }).then((response) => {
+            initialFavouriteRecipesCount = response.body.length;
+
+            cy.request({
+                method: 'PUT',
+                url: '/recipes/favourite/add/' + lastRecipeId,
+                headers: {
+                    'Authorization': 'Bearer ' + jwt,
+                }
+            }).then((response) => {
+                expect(response.status).to.equal(200)
+            })
+        })
+    });
+
     it('Delete previously created recipe', () => {
         cy.request({
             method: 'GET',
@@ -371,5 +465,4 @@ describe('Recipe REST API Tests', () => {
             })
         })
     });
-
 })

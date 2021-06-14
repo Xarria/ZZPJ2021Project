@@ -112,7 +112,7 @@ public class RecipeController {
         }
     }
 
-    @DeleteMapping(path = "recipes/ingredients/{id}")
+    @DeleteMapping(path = "/recipes/ingredients/{id}")
     public ResponseEntity<String> removeIngredientFromRecipe(@PathVariable Long id, @RequestBody String ingredientName, Principal principal) {
         try {
             recipeService.removeIngredientFromRecipe(id, ingredientName, principal.getName());
@@ -179,7 +179,7 @@ public class RecipeController {
         }
     }
 
-    @PutMapping(path = "/recipes/favourite/add/{id}", consumes = {MediaType.TEXT_PLAIN_VALUE})
+    @PutMapping(path = "/recipes/favourite/add/{id}")
     public ResponseEntity<?> addRecipeToFavourites(@PathVariable Long id, Principal principal) {
         recipeService.addRecipeToFavourites(principal.getName(), id);
         return ResponseEntity.ok().build();
