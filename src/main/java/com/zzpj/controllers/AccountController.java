@@ -36,7 +36,6 @@ public class AccountController {
             AccessLevel accessLevel = accessLevelService.getAccessLevelByName(accountDTO.getAccessLevel());
             accountService.createAccount(AccountMapper.noRecipesDTOWithAccessLevelToEntity(accountDTO, accessLevel));
         } catch (LoginAlreadyExistsException | EmailAlreadyExistsException ex) {
-            ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
@@ -52,7 +51,6 @@ public class AccountController {
             AccessLevel accessLevel = accessLevelService.getAccessLevelByName(accountDTO.getAccessLevel());
             accountService.createAccount(AccountMapper.noRecipesDTOWithAccessLevelToEntity(accountDTO, accessLevel));
         } catch (LoginAlreadyExistsException | EmailAlreadyExistsException ex) {
-            ex.printStackTrace();
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
