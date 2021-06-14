@@ -78,8 +78,8 @@ class RecipeMapperTest {
 
     @Test
     void generalDTOToEntity() {
-        RecipeGeneralDTO recipeDTO = new RecipeGeneralDTO(1L, "Bułeczki", "Login", "Mniam", 5F,
-        5, "dairy,gluten", null, 4, 400, 40L, "EASY");
+        RecipeGeneralDTO recipeDTO = new RecipeGeneralDTO("Bułeczki", "Login",
+                5F, 3, 400, 45L,"EASY", null, null);
 
         assertDoesNotThrow(() -> RecipeMapper.generalDTOToEntity(recipeDTO));
 
