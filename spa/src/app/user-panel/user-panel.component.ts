@@ -11,7 +11,7 @@ import { RecipeGeneral } from '../model/RecipeGeneral';
 
 export class UserPanelComponent implements OnInit {
 
-  unwantedTags: string;
+  unwantedTags: string | undefined;
 
   constructor(private router: Router,
               public userService: UserService) {
@@ -37,14 +37,45 @@ export class UserPanelComponent implements OnInit {
     this.router.navigate(['/']);
   }
 
-  getRecommendation(): void {
-    const tagArray = this.unwantedTags.split(',');
-    if(tagArray.length)
-    this.userService.getRecommendation(tagArray).subscribe(
+  getMyRecipes(): void {
+    this.userService.getMyRecipes().subscribe(
       (response: RecipeGeneral[]) => {
         this.userService.recipes = response;
       }
     )
+  }
+
+  getMyFavouriteRecipes(): void {
+    this.userService.getMyFavouriteRecipes().subscribe(
+      (response: RecipeGeneral[]) => {
+        this.userService.recipes = response;
+      }
+    )
+  }
+
+  getRecommendation(): void {
+    if(this.unwantedTags === undefined){
+      this.userService.getRecommendation([]).subscribe(
+        (response: RecipeGeneral[]) => {
+          this.userService.recipes = response;
+        }
+      )
+    }
+    const tagArray = this.unwantedTags.split(',');
+    if(tagArray.length > 1){
+      this.userService.getRecommendation(tagArray).subscribe(
+        (response: RecipeGeneral[]) => {
+          this.userService.recipes = response;
+        }
+      )
+    }
+    if(tagArray.length == 1){
+      this.userService.getRecommendation([]).subscribe(
+        (response: RecipeGeneral[]) => {
+          this.userService.recipes = response;
+        }
+      )
+    }
   }
 }
 

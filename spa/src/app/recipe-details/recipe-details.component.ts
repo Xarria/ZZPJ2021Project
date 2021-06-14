@@ -13,7 +13,7 @@ export class RecipeDetailsComponent implements OnInit {
   id = 0;
 
   constructor(public recipeService: RecipeService,
-              private router: Router,
+              public router: Router,
               private route: ActivatedRoute) {
     this.id = Number(this.route.snapshot.paramMap.get('id'));
     this.getRecipeDetails();
@@ -27,5 +27,9 @@ export class RecipeDetailsComponent implements OnInit {
       (response: RecipeDetails) => {
         this.recipeService.recipe = response;
       });
+  }
+
+  sendRecipe(): void {
+    this.recipeService.sendRecipe(this.id).subscribe();
   }
 }

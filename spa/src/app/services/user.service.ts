@@ -59,6 +59,23 @@ export class UserService {
       headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
     });
   }
+
+  getMyRecipes(): any{
+    return this.httpClient.get<any>(this.url + '/account/' + localStorage.getItem('login'), {
+      observe: 'body',
+      responseType: 'json',
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
+    });
+  }
+
+  getMyFavouriteRecipes(): any{
+    return this.httpClient.get<any>(this.url + '/favourite/' + localStorage.getItem('login'), {
+      observe: 'body',
+      responseType: 'json',
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
+    });
+  }
+
 }
 
 

@@ -1,12 +1,9 @@
 <div class="nav-bar-container">
 <mat-toolbar class="nav-bar">
-  <span>Wielkie żarcie</span>
+  <span>MydłoPowidłoBułkaChmiel</span>
   <div class="spacer"></div>
 
-  <a mat-button>Home</a>
-  <a mat-button>My recipes</a>
-  <a mat-button>My favourite recipes</a>
-  <a mat-button>Find something new</a>
+  <a mat-button (click)="router.navigate(['/user'])">All recipes</a>
   <a mat-raised-button color="primary">Sign out</a>
 </mat-toolbar>
 
@@ -80,6 +77,6 @@
     </div>
     <div class="column right">{{recipeService.recipe.difficulty}}</div>
   </div>
-  <button class="recipe-button" mat-raised-button>Wyślij przepis na adres e-mail</button>
+  <button class="recipe-button" mat-raised-button (click)="sendRecipe()">Wyślij przepis na adres e-mail</button>
 </div>
 </div>

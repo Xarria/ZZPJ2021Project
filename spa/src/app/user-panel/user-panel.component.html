@@ -1,11 +1,11 @@
 <div class="nav-bar-container">
   <mat-toolbar class="nav-bar">
-    <span>Wielkie żarcie</span>
+    <span>MydłoPowidłoBułkaChmiel</span>
     <div class="spacer"></div>
 
-    <a mat-button (click)="getRecipes()">Home</a>
-    <a mat-button>My recipes</a>
-    <a mat-button>My favourite recipes</a>
+    <a mat-button (click)="getRecipes()">All recipes</a>
+    <a mat-button (click)="getMyRecipes()">My recipes</a>
+    <a mat-button (click)="getMyFavouriteRecipes()">My favourite recipes</a>
     <a mat-button (click)="getRecommendation()">Find something new</a>
     <input matInput [(ngModel)]="unwantedTags" name="tags" type="text" placeholder="Unwanted tags">
     <a mat-raised-button color="primary" (click)="signOut()">Sign out</a>

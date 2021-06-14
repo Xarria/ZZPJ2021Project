@@ -34,7 +34,16 @@ export class RecipeService {
   getRecipeDetails(id: number): Observable<RecipeDetails> {
     return this.httpClient.get<RecipeDetails>(this.url + '/' + encodeURIComponent(id), {
       observe: 'body',
-      responseType: 'json'
+      responseType: 'json',
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
+    });
+  }
+
+  sendRecipe(id: number): any {
+    return this.httpClient.get<RecipeDetails>(this.url + '/save/' + encodeURIComponent(id), {
+      observe: 'body',
+      responseType: 'json',
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('token')}
     });
   }
 }
