@@ -1,6 +1,7 @@
 package com.zzpj.services;
 
 import com.zzpj.exceptions.IngredientNotFoundException;
+import com.zzpj.exceptions.LoginAlreadyExistsException;
 import com.zzpj.exceptions.RecipeDoesNotExistException;
 import com.zzpj.model.entities.Account;
 import com.zzpj.model.entities.Ingredient;
@@ -306,4 +307,11 @@ class RecipeServiceTest {
         assertTrue(shoppingList.contains("Quantity: " + ingredient.getQuantity().toString()));
     }
 
+    @Test
+    void sendRecipeByMail() throws RecipeDoesNotExistException {
+        String str = recipeService.sendRecipeByMail(recipe.getId());
+        assertDoesNotThrow(() -> recipeService.sendRecipeByMail(recipe.getId()));
+        Assertions.assertThrows(RecipeDoesNotExistException.class, () -> recipeService.sendRecipeByMail(-2115L));
+        assertEquals("<b>BUŁECZKI</b><br><b> Ingredients: </b> <br>Mąka: 100.0g <br><br><b> Steps: </b><br>Smaczne bułeczki<br>", str);
+    }
 }
