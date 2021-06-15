@@ -65,7 +65,6 @@ public class AccountService implements UserDetailsService, AccountServiceInterfa
         if (accountRepository.findAll().stream().noneMatch(a -> a.getLogin().equals(login))) {
             throw new AccountDoesNotExistException("Account with such login does not exist");
         }
-        //TODO ustalenie, które pola ma uwzględniać update
         Account account = accountRepository.findByLogin(login);
         account.setPassword(Sha512DigestUtils.shaHex(account.getPassword()));
         account.setEmail(updatedAccount.getEmail());

@@ -193,7 +193,7 @@ describe('Recipe REST API Tests', () => {
 
     it('Get recommendations with unwanted tags', () => {
         cy.request({
-            method: 'GET',
+            method: 'POST',
             url: '/recipes/recommendation',
             body: unwantedTags,
             headers: {
